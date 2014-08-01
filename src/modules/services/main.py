@@ -26,7 +26,7 @@ def enable_services(self, services):
     # TODO: check if this is needed
     install_path = libcalamares.globalstorage.value( "rootMountPoint" )
     for name in services:
-        libcalamares.utils.chroot_call(install_path, ['systemctl', 'enable', name + ".service"])
+        libcalamares.utils.chroot_call(['systemctl', 'enable', name + ".service"])
 
 def run():
     """ Setup systemd services """

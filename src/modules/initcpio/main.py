@@ -71,8 +71,8 @@ def run_mkinitcpio(self):
 
     # Run mkinitcpio on the target system
     # TODO: set kernel and locale in a config
-    # libcalamares.utils.chroot_call(install_path, ['sh', '-c', 'LANG=%s /usr/bin/mkinitcpio -p %s' % (locale, kernel)])
-    libcalamares.utils.chroot_call(install_path, ['sh', '-c', 'LANG=en_US.uf8 /usr/bin/mkinitcpio -p linux314'])
+    # libcalamares.utils.chroot_call(['sh', '-c', 'LANG=%s /usr/bin/mkinitcpio -p %s' % (locale, kernel)])
+    libcalamares.utils.chroot_call(['sh', '-c', 'LANG=en_US.uf8 /usr/bin/mkinitcpio -p linux314'])
 
 def run():
     """ Run mkinitcpio """

@@ -51,7 +51,7 @@ def run():
 
     uncomment_locale_gen(locale)
 
-    libcalamares.utils.chroot_call(install_path, ['locale-gen'])
+    libcalamares.utils.chroot_call(['locale-gen'])
     locale_conf_path = os.path.join(install_path, "etc/locale.conf")
     with open(locale_conf_path, "w") as locale_conf:
         locale_conf.write('LANG=%s\n' % locale)

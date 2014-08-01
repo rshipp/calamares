@@ -138,15 +138,15 @@ def run():
 
     # setup lightdm
     if os.path.exists("%s/usr/bin/lightdm" % install_path):
-        libcalamares.utils.chroot_call(install_path, ['mkdir', '-p', '/run/lightdm'])
-        libcalamares.utils.chroot_call(install_path, ['getent', 'group', 'lightdm'])
-        libcalamares.utils.chroot_call(install_path, ['groupadd', '-g', '620', 'lightdm'])
-        libcalamares.utils.chroot_call(install_path, ['getent', 'passwd', 'lightdm'])
-        libcalamares.utils.chroot_call(install_path, ['useradd', '-c', '"LightDM Display Manager"',
+        libcalamares.utils.chroot_call(['mkdir', '-p', '/run/lightdm'])
+        libcalamares.utils.chroot_call(['getent', 'group', 'lightdm'])
+        libcalamares.utils.chroot_call(['groupadd', '-g', '620', 'lightdm'])
+        libcalamares.utils.chroot_call(['getent', 'passwd', 'lightdm'])
+        libcalamares.utils.chroot_call(['useradd', '-c', '"LightDM Display Manager"',
              '-u', '620', '-g', 'lightdm', '-d', '/var/run/lightdm',
              '-s', '/usr/bin/nologin', 'lightdm'])
-        libcalamares.utils.chroot_call(install_path, ['passwd', '-l', 'lightdm'])
-        libcalamares.utils.chroot_call(install_path, ['chown', '-R', 'lightdm:lightdm', '/run/lightdm'])
+        libcalamares.utils.chroot_call(['passwd', '-l', 'lightdm'])
+        libcalamares.utils.chroot_call(['chown', '-R', 'lightdm:lightdm', '/run/lightdm'])
         if os.path.exists("%s/usr/bin/startxfce4" % install_path):
         os.system("sed -i -e 's/^.*user-session=.*/user-session=xfce/' %s/etc/lightdm/lightdm.conf" % install_path)
         os.system("ln -s /usr/lib/lightdm/lightdm/gdmflexiserver %s/usr/bin/gdmflexiserver" % install_path)
@@ -155,14 +155,14 @@ def run():
 
     # Setup gdm
     if os.path.exists("%s/usr/bin/gdm" % install_path):
-        libcalamares.utils.chroot_call(install_path, ['getent', 'group', 'gdm'])
-        libcalamares.utils.chroot_call(install_path, ['groupadd', '-g', '120', 'gdm'])
-        libcalamares.utils.chroot_call(install_path, ['getent', 'passwd', 'gdm'])
-        libcalamares.utils.chroot_call(install_path, ['useradd', '-c', '"Gnome Display Manager"',
+        libcalamares.utils.chroot_call(['getent', 'group', 'gdm'])
+        libcalamares.utils.chroot_call(['groupadd', '-g', '120', 'gdm'])
+        libcalamares.utils.chroot_call(['getent', 'passwd', 'gdm'])
+        libcalamares.utils.chroot_call(['useradd', '-c', '"Gnome Display Manager"',
              '-u', '120', '-g', 'gdm', '-d', '/var/lib/gdm',
              '-s', '/usr/bin/nologin', 'gdm'])
-        libcalamares.utils.chroot_call(install_path, ['passwd', '-l', 'gdm'])
-        libcalamares.utils.chroot_call(install_path, ['chown', '-R', 'gdm:gdm', '/var/lib/gdm'])
+        libcalamares.utils.chroot_call(['passwd', '-l', 'gdm'])
+        libcalamares.utils.chroot_call(['chown', '-R', 'gdm:gdm', '/var/lib/gdm'])
         if os.path.exists("%s/var/lib/AccountsService/users" % install_path):
         os.system("echo \"[User]\" > %s/var/lib/AccountsService/users/gdm" % install_path)
         if os.path.exists("%s/usr/bin/startxfce4" % install_path):
@@ -182,15 +182,15 @@ def run():
 
     # Setup mdm
     if os.path.exists("%s/usr/bin/mdm" % install_path):
-        libcalamares.utils.chroot_call(install_path, ['getent', 'group', 'mdm'])
-        libcalamares.utils.chroot_call(install_path, ['groupadd', '-g', '128', 'mdm'])
-        libcalamares.utils.chroot_call(install_path, ['getent', 'passwd', 'mdm'])
-        libcalamares.utils.chroot_call(install_path, ['useradd', '-c', '"Linux Mint Display Manager"',
+        libcalamares.utils.chroot_call(['getent', 'group', 'mdm'])
+        libcalamares.utils.chroot_call(['groupadd', '-g', '128', 'mdm'])
+        libcalamares.utils.chroot_call(['getent', 'passwd', 'mdm'])
+        libcalamares.utils.chroot_call(['useradd', '-c', '"Linux Mint Display Manager"',
              '-u', '128', '-g', 'mdm', '-d', '/var/lib/mdm',
              '-s', '/usr/bin/nologin', 'mdm'])
-        libcalamares.utils.chroot_call(install_path, ['passwd', '-l', 'mdm'])
-        libcalamares.utils.chroot_call(install_path, ['chown', 'root:mdm', '/var/lib/mdm'])
-        libcalamares.utils.chroot_call(install_path, ['chmod', '1770', '/var/lib/mdm'])
+        libcalamares.utils.chroot_call(['passwd', '-l', 'mdm'])
+        libcalamares.utils.chroot_call(['chown', 'root:mdm', '/var/lib/mdm'])
+        libcalamares.utils.chroot_call(['chmod', '1770', '/var/lib/mdm'])
         if os.path.exists("%s/usr/bin/startxfce4" % install_path):
         os.system("sed -i 's|default.desktop|xfce.desktop|g' %s/etc/mdm/custom.conf" % install_path)
         if os.path.exists("%s/usr/bin/cinnamon-session" % install_path):
@@ -207,7 +207,7 @@ def run():
 
     # Setup lxdm
     if os.path.exists("%s/usr/bin/lxdm" % install_path):
-        libcalamares.utils.chroot_call(install_path, ['groupadd', '--system', 'lxdm'])
+        libcalamares.utils.chroot_call(['groupadd', '--system', 'lxdm'])
         if os.path.exists("%s/usr/bin/startxfce4" % install_path):
         os.system("sed -i -e 's|^.*session=.*|session=/usr/bin/startxfce4|' %s/etc/lxdm/lxdm.conf" % install_path)
         if os.path.exists("%s/usr/bin/cinnamon-session" % install_path):
@@ -227,14 +227,14 @@ def run():
 
     # Setup kdm
     if os.path.exists("%s/usr/bin/kdm" % install_path):
-        libcalamares.utils.chroot_call(install_path, ['getent', 'group', 'kdm'])
-        libcalamares.utils.chroot_call(install_path, ['groupadd', '-g', '135', 'kdm'])
-        libcalamares.utils.chroot_call(install_path, ['getent', 'passwd', 'kdm'])
-        libcalamares.utils.chroot_call(install_path, ['useradd', '-u', '135', '-g', 'kdm', '-d',
+        libcalamares.utils.chroot_call(['getent', 'group', 'kdm'])
+        libcalamares.utils.chroot_call(['groupadd', '-g', '135', 'kdm'])
+        libcalamares.utils.chroot_call(['getent', 'passwd', 'kdm'])
+        libcalamares.utils.chroot_call(['useradd', '-u', '135', '-g', 'kdm', '-d',
              '/var/lib/kdm', '-s', '/bin/false', '-r', '-M', 'kdm'])
-        libcalamares.utils.chroot_call(install_path, ['chown', '-R', '135:135', 'var/lib/kdm'])
-        libcalamares.utils.chroot_call(install_path, ['xdg-icon-resource', 'forceupdate', '--theme', 'hicolor'])
-        libcalamares.utils.chroot_call(install_path, ['update-desktop-database', '-q'])
+        libcalamares.utils.chroot_call(['chown', '-R', '135:135', 'var/lib/kdm'])
+        libcalamares.utils.chroot_call(['xdg-icon-resource', 'forceupdate', '--theme', 'hicolor'])
+        libcalamares.utils.chroot_call(['update-desktop-database', '-q'])
         desktop_manager = 'kdm'
 
     # TODO: find a value to call set_autologin or not

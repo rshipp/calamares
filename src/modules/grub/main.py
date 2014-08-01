@@ -17,20 +17,12 @@
 #   You should have received a copy of the GNU General Public License
 #   along with Calamares. If not, see <http://www.gnu.org/licenses/>.
 
-import os
-import subprocess
-
 import libcalamares
-
-
-def chroot_call(root_mount_point, cmd):
-    subprocess.check_call(["chroot", root_mount_point] + cmd)
-
 
 def install_grub(root_mount_point, boot_loader):
     install_path = boot_loader["installPath"]
-    chroot_call(root_mount_point, ["grub-install", install_path])
-    chroot_call(root_mount_point, ["grub-mkconfig", "-o", "/boot/grub/grub.cfg"])
+    libcalamares.utils.chroot_call(["grub-install", install_path])
+    libcalamares.utils.chroot_call(["grub-mkconfig", "-o", "/boot/grub/grub.cfg"])
 
 
 def run():

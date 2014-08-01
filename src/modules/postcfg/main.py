@@ -46,20 +46,20 @@ def run():
         os.system("echo \"TERM=mate-terminal\" >> %s/etc/profile" % install_path)
 
     # Fix_gnome_apps
-    libcalamares.utils.chroot_call(install_path, ['glib-compile-schemas', '/usr/share/glib-2.0/schemas'])
-    libcalamares.utils.chroot_call(install_path, ['gtk-update-icon-cache', '-q', '-t', '-f', '/usr/share/icons/hicolor'])
-    libcalamares.utils.chroot_call(install_path, ['dconf', 'update'])
+    libcalamares.utils.chroot_call(['glib-compile-schemas', '/usr/share/glib-2.0/schemas'])
+    libcalamares.utils.chroot_call(['gtk-update-icon-cache', '-q', '-t', '-f', '/usr/share/icons/hicolor'])
+    libcalamares.utils.chroot_call(['dconf', 'update'])
 
     if os.path.exists("%s/usr/bin/gnome-keyring-daemon" % install_path):
-        libcalamares.utils.chroot_call(install_path, ['setcap', 'cap_ipc_lock=ep', '/usr/bin/gnome-keyring-daemon'])
+        libcalamares.utils.chroot_call(['setcap', 'cap_ipc_lock=ep', '/usr/bin/gnome-keyring-daemon'])
 
     # Fix_ping_installation
-    libcalamares.utils.chroot_call(install_path, ['setcap', 'cap_net_raw=ep', '/usr/bin/ping'])
-    libcalamares.utils.chroot_call(install_path, ['setcap', 'cap_net_raw=ep', '/usr/bin/ping6'])
+    libcalamares.utils.chroot_call(['setcap', 'cap_net_raw=ep', '/usr/bin/ping'])
+    libcalamares.utils.chroot_call(['setcap', 'cap_net_raw=ep', '/usr/bin/ping6'])
 
     # Remove calamares
     if os.path.exists("%s/usr/bin/calamares" % install_path):
-        libcalamares.utils.chroot_call(install_path, ['pacman', '-R', '--noconfirm', 'calamares'])
+        libcalamares.utils.chroot_call(['pacman', '-R', '--noconfirm', 'calamares'])
 
     # Setup pacman
     queue_event("action", _("Configuring package manager"))
@@ -73,7 +73,7 @@ def run():
     if os.path.exists("%s/etc/pacman.d/gnupg" % install_path):
         os.system("rm -rf %s/etc/pacman.d/gnupg" % install_path)
     os.system("cp -a /etc/pacman.d/gnupg %s/etc/pacman.d/" % install_path)
-    libcalamares.utils.chroot_call(install_path, ['pacman-key', '--populate', 'archlinux', 'manjaro'])
+    libcalamares.utils.chroot_call(['pacman-key', '--populate', 'archlinux', 'manjaro'])
     queue_event('info', _("Finished configuring package manager."))
 
     consolefh = open("%s/etc/keyboard.conf" % install_path, "r")
@@ -88,7 +88,7 @@ def run():
         newconsolefh.write("%s\n" % line)
     consolefh.close()
     newconsolefh.close()
-    libcalamares.utils.chroot_call(install_path, ['mv', '/etc/keyboard.conf', '/etc/keyboard.conf.old'])
-    libcalamares.utils.chroot_call(install_path, ['mv', '/etc/keyboard.new', '/etc/keyboard.conf'])
+    libcalamares.utils.chroot_call(['mv', '/etc/keyboard.conf', '/etc/keyboard.conf.old'])
+    libcalamares.utils.chroot_call(['mv', '/etc/keyboard.new', '/etc/keyboard.conf'])
 
     return None
