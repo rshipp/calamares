@@ -18,17 +18,19 @@
 #   along with Calamares. If not, see <http://www.gnu.org/licenses/>.
 
 import os
-import subprocess
 
 import libcalamares
 
 def enable_services(self, services):
     """ Enables all services that are in the list 'services' """
+    # TODO: check if this is needed
+    install_path = libcalamares.globalstorage.value( "rootMountPoint" )
     for name in services:
-        chroot_call(root_mount_point, ['systemctl', 'enable', name + ".service"])
+        libcalamares.utils.chroot_call(install_path, ['systemctl', 'enable', name + ".service"])
 
 def run():
     """ Setup systemd services """
+    install_path = libcalamares.globalstorage.value( "rootMountPoint" )
 
     # enable services
     enable_services([network_manager, 'remote-fs.target'])

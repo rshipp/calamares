@@ -24,11 +24,10 @@ import libcalamares
 
 import shutil
 
-def chroot_call(root_mount_point, cmd):
-    subprocess.check_call(["chroot", root_mount_point] + cmd)
-
 def run():
     """ Configure the hardware """
+
+    install_path = libcalamares.globalstorage.value( "rootMountPoint" )
 
     # Copy generated xorg.xonf to target
     if os.path.exists("/etc/X11/xorg.conf"):
@@ -37,66 +36,66 @@ def run():
 
     # TODO: Maybe we can drop this
     # Configure ALSA
-    chroot_call(root_mount_point, ['sh', '-c', 'amixer -c 0 sset Master 70% unmute'])
-    chroot_call(root_mount_point, ['sh', '-c', 'amixer -c 0 sset Front 70% unmute'])
-    chroot_call(root_mount_point, ['sh', '-c', 'amixer -c 0 sset Side 70% unmute'])
-    chroot_call(root_mount_point, ['sh', '-c', 'amixer -c 0 sset Surround 70% unmute'])
-    chroot_call(root_mount_point, ['sh', '-c', 'amixer -c 0 sset Center 70% unmute'])
-    chroot_call(root_mount_point, ['sh', '-c', 'amixer -c 0 sset LFE 70% unmute'])
-    chroot_call(root_mount_point, ['sh', '-c', 'amixer -c 0 sset Headphone 70% unmute'])
-    chroot_call(root_mount_point, ['sh', '-c', 'amixer -c 0 sset Speaker 70% unmute'])
-    chroot_call(root_mount_point, ['sh', '-c', 'amixer -c 0 sset PCM 70% unmute'])
-    chroot_call(root_mount_point, ['sh', '-c', 'amixer -c 0 sset Line 70% unmute'])
-    chroot_call(root_mount_point, ['sh', '-c', 'amixer -c 0 sset External 70% unmute'])
-    chroot_call(root_mount_point, ['sh', '-c', 'amixer -c 0 sset FM 50% unmute'])
-    chroot_call(root_mount_point, ['sh', '-c', 'amixer -c 0 sset Master Mono 70% unmute'])
-    chroot_call(root_mount_point, ['sh', '-c', 'amixer -c 0 sset Master Digital 70% unmute'])
-    chroot_call(root_mount_point, ['sh', '-c', 'amixer -c 0 sset Analog Mix 70% unmute'])
-    chroot_call(root_mount_point, ['sh', '-c', 'amixer -c 0 sset Aux 70% unmute'])
-    chroot_call(root_mount_point, ['sh', '-c', 'amixer -c 0 sset Aux2 70% unmute'])
-    chroot_call(root_mount_point, ['sh', '-c', 'amixer -c 0 sset PCM Center 70% unmute'])
-    chroot_call(root_mount_point, ['sh', '-c', 'amixer -c 0 sset PCM Front 70% unmute'])
-    chroot_call(root_mount_point, ['sh', '-c', 'amixer -c 0 sset PCM LFE 70% unmute'])
-    chroot_call(root_mount_point, ['sh', '-c', 'amixer -c 0 sset PCM Side 70% unmute'])
-    chroot_call(root_mount_point, ['sh', '-c', 'amixer -c 0 sset PCM Surround 70% unmute'])
-    chroot_call(root_mount_point, ['sh', '-c', 'amixer -c 0 sset Playback 70% unmute'])
-    chroot_call(root_mount_point, ['sh', '-c', 'amixer -c 0 sset PCM,1 70% unmute'])
-    chroot_call(root_mount_point, ['sh', '-c', 'amixer -c 0 sset DAC 70% unmute'])
-    chroot_call(root_mount_point, ['sh', '-c', 'amixer -c 0 sset DAC,0 70% unmute'])
-    chroot_call(root_mount_point, ['sh', '-c', 'amixer -c 0 sset DAC,1 70% unmute'])
-    chroot_call(root_mount_point, ['sh', '-c', 'amixer -c 0 sset Synth 70% unmute'])
-    chroot_call(root_mount_point, ['sh', '-c', 'amixer -c 0 sset CD 70% unmute'])
-    chroot_call(root_mount_point, ['sh', '-c', 'amixer -c 0 sset Wave 70% unmute'])
-    chroot_call(root_mount_point, ['sh', '-c', 'amixer -c 0 sset Music 70% unmute'])
-    chroot_call(root_mount_point, ['sh', '-c', 'amixer -c 0 sset AC97 70% unmute'])
-    chroot_call(root_mount_point, ['sh', '-c', 'amixer -c 0 sset Analog Front 70% unmute'])
-    chroot_call(root_mount_point, ['sh', '-c', 'amixer -c 0 sset VIA DXS,0 70% unmute'])
-    chroot_call(root_mount_point, ['sh', '-c', 'amixer -c 0 sset VIA DXS,1 70% unmute'])
-    chroot_call(root_mount_point, ['sh', '-c', 'amixer -c 0 sset VIA DXS,2 70% unmute'])
-    chroot_call(root_mount_point, ['sh', '-c', 'amixer -c 0 sset VIA DXS,3 70% unmute'])
+    libcalamares.utils.chroot_call(install_path, ['sh', '-c', 'amixer -c 0 sset Master 70% unmute'])
+    libcalamares.utils.chroot_call(install_path, ['sh', '-c', 'amixer -c 0 sset Front 70% unmute'])
+    libcalamares.utils.chroot_call(install_path, ['sh', '-c', 'amixer -c 0 sset Side 70% unmute'])
+    libcalamares.utils.chroot_call(install_path, ['sh', '-c', 'amixer -c 0 sset Surround 70% unmute'])
+    libcalamares.utils.chroot_call(install_path, ['sh', '-c', 'amixer -c 0 sset Center 70% unmute'])
+    libcalamares.utils.chroot_call(install_path, ['sh', '-c', 'amixer -c 0 sset LFE 70% unmute'])
+    libcalamares.utils.chroot_call(install_path, ['sh', '-c', 'amixer -c 0 sset Headphone 70% unmute'])
+    libcalamares.utils.chroot_call(install_path, ['sh', '-c', 'amixer -c 0 sset Speaker 70% unmute'])
+    libcalamares.utils.chroot_call(install_path, ['sh', '-c', 'amixer -c 0 sset PCM 70% unmute'])
+    libcalamares.utils.chroot_call(install_path, ['sh', '-c', 'amixer -c 0 sset Line 70% unmute'])
+    libcalamares.utils.chroot_call(install_path, ['sh', '-c', 'amixer -c 0 sset External 70% unmute'])
+    libcalamares.utils.chroot_call(install_path, ['sh', '-c', 'amixer -c 0 sset FM 50% unmute'])
+    libcalamares.utils.chroot_call(install_path, ['sh', '-c', 'amixer -c 0 sset Master Mono 70% unmute'])
+    libcalamares.utils.chroot_call(install_path, ['sh', '-c', 'amixer -c 0 sset Master Digital 70% unmute'])
+    libcalamares.utils.chroot_call(install_path, ['sh', '-c', 'amixer -c 0 sset Analog Mix 70% unmute'])
+    libcalamares.utils.chroot_call(install_path, ['sh', '-c', 'amixer -c 0 sset Aux 70% unmute'])
+    libcalamares.utils.chroot_call(install_path, ['sh', '-c', 'amixer -c 0 sset Aux2 70% unmute'])
+    libcalamares.utils.chroot_call(install_path, ['sh', '-c', 'amixer -c 0 sset PCM Center 70% unmute'])
+    libcalamares.utils.chroot_call(install_path, ['sh', '-c', 'amixer -c 0 sset PCM Front 70% unmute'])
+    libcalamares.utils.chroot_call(install_path, ['sh', '-c', 'amixer -c 0 sset PCM LFE 70% unmute'])
+    libcalamares.utils.chroot_call(install_path, ['sh', '-c', 'amixer -c 0 sset PCM Side 70% unmute'])
+    libcalamares.utils.chroot_call(install_path, ['sh', '-c', 'amixer -c 0 sset PCM Surround 70% unmute'])
+    libcalamares.utils.chroot_call(install_path, ['sh', '-c', 'amixer -c 0 sset Playback 70% unmute'])
+    libcalamares.utils.chroot_call(install_path, ['sh', '-c', 'amixer -c 0 sset PCM,1 70% unmute'])
+    libcalamares.utils.chroot_call(install_path, ['sh', '-c', 'amixer -c 0 sset DAC 70% unmute'])
+    libcalamares.utils.chroot_call(install_path, ['sh', '-c', 'amixer -c 0 sset DAC,0 70% unmute'])
+    libcalamares.utils.chroot_call(install_path, ['sh', '-c', 'amixer -c 0 sset DAC,1 70% unmute'])
+    libcalamares.utils.chroot_call(install_path, ['sh', '-c', 'amixer -c 0 sset Synth 70% unmute'])
+    libcalamares.utils.chroot_call(install_path, ['sh', '-c', 'amixer -c 0 sset CD 70% unmute'])
+    libcalamares.utils.chroot_call(install_path, ['sh', '-c', 'amixer -c 0 sset Wave 70% unmute'])
+    libcalamares.utils.chroot_call(install_path, ['sh', '-c', 'amixer -c 0 sset Music 70% unmute'])
+    libcalamares.utils.chroot_call(install_path, ['sh', '-c', 'amixer -c 0 sset AC97 70% unmute'])
+    libcalamares.utils.chroot_call(install_path, ['sh', '-c', 'amixer -c 0 sset Analog Front 70% unmute'])
+    libcalamares.utils.chroot_call(install_path, ['sh', '-c', 'amixer -c 0 sset VIA DXS,0 70% unmute'])
+    libcalamares.utils.chroot_call(install_path, ['sh', '-c', 'amixer -c 0 sset VIA DXS,1 70% unmute'])
+    libcalamares.utils.chroot_call(install_path, ['sh', '-c', 'amixer -c 0 sset VIA DXS,2 70% unmute'])
+    libcalamares.utils.chroot_call(install_path, ['sh', '-c', 'amixer -c 0 sset VIA DXS,3 70% unmute'])
 
     # set input levels
-    chroot_call(root_mount_point, ['sh', '-c', 'amixer -c 0 sset Mic 70% mute'])
-    chroot_call(root_mount_point, ['sh', '-c', 'amixer -c 0 sset IEC958 70% mute'])
+    libcalamares.utils.chroot_call(install_path, ['sh', '-c', 'amixer -c 0 sset Mic 70% mute'])
+    libcalamares.utils.chroot_call(install_path, ['sh', '-c', 'amixer -c 0 sset IEC958 70% mute'])
 
     # special stuff
-    chroot_call(root_mount_point, ['sh', '-c', 'amixer -c 0 sset Master Playback Switch on'])
-    chroot_call(root_mount_point, ['sh', '-c', 'amixer -c 0 sset Master Surround on'])
-    chroot_call(root_mount_point, ['sh', '-c', 'amixer -c 0 sset SB Live Analog/Digital Output Jack off'])
-    chroot_call(root_mount_point, ['sh', '-c', 'amixer -c 0 sset Audigy Analog/Digital Output Jack off'])
+    libcalamares.utils.chroot_call(install_path, ['sh', '-c', 'amixer -c 0 sset Master Playback Switch on'])
+    libcalamares.utils.chroot_call(install_path, ['sh', '-c', 'amixer -c 0 sset Master Surround on'])
+    libcalamares.utils.chroot_call(install_path, ['sh', '-c', 'amixer -c 0 sset SB Live Analog/Digital Output Jack off'])
+    libcalamares.utils.chroot_call(install_path, ['sh', '-c', 'amixer -c 0 sset Audigy Analog/Digital Output Jack off'])
 
     # special stuff
-    chroot_call(root_mount_point, ['sh', '-c', 'amixer -c 0 sset Master Playback Switch on'])
-    chroot_call(root_mount_point, ['sh', '-c', 'amixer -c 0 sset Master Surround on'])
-    chroot_call(root_mount_point, ['sh', '-c', 'amixer -c 0 sset SB Live Analog/Digital Output Jack off'])
-    chroot_call(root_mount_point, ['sh', '-c', 'amixer -c 0 sset Audigy Analog/Digital Output Jack off'])
+    libcalamares.utils.chroot_call(install_path, ['sh', '-c', 'amixer -c 0 sset Master Playback Switch on'])
+    libcalamares.utils.chroot_call(install_path, ['sh', '-c', 'amixer -c 0 sset Master Surround on'])
+    libcalamares.utils.chroot_call(install_path, ['sh', '-c', 'amixer -c 0 sset SB Live Analog/Digital Output Jack off'])
+    libcalamares.utils.chroot_call(install_path, ['sh', '-c', 'amixer -c 0 sset Audigy Analog/Digital Output Jack off'])
 
     # Set pulse
     if os.path.exists("/usr/bin/pulseaudio-ctl"):
-        chroot_call(root_mount_point, ['pulseaudio-ctl', 'normal'])
+        libcalamares.utils.chroot_call(install_path, ['pulseaudio-ctl', 'normal'])
 
     # Save settings
-    chroot_call(root_mount_point, ['alsactl', '-f', '/etc/asound.state', 'store'])
+    libcalamares.utils.chroot_call(install_path, ['alsactl', '-f', '/etc/asound.state', 'store'])
 
     # Install xf86-video driver
     if os.path.exists("/opt/livecd/pacman-gfx.conf"):
@@ -118,10 +117,10 @@ def run():
     p2 = subprocess.Popen(["grep", "0300:80ee:beef"], stdin=p1.stdout, stdout=subprocess.PIPE)
     num_res = p2.communicate()[0]
     if num_res == "0":
-        chroot_call(root_mount_point, ['sh', '-c', 'pacman -Rsc --noconfirm $(pacman -Qq | grep virtualbox-guest-modules)'])
+        libcalamares.utils.chroot_call(install_path, ['sh', '-c', 'pacman -Rsc --noconfirm $(pacman -Qq | grep virtualbox-guest-modules)'])
 
     # Set unique machine-id
-    chroot_call(root_mount_point, ['dbus-uuidgen', '--ensure=/etc/machine-id'])
-    chroot_call(root_mount_point, ['dbus-uuidgen', '--ensure=/var/lib/dbus/machine-id'])
+    libcalamares.utils.chroot_call(install_path, ['dbus-uuidgen', '--ensure=/etc/machine-id'])
+    libcalamares.utils.chroot_call(install_path, ['dbus-uuidgen', '--ensure=/var/lib/dbus/machine-id'])
 
     return None

@@ -18,15 +18,13 @@
 #   along with Calamares. If not, see <http://www.gnu.org/licenses/>.
 
 import os
-import subprocess
 
 import libcalamares
 
-def chroot_call(root_mount_point, cmd):
-    subprocess.check_call(["chroot", root_mount_point] + cmd)
-
 def uncomment_locale_gen(self, locale):
     """ Uncomment selected locale in /etc/locale.gen """
+
+    install_path = libcalamares.globalstorage.value( "rootMountPoint" )
 
     text = []
     with open("%s/etc/locale.gen" % install_path, "r") as gen:
@@ -42,6 +40,9 @@ def uncomment_locale_gen(self, locale):
 def run():
     """ Setup locale """
 
+    # TODO: check if this is enough and not needed to set twice in uncomment_locale_gen
+    install_path = libcalamares.globalstorage.value( "rootMountPoint" )
+
     # Generate locales
     # TODO: get variables
     keyboard_layout = 'en'
@@ -50,7 +51,7 @@ def run():
 
     uncomment_locale_gen(locale)
 
-    chroot_call(root_mount_point, ['locale-gen'])
+    libcalamares.utils.chroot_call(install_path, ['locale-gen'])
     locale_conf_path = os.path.join(install_path, "etc/locale.conf")
     with open(locale_conf_path, "w") as locale_conf:
         locale_conf.write('LANG=%s\n' % locale)

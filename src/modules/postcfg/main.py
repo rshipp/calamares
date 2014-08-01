@@ -18,17 +18,15 @@
 #   along with Calamares. If not, see <http://www.gnu.org/licenses/>.
 
 import os
-import subprocess
 
 import libcalamares
 
 import shutil
 
-def chroot_call(root_mount_point, cmd):
-    subprocess.check_call(["chroot", root_mount_point] + cmd)
-
 def run():
     """ Misc postinstall configurations """
+
+    install_path = libcalamares.globalstorage.value( "rootMountPoint" )
 
     # Add hostname
     # TODO: get hostname
@@ -48,20 +46,20 @@ def run():
         os.system("echo \"TERM=mate-terminal\" >> %s/etc/profile" % install_path)
 
     # Fix_gnome_apps
-    chroot_call(root_mount_point, ['glib-compile-schemas', '/usr/share/glib-2.0/schemas'])
-    chroot_call(root_mount_point, ['gtk-update-icon-cache', '-q', '-t', '-f', '/usr/share/icons/hicolor'])
-    chroot_call(root_mount_point, ['dconf', 'update'])
+    libcalamares.utils.chroot_call(install_path, ['glib-compile-schemas', '/usr/share/glib-2.0/schemas'])
+    libcalamares.utils.chroot_call(install_path, ['gtk-update-icon-cache', '-q', '-t', '-f', '/usr/share/icons/hicolor'])
+    libcalamares.utils.chroot_call(install_path, ['dconf', 'update'])
 
     if os.path.exists("%s/usr/bin/gnome-keyring-daemon" % install_path):
-        chroot_call(root_mount_point, ['setcap', 'cap_ipc_lock=ep', '/usr/bin/gnome-keyring-daemon'])
+        libcalamares.utils.chroot_call(install_path, ['setcap', 'cap_ipc_lock=ep', '/usr/bin/gnome-keyring-daemon'])
 
     # Fix_ping_installation
-    chroot_call(root_mount_point, ['setcap', 'cap_net_raw=ep', '/usr/bin/ping'])
-    chroot_call(root_mount_point, ['setcap', 'cap_net_raw=ep', '/usr/bin/ping6'])
+    libcalamares.utils.chroot_call(install_path, ['setcap', 'cap_net_raw=ep', '/usr/bin/ping'])
+    libcalamares.utils.chroot_call(install_path, ['setcap', 'cap_net_raw=ep', '/usr/bin/ping6'])
 
     # Remove calamares
     if os.path.exists("%s/usr/bin/calamares" % install_path):
-        chroot_call(root_mount_point, ['pacman', '-R', '--noconfirm', 'calamares'])
+        libcalamares.utils.chroot_call(install_path, ['pacman', '-R', '--noconfirm', 'calamares'])
 
     # Setup pacman
     queue_event("action", _("Configuring package manager"))
@@ -75,7 +73,7 @@ def run():
     if os.path.exists("%s/etc/pacman.d/gnupg" % install_path):
         os.system("rm -rf %s/etc/pacman.d/gnupg" % install_path)
     os.system("cp -a /etc/pacman.d/gnupg %s/etc/pacman.d/" % install_path)
-    chroot_call(root_mount_point, ['pacman-key', '--populate', 'archlinux', 'manjaro'])
+    libcalamares.utils.chroot_call(install_path, ['pacman-key', '--populate', 'archlinux', 'manjaro'])
     queue_event('info', _("Finished configuring package manager."))
 
     consolefh = open("%s/etc/keyboard.conf" % install_path, "r")
@@ -90,7 +88,7 @@ def run():
         newconsolefh.write("%s\n" % line)
     consolefh.close()
     newconsolefh.close()
-    chroot_call(root_mount_point, ['mv', '/etc/keyboard.conf', '/etc/keyboard.conf.old'])
-    chroot_call(root_mount_point, ['mv', '/etc/keyboard.new', '/etc/keyboard.conf'])
+    libcalamares.utils.chroot_call(install_path, ['mv', '/etc/keyboard.conf', '/etc/keyboard.conf.old'])
+    libcalamares.utils.chroot_call(install_path, ['mv', '/etc/keyboard.new', '/etc/keyboard.conf'])
 
     return None

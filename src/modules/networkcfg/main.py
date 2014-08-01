@@ -18,17 +18,15 @@
 #   along with Calamares. If not, see <http://www.gnu.org/licenses/>.
 
 import os
-import subprocess
 
 import libcalamares
 
 import shutil
 
-def chroot_call(root_mount_point, cmd):
-    subprocess.check_call(["chroot", root_mount_point] + cmd)
-
 def copy_network_config(self):
     """ Copies Network Manager configuration """
+
+    install_path = libcalamares.globalstorage.value( "rootMountPoint" )
     source_nm = "/etc/NetworkManager/system-connections/"
     target_nm = "%s/etc/NetworkManager/system-connections/" % install_path
 

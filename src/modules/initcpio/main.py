@@ -22,9 +22,6 @@ import subprocess
 
 import libcalamares
 
-def chroot_call(root_mount_point, cmd):
-    subprocess.check_call(["chroot", root_mount_point] + cmd)
-
 def get_cpu(self):
     # Check if system is an intel system. Not sure if we want to move this to hardware module when its done.
     process1 = subprocess.Popen(["hwinfo", "--cpu"], stdout=subprocess.PIPE)
@@ -36,6 +33,9 @@ def get_cpu(self):
 
 def set_mkinitcpio_hooks_and_modules(self, hooks, modules):
     """ Set up mkinitcpio.conf """
+
+    # TODO: Check if we can set this in run()
+    install_path = libcalamares.globalstorage.value( "rootMountPoint" )
     with open("/etc/mkinitcpio.conf", "r") as mkinitcpio_file:
         mklins = [x.strip() for x in mkinitcpio_file.readlines()]
 
@@ -51,6 +51,9 @@ def set_mkinitcpio_hooks_and_modules(self, hooks, modules):
 
 def run_mkinitcpio(self):
     """ Runs mkinitcpio """
+
+    # TODO: Check if we can set this in run()
+    install_path = libcalamares.globalstorage.value( "rootMountPoint" )
     # Add lvm and encrypt hooks if necessary
 
     cpu = get_cpu()
@@ -68,8 +71,8 @@ def run_mkinitcpio(self):
 
     # Run mkinitcpio on the target system
     # TODO: set kernel and locale in a config
-    # chroot_call(root_mount_point, ['sh', '-c', 'LANG=%s /usr/bin/mkinitcpio -p %s' % (locale, kernel)])
-    chroot_call(root_mount_point, ['sh', '-c', 'LANG=en_US.uf8 /usr/bin/mkinitcpio -p linux314'])
+    # libcalamares.utils.chroot_call(install_path, ['sh', '-c', 'LANG=%s /usr/bin/mkinitcpio -p %s' % (locale, kernel)])
+    libcalamares.utils.chroot_call(install_path, ['sh', '-c', 'LANG=en_US.uf8 /usr/bin/mkinitcpio -p linux314'])
 
 def run():
     """ Run mkinitcpio """

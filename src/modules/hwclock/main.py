@@ -25,8 +25,9 @@ import libcalamares
 import shutil
 
 def run():
-    """ Set clock """
     """ Set hardware clock """
+
+    install_path = libcalamares.globalstorage.value( "rootMountPoint" )
     subprocess.check_call(["hwclock", "--systohc", "--utc"])
     shutil.copy2("/etc/adjtime", "%s/etc/" % install_path)
 
