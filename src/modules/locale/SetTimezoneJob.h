@@ -16,34 +16,25 @@
  *   along with Calamares. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef LOCALEPAGE_H
-#define LOCALEPAGE_H
+#ifndef SETTIMEZONEJOB_H
+#define SETTIMEZONEJOB_H
 
-#include "Typedefs.h"
+#include <Job.h>
 
-#include <QWidget>
 
-class QComboBox;
-class TimeZoneWidget;
-
-class LocalePage : public QWidget
+class SetTimezoneJob : public Calamares::Job
 {
     Q_OBJECT
 public:
-    explicit LocalePage( QWidget* parent = nullptr );
+    SetTimezoneJob( const QString& region,
+                   const QString& zone );
 
-    void init( const QString& initialRegion, const QString& initialZone );
-
-    QString prettyStatus() const;
-
-    QList< Calamares::job_ptr > createJobs();
+    QString prettyName() const override;
+    Calamares::JobResult exec() override;
 
 private:
-    TimeZoneWidget* m_tzWidget;
-    QComboBox* m_regionCombo;
-    QComboBox* m_timezoneCombo;
-
-    bool m_blockTzWidgetSet;
+    QString m_region;
+    QString m_zone;
 };
 
-#endif // LOCALEPAGE_H
+#endif /* SETTIMEZONEJOB_H */
