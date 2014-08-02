@@ -23,8 +23,8 @@ import libcalamares
 def set_autologin(self):
     """ Enables automatic login for the installed desktop manager """
 
-    username = libcalamares.globalstorage.value( "autologinUser" )
     # TODO: check if this is needed or already declaired
+    username = libcalamares.globalstorage.value( "autologinUser" )
     install_path = libcalamares.globalstorage.value( "rootMountPoint" )
 
     if desktop_manager == 'mdm':
@@ -126,6 +126,7 @@ def set_autologin(self):
 def run():
     """ Configure display managers """
 
+    username = libcalamares.globalstorage.value( "autologinUser" )
     install_path = libcalamares.globalstorage.value( "rootMountPoint" )
 
     # Setup slim
@@ -237,7 +238,7 @@ def run():
         libcalamares.utils.chroot_call(['update-desktop-database', '-q'])
         desktop_manager = 'kdm'
 
-    # TODO: find a value to call set_autologin or not
-    #    set_autologin()
+    if username != "":
+        set_autologin()
 
     return None

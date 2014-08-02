@@ -76,6 +76,8 @@ def run():
     libcalamares.utils.chroot_call(['pacman-key', '--populate', 'archlinux', 'manjaro'])
     queue_event('info', _("Finished configuring package manager."))
 
+    # TODO: check if this can be done in keyboard or already done
+    '''
     consolefh = open("%s/etc/keyboard.conf" % install_path, "r")
     newconsolefh = open("%s/etc/keyboard.new" % install_path, "w")
     for line in consolefh:
@@ -89,6 +91,6 @@ def run():
     consolefh.close()
     newconsolefh.close()
     libcalamares.utils.chroot_call(['mv', '/etc/keyboard.conf', '/etc/keyboard.conf.old'])
-    libcalamares.utils.chroot_call(['mv', '/etc/keyboard.new', '/etc/keyboard.conf'])
+    libcalamares.utils.chroot_call(['mv', '/etc/keyboard.new', '/etc/keyboard.conf'])'''
 
     return None

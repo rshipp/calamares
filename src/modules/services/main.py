@@ -23,8 +23,7 @@ import libcalamares
 
 def enable_services(self, services):
     """ Enables all services that are in the list 'services' """
-    # TODO: check if this is needed
-    install_path = libcalamares.globalstorage.value( "rootMountPoint" )
+
     for name in services:
         libcalamares.utils.chroot_call(['systemctl', 'enable', name + ".service"])
 
