@@ -60,8 +60,11 @@ int chrootCall( const QStringList& args,
                 const QString& stdInput,
                 int timeoutSec )
 {
+    if ( !Calamares::JobQueue::instance() )
+        return -3;
+
     Calamares::GlobalStorage* gs = Calamares::JobQueue::instance()->globalStorage();
-    if ( !gs->contains( "rootMountPoint" ) )
+    if ( !gs || !gs->contains( "rootMountPoint" ) )
     {
         cLog() << "No rootMountPoint in global storage";
         return -3;
@@ -97,7 +100,7 @@ int chrootCall( const QStringList& args,
         process.closeWriteChannel();
     }
 
-    if ( !process.waitForFinished( timeoutSec ? ( timeoutSec * 1000 ) : 30000 ) )
+    if ( !process.waitForFinished( timeoutSec ? ( timeoutSec * 1000 ) : -1 ) )
     {
         cLog() << "Timed out. output so far:";
         cLog() << process.readAllStandardOutput();
