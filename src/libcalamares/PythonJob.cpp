@@ -51,6 +51,9 @@ BOOST_PYTHON_FUNCTION_OVERLOADS( check_chroot_call_list_overloads,
                                  1, 3 );
 BOOST_PYTHON_MODULE( libcalamares )
 {
+    bp::object package = bp::scope();
+    package.attr( "__path__" ) = "libcalamares";
+
     bp::scope().attr( "ORGANIZATION_NAME" ) = CALAMARES_ORGANIZATION_NAME;
     bp::scope().attr( "ORGANIZATION_DOMAIN" ) = CALAMARES_ORGANIZATION_DOMAIN;
     bp::scope().attr( "APPLICATION_NAME" ) = CALAMARES_APPLICATION_NAME;
@@ -58,11 +61,17 @@ BOOST_PYTHON_MODULE( libcalamares )
     bp::scope().attr( "VERSION_SHORT" ) = CALAMARES_VERSION_SHORT;
 
     bp::class_< CalamaresPython::PythonJobInterface >( "Job", bp::init< Calamares::PythonJob* >() )
-        .def_readonly( "module_name", &CalamaresPython::PythonJobInterface::moduleName )
-        .def_readonly( "pretty_name", &CalamaresPython::PythonJobInterface::prettyName )
-        .def_readonly( "working_path", &CalamaresPython::PythonJobInterface::workingPath )
+        .def_readonly( "module_name",   &CalamaresPython::PythonJobInterface::moduleName )
+        .def_readonly( "pretty_name",   &CalamaresPython::PythonJobInterface::prettyName )
+        .def_readonly( "working_path",  &CalamaresPython::PythonJobInterface::workingPath )
         .def_readonly( "configuration", &CalamaresPython::PythonJobInterface::configuration )
-        .def( "setprogress", &CalamaresPython::PythonJobInterface::setprogress );
+        .def(
+            "setprogress",
+            &CalamaresPython::PythonJobInterface::setprogress,
+            bp::args( "progress" ),
+            "Reports the progress status of this job to Calamares, "
+            "as a real number between 0 and 1."
+        );
 
     bp::class_< Calamares::GlobalStorage >( "GlobalStorage", bp::init<>() )
         .def( "contains",   &Calamares::GlobalStorage::python_contains )
@@ -73,12 +82,17 @@ BOOST_PYTHON_MODULE( libcalamares )
         .def( "value",      &Calamares::GlobalStorage::python_value );
 
     // libcalamares.utils submodule starts here
-    bp::object submodule( bp::borrowed( PyImport_AddModule( "utils" ) ) );
-    bp::scope().attr( "utils" ) = submodule;
-    bp::scope utilsScope = submodule;
+    bp::object utilsModule( bp::handle<>( bp::borrowed( PyImport_AddModule( "libcalamares.utils" ) ) ) );
+    bp::scope().attr( "utils" ) = utilsModule;
+    bp::scope utilsScope = utilsModule;
     Q_UNUSED( utilsScope );
 
-    bp::def( "debug", &CalamaresPython::debug );
+    bp::def(
+        "debug",
+        &CalamaresPython::debug,
+        bp::args( "s" ),
+        "Writes the given string to the Calamares debug stream."
+    );
     bp::def(
         "mount",
         &CalamaresPython::mount,

@@ -15,31 +15,36 @@
  *   You should have received a copy of the GNU General Public License
  *   along with Calamares. If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef PMUTILS_H
-#define PMUTILS_H
 
-// CalaPM
-#include <fs/filesystem.h>
+#ifndef PARTITIONSIZEWIDGET_H
+#define PARTITIONSIZEWIDGET_H
 
-// Qt
-#include <QList>
+#include <QSpinBox>
 
 class Device;
 class Partition;
-class PartitionNode;
-class PartitionRole;
 
-namespace PMUtils
+class PartitionSizeWidget : public QSpinBox
 {
+public:
+    typedef QPair< qint64, qint64 > SectorRange;
 
-bool isPartitionFreeSpace( Partition* );
+    explicit PartitionSizeWidget( QWidget* parent = nullptr );
+    void init( Device* device, Partition* partition );
 
-bool isPartitionNew( Partition* );
+    SectorRange sectorRange() const;
 
-Partition* findPartitionByMountPoint( const QList< Device* >& devices, const QString& mountPoint );
+    bool isDirty() const;
 
-Partition* createNewPartition( PartitionNode* parent, const Device& device, const PartitionRole& role, FileSystem::Type fsType, qint64 firstSector, qint64 lastSector );
+private:
+    Device* m_device = nullptr;
+    Partition* m_partition = nullptr;
+    int m_initialValue;
 
-}
+    qint64 mbSizeForSectorRange( qint64 first, qint64 last ) const;
 
-#endif /* PMUTILS_H */
+    qint64 computeMinSector() const;
+    qint64 computeMaxSector() const;
+};
+
+#endif /* PARTITIONSIZEWIDGET_H */

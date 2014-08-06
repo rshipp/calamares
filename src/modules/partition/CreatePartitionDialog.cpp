@@ -19,6 +19,7 @@
 #include <CreatePartitionDialog.h>
 
 #include <PartitionInfo.h>
+#include <PMUtils.h>
 #include <ui_CreatePartitionDialog.h>
 #include <utils/Logger.h>
 
@@ -117,43 +118,16 @@ CreatePartitionDialog::createPartition()
                  );
     }
 
-    qint64 lastSector;
-    int mbSize = m_ui->sizeSpinBox->value();
-    if ( mbSize == m_ui->sizeSpinBox->maximum() )
-    {
-        // If we are at the maximum value, select the last sector to avoid
-        // potential rounding errors which could leave a few sectors at the end
-        // unused
-        lastSector = m_maxSector;
-    }
-    else
-    {
-        lastSector = m_minSector + qint64( mbSize ) * 1024 * 1024 / m_device->logicalSectorSize();
-        Q_ASSERT( lastSector <= m_maxSector );
-        if ( lastSector > m_maxSector )
-        {
-            cDebug() << "lastSector (" << lastSector << ") > m_maxSector (" << m_maxSector << "). This should not happen!";
-            lastSector = m_maxSector;
-        }
-    }
+    PartitionSizeWidget::SectorRange range = m_ui->sizeSpinBox->sectorRange();
 
-    FileSystem::Type type = m_role.has( PartitionRole::Extended )
-                            ? FileSystem::Extended
-                            : FileSystem::typeForName( m_ui->fsComboBox->currentText() );
-    FileSystem* fs = FileSystemFactory::create( type, m_minSector, lastSector );
-
-    auto partition = new Partition(
-        m_parent,
-        *m_device,
-        m_role,
-        fs, m_minSector, lastSector,
-        QString() /* path */,
-        PartitionTable::FlagNone /* availableFlags */,
-        QString() /* mountPoint */,
-        false /* mounted */,
-        PartitionTable::FlagNone /* activeFlags */,
-        Partition::StateNew
-    );
+    FileSystem::Type fsType = m_role.has( PartitionRole::Extended )
+                              ? FileSystem::Extended
+                              : FileSystem::typeForName( m_ui->fsComboBox->currentText() );
+    Partition* partition = PMUtils::createNewPartition(
+                               m_parent,
+                               *m_device,
+                               m_role,
+                               fsType, range.first, range.second );
 
     PartitionInfo::setMountPoint( partition, m_ui->mountPointComboBox->currentText() );
     PartitionInfo::setFormat( partition, true );
@@ -174,20 +148,9 @@ CreatePartitionDialog::updateMountPointUi()
 }
 
 void
-CreatePartitionDialog::initSectorRange( Partition* partition )
-{
-    PartitionTable* table = m_device->partitionTable();
-    m_minSector = partition->firstSector() - table->freeSectorsBefore( *partition );
-    m_maxSector = partition->lastSector() + table->freeSectorsAfter( *partition );
-
-    m_ui->sizeSpinBox->setMaximum( mbSizeForSectorRange( m_minSector, m_maxSector ) );
-    m_ui->sizeSpinBox->setValue( m_ui->sizeSpinBox->maximum() );
-}
-
-void
 CreatePartitionDialog::initFromFreeSpace( Partition* freeSpacePartition )
 {
-    initSectorRange( freeSpacePartition );
+    m_ui->sizeSpinBox->init( m_device, freeSpacePartition );
 }
 
 void
@@ -203,10 +166,7 @@ CreatePartitionDialog::initFromPartitionToCreate( Partition* partition )
         return;
     }
 
-    initSectorRange( partition );
-
-    // Size
-    m_ui->sizeSpinBox->setValue( mbSizeForSectorRange( partition->firstSector(), partition->lastSector() ) );
+    m_ui->sizeSpinBox->init( m_device, partition );
 
     // File System
     FileSystem::Type fsType = partition->fileSystem().type();
@@ -216,10 +176,4 @@ CreatePartitionDialog::initFromPartitionToCreate( Partition* partition )
     m_ui->mountPointComboBox->setCurrentText( PartitionInfo::mountPoint( partition ) );
 
     updateMountPointUi();
-}
-
-qint64
-CreatePartitionDialog::mbSizeForSectorRange( qint64 first, qint64 last ) const
-{
-    return ( last - first + 1 ) * m_device->logicalSectorSize() / 1024 / 1024;
 }

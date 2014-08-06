@@ -3,6 +3,7 @@
 # === This file is part of Calamares - <http://github.com/calamares> ===
 #
 #   Copyright 2014, Philip Müller <philm@manjaro.org>
+#   Copyright 2014, Teo Mrnjavac <teo@kde.org>
 #
 #   Calamares is free software: you can redistribute it and/or modify
 #   it under the terms of the GNU General Public License as published by
@@ -20,10 +21,10 @@
 import libcalamares
 from libcalamares.utils import check_chroot_call
 
-def run_mkinitcpio():
-    kernel = libcalamares.job.configuration['kernel']
-    check_chroot_call(['mkinitcpio', '-p', kernel])
+def run_dracut():
+    kernelname = libcalamares.job.configuration['kernel']
+    check_chroot_call(['dracut', '-f'])
 
 def run():
-    run_mkinitcpio()
+    run_dracut()
     return None

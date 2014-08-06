@@ -40,8 +40,6 @@ private:
     QScopedPointer< Ui_EditExistingPartitionDialog > m_ui;
     Device* m_device;
     Partition* m_partition;
-
-    qint64 mbSizeForSectorRange( qint64 first, qint64 last ) const;
 };
 
 #endif /* EDITEXISTINGPARTITIONDIALOG_H */

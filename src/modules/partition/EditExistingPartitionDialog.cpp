@@ -20,6 +20,7 @@
 
 #include <PartitionCoreModule.h>
 #include <PartitionInfo.h>
+#include <PMUtils.h>
 #include <ui_EditExistingPartitionDialog.h>
 #include <utils/Logger.h>
 
@@ -37,33 +38,47 @@ EditExistingPartitionDialog::EditExistingPartitionDialog( Device* device, Partit
     , m_partition( partition )
 {
     m_ui->setupUi( this );
-
-    PartitionTable* table = m_device->partitionTable();
-    qint64 minSector = partition->firstSector() - table->freeSectorsBefore( *partition );
-    qint64 maxSector = partition->lastSector() + table->freeSectorsAfter( *partition );
-
-    m_ui->sizeSpinBox->setMaximum( mbSizeForSectorRange( minSector, maxSector ) );
-    m_ui->sizeSpinBox->setValue( mbSizeForSectorRange( partition->firstSector(), partition->lastSector() ) );
-
-    // Mount point
+    m_ui->sizeSpinBox->init( device, partition );
     m_ui->mountPointComboBox->setCurrentText( PartitionInfo::mountPoint( partition ) );
 }
 
 EditExistingPartitionDialog::~EditExistingPartitionDialog()
 {}
 
-qint64
-EditExistingPartitionDialog::mbSizeForSectorRange( qint64 first, qint64 last ) const
-{
-    return ( last - first + 1 ) * m_device->logicalSectorSize() / 1024 / 1024;
-}
-
 void
 EditExistingPartitionDialog::applyChanges( PartitionCoreModule* core )
 {
     PartitionInfo::setMountPoint( m_partition, m_ui->mountPointComboBox->currentText() );
-    if ( m_ui->formatRadioButton->isChecked() )
-        core->formatPartition( m_device, m_partition );
+
+    if ( m_ui->sizeSpinBox->isDirty() )
+    {
+        PartitionSizeWidget::SectorRange range = m_ui->sizeSpinBox->sectorRange();
+        if ( m_ui->formatRadioButton->isChecked() )
+        {
+            Partition* newPartition = PMUtils::createNewPartition(
+                                          m_partition->parent(),
+                                          *m_device,
+                                          m_partition->roles(),
+                                          m_partition->fileSystem().type(),
+                                          range.first,
+                                          range.second );
+            PartitionInfo::setMountPoint( newPartition, PartitionInfo::mountPoint( m_partition ) );
+            PartitionInfo::setFormat( newPartition, true );
+
+            core->deletePartition( m_device, m_partition );
+            core->createPartition( m_device, newPartition );
+        }
+        else
+        {
+            //core->resizePartition( m_device, m_partition );
+        }
+    }
     else
-        core->refreshPartition( m_device, m_partition );
+    {
+        // No size changes
+        if ( m_ui->formatRadioButton->isChecked() )
+            core->formatPartition( m_device, m_partition );
+        else
+            core->refreshPartition( m_device, m_partition );
+    }
 }
