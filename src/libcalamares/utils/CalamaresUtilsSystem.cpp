@@ -28,10 +28,11 @@
 namespace CalamaresUtils
 {
 
-int mount( const QString& devicePath,
-           const QString& mountPoint,
-           const QString& filesystemName,
-           const QString& options )
+int
+mount( const QString& devicePath,
+       const QString& mountPoint,
+       const QString& filesystemName,
+       const QString& options )
 {
     if ( devicePath.isEmpty() || mountPoint.isEmpty() )
         return -3;
@@ -56,10 +57,43 @@ int mount( const QString& devicePath,
     return QProcess::execute( program, args );
 }
 
-int chrootCall( const QStringList& args,
-                const QString& stdInput,
-                int timeoutSec )
+int
+chrootCall( const QStringList& args,
+            const QString& workingPath,
+            const QString& stdInput,
+            int timeoutSec )
 {
+    QString discard;
+    return chrootOutput( args,
+                         discard,
+                         workingPath,
+                         stdInput,
+                         timeoutSec );
+}
+
+
+int
+chrootCall( const QString& command,
+            const QString& workingPath,
+            const QString& stdInput,
+            int timeoutSec )
+{
+    return chrootCall( QStringList() = { command },
+                       workingPath,
+                       stdInput,
+                       timeoutSec );
+}
+
+
+int
+chrootOutput( const QStringList& args,
+              QString& output,
+              const QString& workingPath,
+              const QString& stdInput,
+              int timeoutSec )
+{
+    output.clear();
+
     if ( !Calamares::JobQueue::instance() )
         return -3;
 
@@ -86,6 +120,15 @@ int chrootCall( const QStringList& args,
     process.setArguments( arguments );
     process.setProcessChannelMode( QProcess::MergedChannels );
 
+    if ( !workingPath.isEmpty() )
+    {
+        if ( QDir( workingPath ).exists() )
+            process.setWorkingDirectory( QDir( workingPath ).absolutePath() );
+        else
+            cLog() << "Invalid working directory:" << workingPath;
+            return -3;
+    }
+
     cLog() << "Running" << program << arguments;
     process.start();
     if ( !process.waitForStarted() )
@@ -107,8 +150,7 @@ int chrootCall( const QStringList& args,
         return -4;
     }
 
-    cLog() << "Output:";
-    cLog() << process.readAllStandardOutput();
+    output.append( QString::fromLocal8Bit( process.readAllStandardOutput() ).trimmed() );
 
     if ( process.exitStatus() == QProcess::CrashExit )
     {
@@ -121,13 +163,18 @@ int chrootCall( const QStringList& args,
 }
 
 
-int chrootCall( const QString& command,
-                const QString& stdInput,
-                int timeoutSec )
+int
+chrootOutput( const QString& command,
+              QString& output,
+              const QString& workingPath,
+              const QString& stdInput,
+              int timeoutSec )
 {
-    return chrootCall( QStringList() = { command },
-                       stdInput,
-                       timeoutSec );
+    return chrootOutput( QStringList() = { command },
+                         output,
+                         workingPath,
+                         stdInput,
+                         timeoutSec );
 }
 
 

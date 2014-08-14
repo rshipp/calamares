@@ -45,12 +45,26 @@ DLLEXPORT int mount( const QString& devicePath,
   *             -4 = QProcess timeout
   */
 DLLEXPORT int chrootCall( const QStringList& args,
+                          const QString& workingPath = QString(),
                           const QString& stdInput = QString(),
                           int timeoutSec = 0 );
 
 DLLEXPORT int chrootCall( const QString& command,
+                          const QString& workingPath = QString(),
                           const QString& stdInput = QString(),
                           int timeoutSec = 0 );
+
+DLLEXPORT int chrootOutput( const QStringList& args,
+                            QString& output,
+                            const QString& workingPath = QString(),
+                            const QString& stdInput = QString(),
+                            int timeoutSec = 0 );
+
+DLLEXPORT int chrootOutput( const QString& command,
+                            QString& output,
+                            const QString& workingPath = QString(),
+                            const QString& stdInput = QString(),
+                            int timeoutSec = 0 );
 }
 
 #endif // CALAMARESUTILSSYSTEM_H

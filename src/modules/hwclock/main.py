@@ -3,6 +3,7 @@
 # === This file is part of Calamares - <http://github.com/calamares> ===
 #
 #   Copyright 2014, Philip Müller <philm@manjaro.org>
+#   Copyright 2014, Teo Mrnjavac <teo@kde.org>
 #
 #   Calamares is free software: you can redistribute it and/or modify
 #   it under the terms of the GNU General Public License as published by
@@ -17,18 +18,22 @@
 #   You should have received a copy of the GNU General Public License
 #   along with Calamares. If not, see <http://www.gnu.org/licenses/>.
 
-import os
 import subprocess
+import shutil
 
 import libcalamares
 
-import shutil
 
 def run():
     """ Set hardware clock """
 
-    install_path = libcalamares.globalstorage.value( "rootMountPoint" )
-    subprocess.check_call(["hwclock", "--systohc", "--utc"])
-    shutil.copy2("/etc/adjtime", "%s/etc/" % install_path)
+    root_mount_point = libcalamares.globalstorage.value("rootMountPoint")
+    try:
+        subprocess.check_call(["hwclock", "--systohc", "--utc"])
+    except subprocess.CalledProcessError as e:
+        return "Cannot set hardware clock.",\
+               "hwclock terminated with exit code {}.".format(e.returncode)
+
+    shutil.copy2("/etc/adjtime", "%s/etc/" % root_mount_point)
 
     return None

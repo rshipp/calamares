@@ -25,7 +25,7 @@ find_package( YamlCpp 0.5.1 REQUIRED )
 
 option( WITH_PYTHON "Enable Python modules support." ON )
 
-macro_optional_find_package( PythonLibs 3.3 REQUIRED )
+macro_optional_find_package( PythonLibs 3.3 )
 macro_log_feature(
     PYTHONLIBS_FOUND
     "Python"
@@ -111,7 +111,6 @@ file( COPY CalamaresAddPlugin.cmake DESTINATION "${PROJECT_BINARY_DIR}" )
 set( CALAMARES_LIBRARIES calamares )
 
 add_subdirectory( src )
-add_subdirectory( tests )
 
 macro_display_feature_log()
 

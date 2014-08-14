@@ -10,6 +10,13 @@ Distribution-independent installer framework
 * Python >= 3.3
 * Boost.Python >= 1.55.0
 
+Additional dependencies, only for the partitioning module:
+* extra-cmake-modules
+* kconfig (part of KF5)
+* solid (part of KF5)
+* kcoreaddons (part of KF5)
+* ki18n (part of KF5)
+
 ### Building
 ```
 $ git submodule init
@@ -33,5 +40,3 @@ Calamares is currently split as follows:
  * presents a bunch of pages in a scripted order, enqueues jobs in the backend library;
 * calamares - the main executable,
  * a thin wrapper around libcalamaresui, starts up and plugs together all the parts.
-
-Some modules require additional dependencies: for example the partition viewmodule pulls in partitionmanager, which in turn requires a few KF5 libraries.

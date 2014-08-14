@@ -51,6 +51,7 @@ chroot_call( const std::string& command,
              int timeout )
 {
     return CalamaresUtils::chrootCall( QString::fromStdString( command ),
+                                       QString(),
                                        QString::fromStdString( stdin ),
                                        timeout );
 }
@@ -69,6 +70,7 @@ chroot_call( const bp::list& args,
     }
 
     return CalamaresUtils::chrootCall( list,
+                                       QString(),
                                        QString::fromStdString( stdin ),
                                        timeout );
 }
@@ -101,6 +103,45 @@ check_chroot_call( const bp::list& args,
     }
 
     return _handle_check_chroot_call_error( ec, failedCmdList.join( ' ' ) );
+}
+
+
+std::string
+check_chroot_output( const std::string& command,
+                     const std::string& stdin,
+                     int timeout )
+{
+    QString output;
+    int ec = CalamaresUtils::chrootOutput( QString::fromStdString( command ),
+                                           output,
+                                           QString(),
+                                           QString::fromStdString( stdin ),
+                                           timeout );
+    _handle_check_chroot_call_error( ec, QString::fromStdString( command ) );
+    return output.toStdString();
+}
+
+
+std::string
+check_chroot_output( const bp::list& args,
+                     const std::string& stdin,
+                     int timeout )
+{
+    QString output;
+    QStringList list;
+    for ( int i = 0; i < bp::len( args ); ++i )
+    {
+        list.append( QString::fromStdString(
+            bp::extract< std::string >( args[ i ] ) ) );
+    }
+
+    int ec = CalamaresUtils::chrootOutput( list,
+                                           output,
+                                           QString(),
+                                           QString::fromStdString( stdin ),
+                                           timeout );
+    _handle_check_chroot_call_error( ec, list.join( ' ' ) );
+    return output.toStdString();
 }
 
 

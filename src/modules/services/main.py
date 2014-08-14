@@ -3,6 +3,7 @@
 # === This file is part of Calamares - <http://github.com/calamares> ===
 #
 #   Copyright 2014, Philip Müller <philm@manjaro.org>
+#   Copyright 2014, Teo Mrnjavac <teo@kde.org>
 #
 #   Calamares is free software: you can redistribute it and/or modify
 #   it under the terms of the GNU General Public License as published by
@@ -17,25 +18,43 @@
 #   You should have received a copy of the GNU General Public License
 #   along with Calamares. If not, see <http://www.gnu.org/licenses/>.
 
-import os
-
 import libcalamares
 
-def enable_services(self, services):
-    """ Enables all services that are in the list 'services' """
-
-    for name in services:
-        libcalamares.utils.chroot_call(['systemctl', 'enable', name + ".service"])
 
 def run():
     """ Setup systemd services """
-    install_path = libcalamares.globalstorage.value( "rootMountPoint" )
+
+    services = libcalamares.job.configuration['services']
+    targets = libcalamares.job.configuration['targets']
 
     # enable services
-    enable_services([network_manager, 'remote-fs.target'])
+    for svc in services:
+        ec = libcalamares.utils.chroot_call(['systemctl',
+                                             'enable',
+                                             '{}.service'.format(svc['name'])])
+        if ec != 0:
+            if svc['mandatory']:
+                return "Cannot enable systemd service {}".format(svc['name']),\
+                       "systemctl enable call in chroot returned error code {}".format(ec)
+            else:
+                libcalamares.utils.debug(
+                    "Cannot enable systemd service {}".format(svc['name']))
+                libcalamares.utils.debug(
+                    "systemctl enable call in chroot returned error code {}".format(ec))
 
-    cups_service = os.path.join(install_path, "usr/lib/systemd/system/cups.service")
-    if os.path.exists(cups_service):
-        enable_services(['cups'])
+    # enable targets
+    for tgt in targets:
+        ec = libcalamares.utils.chroot_call(['systemctl',
+                                             'enable',
+                                             '{}.target'.format(tgt['name'])])
+        if ec != 0:
+            if tgt['mandatory']:
+                return "Cannot enable systemd target {}".format(tgt['name']), \
+                       "systemctl enable call in chroot returned error code {}".format(ec)
+            else:
+                libcalamares.utils.debug(
+                    "Cannot enable systemd target {}".format(tgt['name']))
+                libcalamares.utils.debug(
+                    "systemctl enable call in chroot returned error code {}".format(ec))
 
     return None
