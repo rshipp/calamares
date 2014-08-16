@@ -114,11 +114,12 @@ def run():
         #    return False'''
 
     # Remove virtualbox driver on real hardware
-    p1 = subprocess.Popen(["mhwd"], stdout=subprocess.PIPE)
-    p2 = subprocess.Popen(["grep", "0300:80ee:beef"], stdin=p1.stdout, stdout=subprocess.PIPE)
-    num_res = p2.communicate()[0]
-    if num_res == "0":
-        libcalamares.utils.chroot_call(['sh', '-c', 'pacman -Rsc --noconfirm $(pacman -Qq | grep virtualbox-guest-modules)'])
+    # Seems Calamares can't handle pipes
+    #p1 = subprocess.Popen(["mhwd"], stdout=subprocess.PIPE)
+    #p2 = subprocess.Popen(["grep", "0300:80ee:beef"], stdin=p1.stdout, stdout=subprocess.PIPE)
+    #num_res = p2.communicate()[0]
+    #if num_res == "0":
+    #    libcalamares.utils.chroot_call(['sh', '-c', 'pacman -Rsc --noconfirm $(pacman -Qq | grep virtualbox-guest-modules)'])
 
     # Set unique machine-id
     libcalamares.utils.chroot_call(['dbus-uuidgen', '--ensure=/etc/machine-id'])
