@@ -30,10 +30,10 @@ def uncomment_locale_gen(locale, install_path):
 
     with open("%s/etc/locale.gen" % install_path, "w") as gen:
         for line in text:
-        if locale in line and line[0] == "#":
-            # uncomment line
-            line = line[1:]
-        gen.write(line)
+            if locale in line and line[0] == "#":
+                # uncomment line
+                line = line[1:]
+            gen.write(line)
 
 def run():
     """ Setup locale """
