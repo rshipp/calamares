@@ -140,8 +140,8 @@ def run():
         libcalamares.utils.chroot_call(['groupadd', '-g', '620', 'lightdm'])
         libcalamares.utils.chroot_call(['getent', 'passwd', 'lightdm'])
         libcalamares.utils.chroot_call(['useradd', '-c', '"LightDM Display Manager"',
-             '-u', '620', '-g', 'lightdm', '-d', '/var/run/lightdm',
-             '-s', '/usr/bin/nologin', 'lightdm'])
+                                        '-u', '620', '-g', 'lightdm', '-d', '/var/run/lightdm',
+                                        '-s', '/usr/bin/nologin', 'lightdm'])
         libcalamares.utils.chroot_call(['passwd', '-l', 'lightdm'])
         libcalamares.utils.chroot_call(['chown', '-R', 'lightdm:lightdm', '/run/lightdm'])
         if os.path.exists("%s/usr/bin/startxfce4" % install_path):
@@ -156,8 +156,8 @@ def run():
         libcalamares.utils.chroot_call(['groupadd', '-g', '120', 'gdm'])
         libcalamares.utils.chroot_call(['getent', 'passwd', 'gdm'])
         libcalamares.utils.chroot_call(['useradd', '-c', '"Gnome Display Manager"',
-             '-u', '120', '-g', 'gdm', '-d', '/var/lib/gdm',
-             '-s', '/usr/bin/nologin', 'gdm'])
+                                        '-u', '120', '-g', 'gdm', '-d', '/var/lib/gdm',
+                                        '-s', '/usr/bin/nologin', 'gdm'])
         libcalamares.utils.chroot_call(['passwd', '-l', 'gdm'])
         libcalamares.utils.chroot_call(['chown', '-R', 'gdm:gdm', '/var/lib/gdm'])
         if os.path.exists("%s/var/lib/AccountsService/users" % install_path):
@@ -183,8 +183,8 @@ def run():
         libcalamares.utils.chroot_call(['groupadd', '-g', '128', 'mdm'])
         libcalamares.utils.chroot_call(['getent', 'passwd', 'mdm'])
         libcalamares.utils.chroot_call(['useradd', '-c', '"Linux Mint Display Manager"',
-             '-u', '128', '-g', 'mdm', '-d', '/var/lib/mdm',
-             '-s', '/usr/bin/nologin', 'mdm'])
+                                        '-u', '128', '-g', 'mdm', '-d', '/var/lib/mdm',
+                                        '-s', '/usr/bin/nologin', 'mdm'])
         libcalamares.utils.chroot_call(['passwd', '-l', 'mdm'])
         libcalamares.utils.chroot_call(['chown', 'root:mdm', '/var/lib/mdm'])
         libcalamares.utils.chroot_call(['chmod', '1770', '/var/lib/mdm'])
