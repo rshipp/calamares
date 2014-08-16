@@ -101,8 +101,8 @@ def run():
     if os.path.exists("/opt/livecd/pacman-gfx.conf"):
         # TODO: get mhwd-script path or port it to python
         mhwd_script_path = '/usr/lib/calamares/modules/hardwarecfg/mhwd.sh'
-        try:
-            subprocess.check_call(["/usr/bin/bash", mhwd_script_path, install_path])
+        #try:
+        subprocess.check_call(["/usr/bin/bash", mhwd_script_path, install_path])
         # Seems to create issues with Calamares. Bash-script needs to been ported anyway.
         #except subprocess.FileNotFoundError as e:
         #    txt = _("Can't execute the MHWD script")
@@ -115,11 +115,11 @@ def run():
 
     # Remove virtualbox driver on real hardware
     # Seems Calamares can't handle pipes
-    #p1 = subprocess.Popen(["mhwd"], stdout=subprocess.PIPE)
-    #p2 = subprocess.Popen(["grep", "0300:80ee:beef"], stdin=p1.stdout, stdout=subprocess.PIPE)
-    #num_res = p2.communicate()[0]
-    #if num_res == "0":
-    #    libcalamares.utils.chroot_call(['sh', '-c', 'pacman -Rsc --noconfirm $(pacman -Qq | grep virtualbox-guest-modules)'])
+    p1 = subprocess.Popen(["mhwd"], stdout=subprocess.PIPE)
+    p2 = subprocess.Popen(["grep", "0300:80ee:beef"], stdin=p1.stdout, stdout=subprocess.PIPE)
+    num_res = p2.communicate()[0]
+    if num_res == "0":
+        libcalamares.utils.chroot_call(['sh', '-c', 'pacman -Rsc --noconfirm $(pacman -Qq | grep virtualbox-guest-modules)'])
 
     # Set unique machine-id
     libcalamares.utils.chroot_call(['dbus-uuidgen', '--ensure=/etc/machine-id'])
