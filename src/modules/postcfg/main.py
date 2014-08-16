@@ -61,10 +61,6 @@ def run():
     if os.path.exists("%s/usr/bin/calamares" % install_path):
         libcalamares.utils.chroot_call(['pacman', '-R', '--noconfirm', 'calamares'])
 
-    # Setup pacman
-    queue_event("action", _("Configuring package manager"))
-    queue_event("pulse")
-
     # Copy mirror list
     shutil.copy2('/etc/pacman.d/mirrorlist',
              os.path.join(install_path, 'etc/pacman.d/mirrorlist'))
