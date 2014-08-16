@@ -234,7 +234,7 @@ def run():
         libcalamares.utils.chroot_call(['update-desktop-database', '-q'])
         desktop_manager = 'kdm'
 
-    if username != "":
+    if username != "None":
         libcalamares.utils.debug("Setting up autologin for user %s." % username)
         set_autologin(desktop_manager, username, install_path)
 
