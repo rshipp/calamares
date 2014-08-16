@@ -44,6 +44,9 @@ def run():
     if os.path.exists("%s/usr/bin/mate-session" % install_path):
         os.system("echo \"TERM=mate-terminal\" >> %s/etc/environment" % install_path)
         os.system("echo \"TERM=mate-terminal\" >> %s/etc/profile" % install_path)
+    # Fix XFCE QT5 Theming
+    if os.path.exists("%s/usr/bin/startxfce4" % install_path):
+        os.system("echo \"QT_STYLE_OVERRIDE=gtk\" >> %s/etc/environment" % install_path)
 
     # Fix_gnome_apps
     libcalamares.utils.chroot_call(['glib-compile-schemas', '/usr/share/glib-2.0/schemas'])

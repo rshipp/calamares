@@ -44,7 +44,7 @@ def run():
     keyboard_layout = libcalamares.globalstorage.value("keyboardLayout")
     keyboard_variant = libcalamares.globalstorage.value("keyboardVariant")
     # TODO: get locale
-    locale = 'en_US.utf8'
+    locale = 'en_US.UTF-8'
 
     uncomment_locale_gen(locale, install_path)
 
