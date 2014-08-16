@@ -74,22 +74,5 @@ def run():
         os.system("rm -rf %s/etc/pacman.d/gnupg" % install_path)
     os.system("cp -a /etc/pacman.d/gnupg %s/etc/pacman.d/" % install_path)
     libcalamares.utils.chroot_call(['pacman-key', '--populate', 'archlinux', 'manjaro'])
-    queue_event('info', _("Finished configuring package manager."))
-
-    # TODO: check if this can be done in keyboard or already done
-    #consolefh = open("%s/etc/keyboard.conf" % install_path, "r")
-    #newconsolefh = open("%s/etc/keyboard.new" % install_path, "w")
-    #for line in consolefh:
-    #    line = line.rstrip("\r\n")
-    #    if(line.startswith("XKBLAYOUT=")):
-    #        newconsolefh.write("XKBLAYOUT=\"%s\"\n" % keyboard_layout)
-    #    elif(line.startswith("XKBVARIANT=") and keyboard_variant != ''):
-    #        newconsolefh.write("XKBVARIANT=\"%s\"\n" % keyboard_variant)
-    #    else:
-    #        newconsolefh.write("%s\n" % line)
-    #consolefh.close()
-    #newconsolefh.close()
-    #libcalamares.utils.chroot_call(['mv', '/etc/keyboard.conf', '/etc/keyboard.conf.old'])
-    #libcalamares.utils.chroot_call(['mv', '/etc/keyboard.new', '/etc/keyboard.conf'])
 
     return None

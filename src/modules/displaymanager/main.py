@@ -20,12 +20,8 @@
 import os
 import libcalamares
 
-def set_autologin(self):
+def set_autologin(desktop_manager, username, install_path):
     """ Enables automatic login for the installed desktop manager """
-
-    # TODO: check if this is needed or already declaired
-    username = libcalamares.globalstorage.value( "autologinUser" )
-    install_path = libcalamares.globalstorage.value( "rootMountPoint" )
 
     if desktop_manager == 'mdm':
         # Systems with MDM as Desktop Manager
@@ -239,6 +235,6 @@ def run():
         desktop_manager = 'kdm'
 
     if username != "":
-        set_autologin()
+        set_autologin(desktop_manager, username, install_path)
 
     return None

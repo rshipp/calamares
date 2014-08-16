@@ -21,10 +21,8 @@ import os
 
 import libcalamares
 
-def uncomment_locale_gen(self, locale):
+def uncomment_locale_gen(locale, install_path):
     """ Uncomment selected locale in /etc/locale.gen """
-
-    install_path = libcalamares.globalstorage.value( "rootMountPoint" )
 
     text = []
     with open("%s/etc/locale.gen" % install_path, "r") as gen:
@@ -40,16 +38,15 @@ def uncomment_locale_gen(self, locale):
 def run():
     """ Setup locale """
 
-    # TODO: check if this is enough and not needed to set twice in uncomment_locale_gen
     install_path = libcalamares.globalstorage.value( "rootMountPoint" )
 
     # Generate locales
-    # TODO: get variables
-    keyboard_layout = 'en'
-    keyboard_variant = ''
+    keyboard_layout = libcalamares.globalstorage.value("keyboardLayout")
+    keyboard_variant = libcalamares.globalstorage.value("keyboardVariant")
+    # TODO: get locale
     locale = 'en_US.utf8'
 
-    uncomment_locale_gen(locale)
+    uncomment_locale_gen(locale, install_path)
 
     libcalamares.utils.chroot_call(['locale-gen'])
     locale_conf_path = os.path.join(install_path, "etc/locale.conf")
@@ -64,5 +61,21 @@ def run():
     vconsole_conf_path = os.path.join(install_path, "etc/vconsole.conf")
     with open(vconsole_conf_path, "w") as vconsole_conf:
         vconsole_conf.write('KEYMAP=%s\n' % keyboard_layout)
+
+    # TODO: check if this can be done in keyboard or already done
+    consolefh = open("%s/etc/keyboard.conf" % install_path, "r")
+    newconsolefh = open("%s/etc/keyboard.new" % install_path, "w")
+    for line in consolefh:
+        line = line.rstrip("\r\n")
+        if(line.startswith("XKBLAYOUT=")):
+            newconsolefh.write("XKBLAYOUT=\"%s\"\n" % keyboard_layout)
+        elif(line.startswith("XKBVARIANT=") and keyboard_variant != ''):
+            newconsolefh.write("XKBVARIANT=\"%s\"\n" % keyboard_variant)
+        else:
+            newconsolefh.write("%s\n" % line)
+    consolefh.close()
+    newconsolefh.close()
+    libcalamares.utils.chroot_call(['mv', '/etc/keyboard.conf', '/etc/keyboard.conf.old'])
+    libcalamares.utils.chroot_call(['mv', '/etc/keyboard.new', '/etc/keyboard.conf'])
 
     return None
