@@ -31,60 +31,60 @@ def set_autologin(self):
         # Systems with MDM as Desktop Manager
         mdm_conf_path = os.path.join(install_path, "etc/mdm/custom.conf")
         if os.path.exists(mdm_conf_path):
-        with open(mdm_conf_path, "r") as mdm_conf:
-            text = mdm_conf.readlines()
-        with open(mdm_conf_path, "w") as mdm_conf:
-            for line in text:
-            if '[daemon]' in line:
-                line = '[daemon]\nAutomaticLogin=%s\nAutomaticLoginEnable=True\n' % username
-            mdm_conf.write(line)
+            with open(mdm_conf_path, "r") as mdm_conf:
+                text = mdm_conf.readlines()
+            with open(mdm_conf_path, "w") as mdm_conf:
+                for line in text:
+                    if '[daemon]' in line:
+                        line = '[daemon]\nAutomaticLogin=%s\nAutomaticLoginEnable=True\n' % username
+                mdm_conf.write(line)
         else:
-        with open(mdm_conf_path, "w") as mdm_conf:
-            mdm_conf.write('# Calamares - Enable automatic login for user\n')
-            mdm_conf.write('[daemon]\n')
-            mdm_conf.write('AutomaticLogin=%s\n' % username)
-            mdm_conf.write('AutomaticLoginEnable=True\n')
+            with open(mdm_conf_path, "w") as mdm_conf:
+                mdm_conf.write('# Calamares - Enable automatic login for user\n')
+                mdm_conf.write('[daemon]\n')
+                mdm_conf.write('AutomaticLogin=%s\n' % username)
+                mdm_conf.write('AutomaticLoginEnable=True\n')
     elif desktop_manager == 'gdm':
         # Systems with GDM as Desktop Manager
         gdm_conf_path = os.path.join(install_path, "etc/gdm/custom.conf")
         if os.path.exists(gdm_conf_path):
-        with open(gdm_conf_path, "r") as gdm_conf:
-            text = gdm_conf.readlines()
-        with open(gdm_conf_path, "w") as gdm_conf:
-            for line in text:
-            if '[daemon]' in line:
-                line = '[daemon]\nAutomaticLogin=%s\nAutomaticLoginEnable=True\n' % username
-            gdm_conf.write(line)
+            with open(gdm_conf_path, "r") as gdm_conf:
+                text = gdm_conf.readlines()
+            with open(gdm_conf_path, "w") as gdm_conf:
+                for line in text:
+                    if '[daemon]' in line:
+                        line = '[daemon]\nAutomaticLogin=%s\nAutomaticLoginEnable=True\n' % username
+                gdm_conf.write(line)
         else:
-        with open(gdm_conf_path, "w") as gdm_conf:
-            gdm_conf.write('# Calamares - Enable automatic login for user\n')
-            gdm_conf.write('[daemon]\n')
-            gdm_conf.write('AutomaticLogin=%s\n' % username)
-            gdm_conf.write('AutomaticLoginEnable=True\n')
+            with open(gdm_conf_path, "w") as gdm_conf:
+                gdm_conf.write('# Calamares - Enable automatic login for user\n')
+                gdm_conf.write('[daemon]\n')
+                gdm_conf.write('AutomaticLogin=%s\n' % username)
+                gdm_conf.write('AutomaticLoginEnable=True\n')
     elif desktop_manager == 'kdm':
         # Systems with KDM as Desktop Manager
         kdm_conf_path = os.path.join(install_path, "usr/share/config/kdm/kdmrc")
         text = []
         with open(kdm_conf_path, "r") as kdm_conf:
-        text = kdm_conf.readlines()
+            text = kdm_conf.readlines()
         with open(kdm_conf_path, "w") as kdm_conf:
-        for line in text:
-            if '#AutoLoginEnable=true' in line:
-            line = 'AutoLoginEnable=true\n'
-            if 'AutoLoginUser=' in line:
-            line = 'AutoLoginUser=%s\n' % username
-            kdm_conf.write(line)
+            for line in text:
+                if '#AutoLoginEnable=true' in line:
+                    line = 'AutoLoginEnable=true\n'
+                if 'AutoLoginUser=' in line:
+                    line = 'AutoLoginUser=%s\n' % username
+                kdm_conf.write(line)
     elif desktop_manager == 'lxdm':
         # Systems with LXDM as Desktop Manager
         lxdm_conf_path = os.path.join(install_path, "etc/lxdm/lxdm.conf")
         text = []
         with open(lxdm_conf_path, "r") as lxdm_conf:
-        text = lxdm_conf.readlines()
+            text = lxdm_conf.readlines()
         with open(lxdm_conf_path, "w") as lxdm_conf:
-        for line in text:
-            if '# autologin=dgod' in line:
-            line = 'autologin=%s\n' % username
-            lxdm_conf.write(line)
+            for line in text:
+                if '# autologin=dgod' in line:
+                    line = 'autologin=%s\n' % username
+                lxdm_conf.write(line)
     elif desktop_manager == 'lightdm':
         # Systems with LightDM as Desktop Manager
         # Ideally, we should use configparser for the ini conf file,
@@ -92,36 +92,36 @@ def set_autologin(self):
         lightdm_conf_path = os.path.join(install_path, "etc/lightdm/lightdm.conf")
         text = []
         with open(lightdm_conf_path, "r") as lightdm_conf:
-        text = lightdm_conf.readlines()
+            text = lightdm_conf.readlines()
         with open(lightdm_conf_path, "w") as lightdm_conf:
-        for line in text:
-            if '#autologin-user=' in line:
-            line = 'autologin-user=%s\n' % username
-            lightdm_conf.write(line)
+            for line in text:
+                if '#autologin-user=' in line:
+                    line = 'autologin-user=%s\n' % username
+                lightdm_conf.write(line)
     elif desktop_manager == 'slim':
         # Systems with Slim as Desktop Manager
         slim_conf_path = os.path.join(install_path, "etc/slim.conf")
         text = []
         with open(slim_conf_path, "r") as slim_conf:
-        text = slim_conf.readlines()
+             text = slim_conf.readlines()
         with open(slim_conf_path, "w") as slim_conf:
-        for line in text:
-            if 'auto_login' in line:
-            line = 'auto_login yes\n'
-            if 'default_user' in line:
-            line = 'default_user %s\n' % username
-            slim_conf.write(line)
+            for line in text:
+                if 'auto_login' in line:
+                   line = 'auto_login yes\n'
+                if 'default_user' in line:
+                   line = 'default_user %s\n' % username
+                slim_conf.write(line)
     elif desktop_manager == 'sddm':
         # Systems with Sddm as Desktop Manager
         sddm_conf_path = os.path.join(install_path, "etc/sddm.conf")
         text = []
         with open(sddm_conf_path, "r") as sddm_conf:
-        text = sddm_conf.readlines()
+            text = sddm_conf.readlines()
         with open(sddm_conf_path, "w") as sddm_conf:
-        for line in text:
-            if 'AutoUser=' in line:
-            line = 'AutoUser=%s\n' % username
-            sddm_conf.write(line)
+            for line in text:
+                if 'AutoUser=' in line:
+                    line = 'AutoUser=%s\n' % username
+                sddm_conf.write(line)
 
 def run():
     """ Configure display managers """
@@ -149,8 +149,8 @@ def run():
         libcalamares.utils.chroot_call(['passwd', '-l', 'lightdm'])
         libcalamares.utils.chroot_call(['chown', '-R', 'lightdm:lightdm', '/run/lightdm'])
         if os.path.exists("%s/usr/bin/startxfce4" % install_path):
-        os.system("sed -i -e 's/^.*user-session=.*/user-session=xfce/' %s/etc/lightdm/lightdm.conf" % install_path)
-        os.system("ln -s /usr/lib/lightdm/lightdm/gdmflexiserver %s/usr/bin/gdmflexiserver" % install_path)
+            os.system("sed -i -e 's/^.*user-session=.*/user-session=xfce/' %s/etc/lightdm/lightdm.conf" % install_path)
+            os.system("ln -s /usr/lib/lightdm/lightdm/gdmflexiserver %s/usr/bin/gdmflexiserver" % install_path)
         os.system("chmod +r %s/etc/lightdm/lightdm.conf" % install_path)
         desktop_manager = 'lightdm'
 
@@ -193,34 +193,34 @@ def run():
         libcalamares.utils.chroot_call(['chown', 'root:mdm', '/var/lib/mdm'])
         libcalamares.utils.chroot_call(['chmod', '1770', '/var/lib/mdm'])
         if os.path.exists("%s/usr/bin/startxfce4" % install_path):
-        os.system("sed -i 's|default.desktop|xfce.desktop|g' %s/etc/mdm/custom.conf" % install_path)
+            os.system("sed -i 's|default.desktop|xfce.desktop|g' %s/etc/mdm/custom.conf" % install_path)
         if os.path.exists("%s/usr/bin/cinnamon-session" % install_path):
-        os.system("sed -i 's|default.desktop|cinnamon.desktop|g' %s/etc/mdm/custom.conf" % install_path)
+            os.system("sed -i 's|default.desktop|cinnamon.desktop|g' %s/etc/mdm/custom.conf" % install_path)
         if os.path.exists("%s/usr/bin/openbox-session" % install_path):
-        os.system("sed -i 's|default.desktop|openbox.desktop|g' %s/etc/mdm/custom.conf" % install_path)
+            os.system("sed -i 's|default.desktop|openbox.desktop|g' %s/etc/mdm/custom.conf" % install_path)
         if os.path.exists("%s/usr/bin/mate-session" % install_path):
-        os.system("sed -i 's|default.desktop|mate.desktop|g' %s/etc/mdm/custom.conf" % install_path)
+            os.system("sed -i 's|default.desktop|mate.desktop|g' %s/etc/mdm/custom.conf" % install_path)
         if os.path.exists("%s/usr/bin/lxsession" % install_path):
-        os.system("sed -i 's|default.desktop|LXDE.desktop|g' %s/etc/mdm/custom.conf" % install_path)
+            os.system("sed -i 's|default.desktop|LXDE.desktop|g' %s/etc/mdm/custom.conf" % install_path)
         if os.path.exists("%s/usr/bin/enlightenment_start" % install_path):
-        os.system("sed -i 's|default.desktop|enlightenment.desktop|g' %s/etc/mdm/custom.conf" % install_path)
+            os.system("sed -i 's|default.desktop|enlightenment.desktop|g' %s/etc/mdm/custom.conf" % install_path)
         desktop_manager = 'mdm'
 
     # Setup lxdm
     if os.path.exists("%s/usr/bin/lxdm" % install_path):
         libcalamares.utils.chroot_call(['groupadd', '--system', 'lxdm'])
         if os.path.exists("%s/usr/bin/startxfce4" % install_path):
-        os.system("sed -i -e 's|^.*session=.*|session=/usr/bin/startxfce4|' %s/etc/lxdm/lxdm.conf" % install_path)
+            os.system("sed -i -e 's|^.*session=.*|session=/usr/bin/startxfce4|' %s/etc/lxdm/lxdm.conf" % install_path)
         if os.path.exists("%s/usr/bin/cinnamon-session" % install_path):
-        os.system("sed -i -e 's|^.*session=.*|session=/usr/bin/cinnamon-session|' %s/etc/lxdm/lxdm.conf" % install_path)
+            os.system("sed -i -e 's|^.*session=.*|session=/usr/bin/cinnamon-session|' %s/etc/lxdm/lxdm.conf" % install_path)
         if os.path.exists("%s/usr/bin/mate-session" % install_path):
-        os.system("sed -i -e 's|^.*session=.*|session=/usr/bin/mate-session|' %s/etc/lxdm/lxdm.conf" % install_path)
+            os.system("sed -i -e 's|^.*session=.*|session=/usr/bin/mate-session|' %s/etc/lxdm/lxdm.conf" % install_path)
         if os.path.exists("%s/usr/bin/enlightenment_start" % install_path):
-        os.system("sed -i -e 's|^.*session=.*|session=/usr/bin/enlightenment_start|' %s/etc/lxdm/lxdm.conf" % install_path)
+            os.system("sed -i -e 's|^.*session=.*|session=/usr/bin/enlightenment_start|' %s/etc/lxdm/lxdm.conf" % install_path)
         if os.path.exists("%s/usr/bin/openbox-session" % install_path):
-        os.system("sed -i -e 's|^.*session=.*|session=/usr/bin/openbox-session|' %s/etc/lxdm/lxdm.conf" % install_path)
+            os.system("sed -i -e 's|^.*session=.*|session=/usr/bin/openbox-session|' %s/etc/lxdm/lxdm.conf" % install_path)
         if os.path.exists("%s/usr/bin/lxsession" % install_path):
-        os.system("sed -i -e 's|^.*session=.*|session=/usr/bin/lxsession|' %s/etc/lxdm/lxdm.conf" % install_path)
+            os.system("sed -i -e 's|^.*session=.*|session=/usr/bin/lxsession|' %s/etc/lxdm/lxdm.conf" % install_path)
         os.system("chgrp -R lxdm %s/var/lib/lxdm" % install_path)
         os.system("chgrp lxdm %s/etc/lxdm/lxdm.conf" % install_path)
         os.system("chmod +r %s/etc/lxdm/lxdm.conf" % install_path)
@@ -232,7 +232,7 @@ def run():
         libcalamares.utils.chroot_call(['groupadd', '-g', '135', 'kdm'])
         libcalamares.utils.chroot_call(['getent', 'passwd', 'kdm'])
         libcalamares.utils.chroot_call(['useradd', '-u', '135', '-g', 'kdm', '-d',
-             '/var/lib/kdm', '-s', '/bin/false', '-r', '-M', 'kdm'])
+                                        '/var/lib/kdm', '-s', '/bin/false', '-r', '-M', 'kdm'])
         libcalamares.utils.chroot_call(['chown', '-R', '135:135', 'var/lib/kdm'])
         libcalamares.utils.chroot_call(['xdg-icon-resource', 'forceupdate', '--theme', 'hicolor'])
         libcalamares.utils.chroot_call(['update-desktop-database', '-q'])

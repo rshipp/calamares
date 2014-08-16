@@ -83,11 +83,11 @@ def run():
     for line in consolefh:
         line = line.rstrip("\r\n")
         if(line.startswith("XKBLAYOUT=")):
-        newconsolefh.write("XKBLAYOUT=\"%s\"\n" % keyboard_layout)
+            newconsolefh.write("XKBLAYOUT=\"%s\"\n" % keyboard_layout)
         elif(line.startswith("XKBVARIANT=") and keyboard_variant != ''):
-        newconsolefh.write("XKBVARIANT=\"%s\"\n" % keyboard_variant)
+            newconsolefh.write("XKBVARIANT=\"%s\"\n" % keyboard_variant)
         else:
-        newconsolefh.write("%s\n" % line)
+            newconsolefh.write("%s\n" % line)
     consolefh.close()
     newconsolefh.close()
     libcalamares.utils.chroot_call(['mv', '/etc/keyboard.conf', '/etc/keyboard.conf.old'])

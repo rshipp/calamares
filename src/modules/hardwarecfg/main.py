@@ -102,15 +102,15 @@ def run():
         # TODO: get mhwd-script path or port it to python
         mhwd_script_path = '/usr/lib/calamares/modules/hardwarecfg/mhwd.sh'
         try:
-        subprocess.check_call(["/usr/bin/bash", mhwd_script_path])
+            subprocess.check_call(["/usr/bin/bash", mhwd_script_path])
         except subprocess.FileNotFoundError as e:
-        txt = _("Can't execute the MHWD script")
-        # TODO: produce fatal error here
-        return False
+            txt = _("Can't execute the MHWD script")
+            # TODO: produce fatal error here
+            return False
         except subprocess.CalledProcessError as e:
-        txt = "CalledProcessError.output = %s" % e.output
-        # TODO: produce fatal error here
-        return False
+            txt = "CalledProcessError.output = %s" % e.output
+            # TODO: produce fatal error here
+            return False
 
     # Remove virtualbox driver on real hardware
     p1 = subprocess.Popen(["mhwd"], stdout=subprocess.PIPE)
