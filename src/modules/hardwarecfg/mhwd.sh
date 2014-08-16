@@ -39,7 +39,7 @@ chroot_umount()
 
 USENONFREE="$(kernel_cmdline nonfree no)"
 VIDEO="$(kernel_cmdline xdriver no)"
-DESTDIR="/install"
+DESTDIR="$1"
 
 echo "MHWD-Driver: ${USENONFREE}"
 echo "MHWD-Video: ${VIDEO}"
