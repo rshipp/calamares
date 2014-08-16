@@ -33,7 +33,7 @@ def set_autologin(desktop_manager, username, install_path):
                 for line in text:
                     if '[daemon]' in line:
                         line = '[daemon]\nAutomaticLogin=%s\nAutomaticLoginEnable=True\n' % username
-                mdm_conf.write(line)
+                    mdm_conf.write(line)
         else:
             with open(mdm_conf_path, "w") as mdm_conf:
                 mdm_conf.write('# Calamares - Enable automatic login for user\n')
@@ -50,7 +50,7 @@ def set_autologin(desktop_manager, username, install_path):
                 for line in text:
                     if '[daemon]' in line:
                         line = '[daemon]\nAutomaticLogin=%s\nAutomaticLoginEnable=True\n' % username
-                gdm_conf.write(line)
+                    gdm_conf.write(line)
         else:
             with open(gdm_conf_path, "w") as gdm_conf:
                 gdm_conf.write('# Calamares - Enable automatic login for user\n')
