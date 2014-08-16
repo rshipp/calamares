@@ -235,6 +235,7 @@ def run():
         desktop_manager = 'kdm'
 
     if username != "":
+        libcalamares.utils.debug("Setting up autologin for user %s." % username)
         set_autologin(desktop_manager, username, install_path)
 
     return None
