@@ -103,7 +103,7 @@ def set_autologin(self):
         slim_conf_path = os.path.join(install_path, "etc/slim.conf")
         text = []
         with open(slim_conf_path, "r") as slim_conf:
-             text = slim_conf.readlines()
+            text = slim_conf.readlines()
         with open(slim_conf_path, "w") as slim_conf:
             for line in text:
                 if 'auto_login' in line:
@@ -165,7 +165,7 @@ def run():
         libcalamares.utils.chroot_call(['passwd', '-l', 'gdm'])
         libcalamares.utils.chroot_call(['chown', '-R', 'gdm:gdm', '/var/lib/gdm'])
         if os.path.exists("%s/var/lib/AccountsService/users" % install_path):
-        os.system("echo \"[User]\" > %s/var/lib/AccountsService/users/gdm" % install_path)
+            os.system("echo \"[User]\" > %s/var/lib/AccountsService/users/gdm" % install_path)
         if os.path.exists("%s/usr/bin/startxfce4" % install_path):
             os.system("echo \"XSession=xfce\" >> %s/var/lib/AccountsService/users/gdm" % install_path)
         if os.path.exists("%s/usr/bin/cinnamon-session" % install_path):
