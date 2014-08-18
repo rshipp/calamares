@@ -1,6 +1,6 @@
-# Syntax is YAML 1.2
 ---
 type:       "job"
 name:       "displaymanager"
 interface:  "python"
-script:     "main.py"   #assumed relative to the current directory
+requires:   []
+script:     "main.py"
