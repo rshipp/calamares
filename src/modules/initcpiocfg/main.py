@@ -63,6 +63,9 @@ def modify_mkinitcpio_conf(partitions, root_mount_point):
     if os.path.exists(plymouth_bin):
         hooks.append("plymouth")
 
+    swap_uuid = ""
+    btrfs = ""
+
     for partition in partitions:
         if partition["fs"] == "linuxswap":
             swap_uuid = partition["uuid"]
