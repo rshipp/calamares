@@ -126,8 +126,9 @@ class UnpackOperation:
                                                         entry.source])
                     entry.total = len(sqfslist.splitlines())
                 if entry.sourcefs == "ext4":
-                    fslist = subprocess.check_output(["ls", "-1",
-                                                      imgmountdir])
+                    fslist = subprocess.check_output(["find",
+                                                      imgmountdir,
+                                                      "-type", "f"])
                     entry.total = len(fslist.splitlines())
 
                 self.report_progress()
@@ -143,7 +144,9 @@ class UnpackOperation:
         subprocess.check_call(["mount",
                                entry.source,
                                imgmountdir,
-                               "-t", entry.sourcefs, "-o", "loop"])
+                               "-t",
+                               entry.sourcefs,
+                               "-o", "loop"])
 
     def unpack_image(self, entry, imgmountdir):
         def progress_cb(copied):
@@ -186,7 +189,11 @@ def run():
 
     for entry in job.configuration["unpack"]:
         source = os.path.abspath(entry["source"])
+
         sourcefs = entry["sourcefs"]
+        if sourcefs not in ["ext4", "squashfs"]:
+            return "Bad filesystem", "sourcefs=\"{}\"".format(sourcefs)
+
         destination = os.path.abspath(root_mount_point + entry["destination"])
 
         if not os.path.isfile(source):
