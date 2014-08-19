@@ -33,10 +33,9 @@ def modify_grub_default(partitions, root_mount_point, distributor):
 
     for partition in partitions:
         if partition["fs"] == "linuxswap":
-            swap_partition = root_mount_point + partition["mountPoint"]
             swap_uuid = partition["uuid"]
 
-    if swap_partition != "":
+    if swap_uuid != "":
         kernel_cmd = 'GRUB_CMDLINE_LINUX_DEFAULT="resume=UUID=%s quiet %s"' % (swap_uuid, use_splash)
     else:
         kernel_cmd = 'GRUB_CMDLINE_LINUX_DEFAULT="quiet %s"' % use_splash
