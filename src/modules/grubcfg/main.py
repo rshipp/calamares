@@ -44,7 +44,7 @@ def modify_grub_default(partitions, root_mount_point, distributor):
         os.mkdir(default_dir)
 
     with open(default_grub, 'r') as grub_file:
-    lines = [x.strip() for x in grub_file.readlines()]
+        lines = [x.strip() for x in grub_file.readlines()]
 
     for i in range(len(lines)):
         if lines[i].startswith("#GRUB_CMDLINE_LINUX_DEFAULT"):
@@ -55,7 +55,7 @@ def modify_grub_default(partitions, root_mount_point, distributor):
             lines[i] = "GRUB_DISTRIBUTOR=%s" % distributor
 
     with open(default_grub, 'w') as grub_file:
-    grub_file.write("\n".join(lines) + "\n")
+        grub_file.write("\n".join(lines) + "\n")
 
 
 def run():
