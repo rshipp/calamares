@@ -65,7 +65,6 @@ def modify_mkinitcpio_conf(partitions, root_mount_point):
 
     swap_uuid = ""
     btrfs = ""
-
     for partition in partitions:
         if partition["fs"] == "linuxswap":
             swap_uuid = partition["uuid"]
@@ -77,10 +76,10 @@ def modify_mkinitcpio_conf(partitions, root_mount_point):
     else:
         hooks.extend(["filesystems"])
 
-    if btrfs is "yes" and cpu is not 'genuineintel':
-        modules.append('crc32c')
-    elif btrfs is "yes" and cpu is 'genuineintel':
-        modules.append('crc32c-intel')
+    if btrfs is "yes" and cpu is not "genuineintel":
+        modules.append("crc32c")
+    elif btrfs is "yes" and cpu is "genuineintel":
+        modules.append("crc32c-intel")
     else:
         hooks.append("fsck")
 
