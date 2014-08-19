@@ -24,7 +24,8 @@ from libcalamares.utils import check_chroot_call
 
 
 def get_cpu():
-    # Check if system is an intel system. Not sure if we want to move this to hardware module when its done.
+    """ Check if system is an intel system. """
+
     process1 = subprocess.Popen(["hwinfo", "--cpu"], stdout=subprocess.PIPE)
     process2 = subprocess.Popen(["grep", "Model:[[:space:]]"],
                                 stdin=process1.stdout, stdout=subprocess.PIPE)
@@ -58,7 +59,6 @@ def modify_mkinitcpio_conf(partitions, root_mount_point):
     modules = []
 
     # It is important that the plymouth hook comes before any encrypt hook
-
     plymouth_bin = os.path.join(root_mount_point, "usr/bin/plymouth")
     if os.path.exists(plymouth_bin):
         hooks.append("plymouth")
@@ -66,15 +66,17 @@ def modify_mkinitcpio_conf(partitions, root_mount_point):
     for partition in partitions:
         if partition["fs"] == "linuxswap":
             swap_uuid = partition["uuid"]
+        if partition["fs"] == "btrfs":
+            btrfs = "yes"
 
-    if swap_uuid != "":
+    if swap_uuid is not "":
         hooks.extend(["resume", "filesystems"])
     else:
         hooks.extend(["filesystems"])
 
-    if self.settings.get('btrfs') and cpu is not 'genuineintel':
+    if btrfs is "yes" and cpu is not 'genuineintel':
         modules.append('crc32c')
-    elif self.settings.get('btrfs') and cpu is 'genuineintel':
+    elif btrfs is "yes" and cpu is 'genuineintel':
         modules.append('crc32c-intel')
     else:
         hooks.append("fsck")
