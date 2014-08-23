@@ -34,9 +34,7 @@ qtcreator-build
 CMakeLists.txt.user
 
 # PyCharm
-
 .idea
 
-# Gedit
-
+# Backup files
 *~
