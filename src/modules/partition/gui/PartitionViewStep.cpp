@@ -21,20 +21,92 @@
 #include <core/DeviceModel.h>
 #include <core/PartitionCoreModule.h>
 #include <core/PartitionModel.h>
+#include <gui/ChoicePage.h>
+#include <gui/EraseDiskPage.h>
 #include <gui/PartitionPage.h>
 #include <gui/PartitionPreview.h>
 
+#include "CalamaresVersion.h"
+#include "utils/CalamaresUtilsGui.h"
+#include "utils/Logger.h"
+#include "widgets/WaitingWidget.h"
+
 // Qt
+#include <QApplication>
 #include <QFormLayout>
 #include <QLabel>
+#include <QProcess>
+#include <QStackedWidget>
+#include <QTimer>
 
 PartitionViewStep::PartitionViewStep( QObject* parent )
     : Calamares::ViewStep( parent )
+    , m_widget( new QStackedWidget() )
     , m_core( new PartitionCoreModule( this ) )
-    , m_page( new PartitionPage( m_core ) )
+    , m_choicePage( new ChoicePage() )
+    , m_erasePage( new EraseDiskPage() )
+    , m_manualPartitionPage( new PartitionPage( m_core ) )
 {
-    connect( m_core, SIGNAL( hasRootMountPointChanged( bool ) ),
-             SIGNAL( nextStatusChanged( bool ) ) );
+    m_widget->setContentsMargins( 0, 0, 0, 0 );
+
+    QWidget* waitingWidget = new WaitingWidget( tr( "Gathering system information..." ) );
+    m_widget->addWidget( waitingWidget );
+
+    QTimer* timer = new QTimer;
+    timer->setSingleShot( true );
+    connect( timer, &QTimer::timeout,
+             [=]()
+    {
+        QString osproberOutput;
+        QProcess osprober;
+        osprober.setProgram( "os-prober" );
+        osprober.setProcessChannelMode( QProcess::SeparateChannels );
+        osprober.start();
+        if ( !osprober.waitForStarted() )
+        {
+            cDebug() << "ERROR: os-prober cannot start.";
+        }
+        else if ( !osprober.waitForFinished( 60000 ) )
+        {
+            cDebug() << "ERROR: os-prober timed out.";
+        }
+        else
+        {
+            osproberOutput.append(
+                QString::fromLocal8Bit(
+                    osprober.readAllStandardOutput() ).trimmed() );
+        }
+
+        QStringList osproberLines = osproberOutput.split( '\n' );
+
+        m_choicePage->init( m_core, osproberLines );
+        m_erasePage->init( m_core );
+
+        m_widget->addWidget( m_choicePage );
+        m_widget->addWidget( m_manualPartitionPage );
+        m_widget->addWidget( m_erasePage );
+        m_widget->removeWidget( waitingWidget );
+        waitingWidget->deleteLater();
+
+        timer->deleteLater();
+    } );
+    timer->start( 0 );
+
+    connect( m_core,        &PartitionCoreModule::hasRootMountPointChanged,
+             this,          &PartitionViewStep::nextStatusChanged );
+    connect( m_choicePage,  &ChoicePage::nextStatusChanged,
+             this,          &PartitionViewStep::nextStatusChanged );
+    connect( m_erasePage,   &EraseDiskPage::nextStatusChanged,
+             this,          &PartitionViewStep::nextStatusChanged );
+}
+
+
+PartitionViewStep::~PartitionViewStep()
+{
+    if ( m_choicePage && m_choicePage->parent() == nullptr )
+        m_choicePage->deleteLater();
+    if ( m_manualPartitionPage && m_manualPartitionPage->parent() == nullptr )
+        m_manualPartitionPage->deleteLater();
 }
 
 
@@ -48,7 +120,7 @@ PartitionViewStep::prettyName() const
 QWidget*
 PartitionViewStep::widget()
 {
-    return m_page;
+    return m_widget;
 }
 
 
@@ -79,28 +151,60 @@ PartitionViewStep::createSummaryWidget() const
     return widget;
 }
 
+
 void
 PartitionViewStep::next()
 {
-    emit done();
+    if ( m_choicePage == m_widget->currentWidget() )
+    {
+        if ( m_choicePage->currentChoice() == ChoicePage::Manual )
+            m_widget->setCurrentWidget( m_manualPartitionPage );
+        else if ( m_choicePage->currentChoice() == ChoicePage::Erase )
+        {
+            if ( m_core->isDirty() )
+                m_core->revert();
+            m_widget->setCurrentWidget( m_erasePage );
+        }
+        cDebug() << "Choice applied: " << m_choicePage->currentChoice();
+    }
+    else
+        emit done();
 }
 
 
 void
 PartitionViewStep::back()
-{}
+{
+    if ( m_widget->currentWidget() != m_choicePage )
+        m_widget->setCurrentWidget( m_choicePage );
+}
 
 
 bool
 PartitionViewStep::isNextEnabled() const
 {
-    return m_core->hasRootMountPoint();
+    if ( m_choicePage && m_choicePage == m_widget->currentWidget() )
+        return m_choicePage->isNextEnabled();
+
+    if ( m_erasePage && m_erasePage == m_widget->currentWidget() )
+    {
+        return m_erasePage->isNextEnabled() &&
+               m_core->hasRootMountPoint();
+    }
+
+    if ( m_manualPartitionPage && m_manualPartitionPage == m_widget->currentWidget() )
+        return m_core->hasRootMountPoint();
+
+    return false;
 }
 
 
 bool
 PartitionViewStep::isAtBeginning() const
 {
+    if ( m_widget->currentWidget() == m_manualPartitionPage ||
+         m_widget->currentWidget() == m_erasePage )
+        return false;
     return true;
 }
 
@@ -108,6 +212,8 @@ PartitionViewStep::isAtBeginning() const
 bool
 PartitionViewStep::isAtEnd() const
 {
+    if ( m_choicePage == m_widget->currentWidget() )
+        return false;
     return true;
 }
 

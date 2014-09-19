@@ -24,8 +24,11 @@
 #include "viewpages/ViewStep.h"
 #include "PluginDllMacro.h"
 
+class ChoicePage;
+class EraseDiskPage;
 class PartitionPage;
 class PartitionCoreModule;
+class QStackedWidget;
 
 /**
  * The starting point of the module. Instantiates PartitionCoreModule and
@@ -39,6 +42,7 @@ class PLUGINDLLEXPORT PartitionViewStep : public Calamares::ViewStep
 
 public:
     explicit PartitionViewStep( QObject* parent = 0 );
+    virtual ~PartitionViewStep();
 
     QString prettyName() const override;
     QWidget* createSummaryWidget() const override;
@@ -57,7 +61,10 @@ public:
 
 private:
     PartitionCoreModule* m_core;
-    PartitionPage* m_page;
+    QStackedWidget*   m_widget;
+    ChoicePage*       m_choicePage;
+    EraseDiskPage*    m_erasePage;
+    PartitionPage*    m_manualPartitionPage;
 };
 
 #endif // PARTITIONVIEWSTEP_H
