@@ -95,8 +95,8 @@ ChoicePage::init( PartitionCoreModule* core, const OsproberEntryList& osproberEn
                                                          iconSize ) );
     grp->addButton( eraseButton->buttonWidget() );
 
-    m_itemsLayout->addWidget( alongsideButton );
     m_itemsLayout->addWidget( eraseButton );
+    m_itemsLayout->addWidget( alongsideButton );
     m_itemsLayout->setSpacing( CalamaresUtils::defaultFontHeight() / 2 );
 
     if ( osproberEntries.count() == 0 )
@@ -202,7 +202,6 @@ ChoicePage::init( PartitionCoreModule* core, const OsproberEntryList& osproberEn
                                                                  iconSize ) );
     m_itemsLayout->addWidget( somethingElseButton );
     grp->addButton( somethingElseButton->buttonWidget() );
-
 
     connect( alongsideButton->buttonWidget(), &QRadioButton::toggled,
              this, [ this ]( bool checked )
