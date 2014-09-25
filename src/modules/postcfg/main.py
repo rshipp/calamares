@@ -44,9 +44,14 @@ def run():
     if os.path.exists("%s/usr/bin/mate-session" % install_path):
         os.system("echo \"TERM=mate-terminal\" >> %s/etc/environment" % install_path)
         os.system("echo \"TERM=mate-terminal\" >> %s/etc/profile" % install_path)
+
     # Fix XFCE QT5 Theming
     if os.path.exists("%s/usr/bin/startxfce4" % install_path):
         os.system("echo \"QT_STYLE_OVERRIDE=gtk\" >> %s/etc/environment" % install_path)
+
+    # Adjust Steam-Native when libudev.so.0 is available
+    if os.path.exists("%s/usr/lib/libudev.so.0" % install_path) or os.path.exists("%s/usr/lib32/libudev.so.0" % install_path):
+        os.system("echo -e \"STEAM_RUNTIME=0\nSTEAM_FRAME_FORCE_CLOSE=1\" >> %s/etc/environment" % install_path)
 
     # Fix_gnome_apps
     libcalamares.utils.chroot_call(['glib-compile-schemas', '/usr/share/glib-2.0/schemas'])
