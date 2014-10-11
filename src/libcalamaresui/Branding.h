@@ -16,52 +16,39 @@
  *   along with Calamares. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef SETTINGS_H
-#define SETTINGS_H
+#ifndef BRANDING_H
+#define BRANDING_H
 
 #include "UiDllMacro.h"
 #include "Typedefs.h"
 
 #include <QObject>
-#include <QStringList>
 
 
 namespace Calamares
 {
 
-class UIDLLEXPORT Settings : public QObject
+class UIDLLEXPORT Branding : public QObject
 {
     Q_OBJECT
 public:
-    explicit Settings( const QString& settingsFilePath,
-                       bool debugMode,
+    static Branding* instance();
+
+    explicit Branding( const QString& brandingFilePath,
                        QObject *parent = nullptr );
 
-    static Settings* instance();
-    //TODO: load from JSON then emit ready
+    QString descriptorPath() const;
+    QString componentName() const;
+    QString componentDirectory() const;
 
-    QStringList modulesSearchPaths() const;
-
-    QStringList modules( Phase phase ) const;
-
-    QString brandingComponentName() const;
-
-    bool debugMode() const;
 
 private:
-    static Settings* s_instance;
+    static Branding* s_instance;
 
-    bool m_debug;
-
-    QStringList m_modulesSearchPaths;
-
-    QStringList m_modulesPrepareList;
-    QStringList m_modulesInstallList;
-    QStringList m_modulesPostInstallList;
-
-    QString m_brandingComponentName;
+    QString m_descriptorPath;
+    QString m_componentName;
 };
 
 }
 
-#endif // SETTINGS_H
+#endif // BRANDING_H

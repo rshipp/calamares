@@ -30,11 +30,17 @@
 #include <QTextStream>
 
 
-CreateUserJob::CreateUserJob( const QString& userName, const QString& fullName, bool autologin )
+CreateUserJob::CreateUserJob( const QString& userName,
+                              const QString& fullName,
+                              bool autologin,
+                              const QString& userGroup,
+                              const QStringList& defaultGroups )
     : Calamares::Job()
     , m_userName( userName )
     , m_fullName( fullName )
     , m_autologin( autologin )
+    , m_userGroup( userGroup )
+    , m_defaultGroups( defaultGroups )
 {
 }
 
@@ -51,27 +57,57 @@ CreateUserJob::exec()
 {
     Calamares::GlobalStorage* gs = Calamares::JobQueue::instance()->globalStorage();
     QDir destDir( gs->value( "rootMountPoint" ).toString() );
-    QFileInfo sudoersFi( destDir.absoluteFilePath( "etc/sudoers.d/10-installer" ) );
 
-    if ( !sudoersFi.absoluteDir().exists() )
-        return Calamares::JobResult::error( tr( "Sudoers dir is not writable." ) );
+    if ( gs->contains( "sudoersGroup" ) &&
+         !gs->value( "sudoersGroup" ).toString().isEmpty() )
+    {
+        QFileInfo sudoersFi( destDir.absoluteFilePath( "etc/sudoers.d/10-installer" ) );
 
-    QFile sudoersFile( sudoersFi.absoluteFilePath() );
-    if (!sudoersFile.open( QIODevice::WriteOnly | QIODevice::Text ) )
-        return Calamares::JobResult::error( tr( "Cannot create sudoers file for writing." ) );
+        if ( !sudoersFi.absoluteDir().exists() )
+            return Calamares::JobResult::error( tr( "Sudoers dir is not writable." ) );
 
-    QTextStream sudoersOut( &sudoersFile );
-    sudoersOut << QString( "%1 ALL=(ALL) ALL\n" ).arg( m_userName );
+        QFile sudoersFile( sudoersFi.absoluteFilePath() );
+        if (!sudoersFile.open( QIODevice::WriteOnly | QIODevice::Text ) )
+            return Calamares::JobResult::error( tr( "Cannot create sudoers file for writing." ) );
 
-    if ( QProcess::execute( "chmod", { "440", sudoersFi.absoluteFilePath() } ) )
-        return Calamares::JobResult::error( tr( "Cannot chmod sudoers file." ) );
+        QString sudoersGroup = gs->value( "sudoersGroup" ).toString();
 
+        QTextStream sudoersOut( &sudoersFile );
+        sudoersOut << QString( "%%1 ALL=(ALL) ALL\n" ).arg( sudoersGroup );
 
-    QString defaultGroups( "lp,video,network,storage,wheel,audio" );
+        if ( QProcess::execute( "chmod", { "440", sudoersFi.absoluteFilePath() } ) )
+            return Calamares::JobResult::error( tr( "Cannot chmod sudoers file." ) );
+    }
+
+    QFileInfo groupsFi( destDir.absoluteFilePath( "etc/group" ) );
+    QFile groupsFile( groupsFi.absoluteFilePath() );
+    if ( !groupsFile.open( QIODevice::ReadOnly | QIODevice::Text ) )
+        return Calamares::JobResult::error( tr( "Cannot open groups file for reading." ) );
+    QString groupsData = QString::fromLocal8Bit( groupsFile.readAll() );
+    QStringList groupsLines = groupsData.split( '\n' );
+    for ( QStringList::iterator it = groupsLines.begin();
+          it != groupsLines.end(); ++it )
+    {
+        int indexOfFirstToDrop = it->indexOf( ':' );
+        it->truncate( indexOfFirstToDrop );
+    }
+
+    foreach ( const QString& group, m_defaultGroups )
+        if ( !groupsLines.contains( group ) )
+            CalamaresUtils::chrootCall( { "groupadd", group } );
+
+    QString defaultGroups = m_defaultGroups.join( ',' );
     if ( m_autologin )
     {
-        CalamaresUtils::chrootCall( { "groupadd", "autologin" } );
-        defaultGroups.append( ",autologin" );
+        QString autologinGroup;
+        if ( gs->contains( "autologinGroup" ) &&
+             !gs->value( "autologinGroup" ).toString().isEmpty() )
+            autologinGroup = gs->value( "autologinGroup" ).toString();
+        else
+            autologinGroup = QStringLiteral( "autologin" );
+
+        CalamaresUtils::chrootCall( { "groupadd", autologinGroup } );
+        defaultGroups.append( QString( ",%1" ).arg( autologinGroup ) );
     }
 
     int ec = CalamaresUtils::chrootCall( { "useradd",
@@ -98,7 +134,8 @@ CreateUserJob::exec()
 
     ec = CalamaresUtils::chrootCall( { "chown",
                                        "-R",
-                                       QString( "%1:users" ).arg( m_userName ),
+                                       QString( "%1:%2" ).arg( m_userName )
+                                                         .arg( m_userGroup ),
                                        QString( "/home/%1" ).arg( m_userName ) } );
     if ( ec )
         return Calamares::JobResult::error( tr( "Cannot set home directory ownership for user %1." )
