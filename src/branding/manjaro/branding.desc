@@ -1,0 +1,16 @@
+---
+componentName:  default
+
+strings:
+    productName:        Manjaro Linux
+    version:            0.9.0-dev
+    shortVersion:       0.9
+    versionedName:      Manjaro Linux 0.9.0 "Spasimira"
+    shortVersionedName: Manjaro 0.9
+
+images:
+    productLogo:        "squid.png"
+    productIcon:        "logo.png"
+
+slideshow:
+    - "slide.png"
