@@ -160,7 +160,7 @@ ModuleManager::doInit()
         }
         else
         {
-            cDebug() << Q_FUNC_INFO << "bad search path " << path;
+            cDebug() << "ModuleManager bad search path" << path;
         }
     }
     // At this point m_availableModules is filled with whatever was found in the
@@ -175,7 +175,8 @@ ModuleManager::doLoad( const QString& moduleName )
 {
     Module* thisModule = m_availableModules.value( moduleName );
     thisModule->loadSelf();
-    cDebug() << ( thisModule->isLoaded() ? "SUCCESS" : "FAILURE" );
+    if ( !thisModule->isLoaded() )
+        cDebug() << "Module" << moduleName << "loading FAILED";
 }
 
 

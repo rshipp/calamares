@@ -66,7 +66,7 @@ Module::fromDescriptorFile( const QString& path )
     if ( descriptorFile.exists() && descriptorFile.open( QFile::ReadOnly | QFile::Text ) )
     {
         QByteArray ba = descriptorFile.readAll();
-        cDebug() << Q_FUNC_INFO << "module descriptor file" << path;
+        cDebug() << "Loading module.desc for" << QFileInfo( descriptorFile ).dir().dirName();
 
         try
         {
@@ -167,8 +167,6 @@ Module::loadConfigurationFile() //throws YAML::Exception
         if ( configFile.exists() && configFile.open( QFile::ReadOnly | QFile::Text ) )
         {
             QByteArray ba = configFile.readAll();
-            cLog() << Q_FUNC_INFO << "module configuration file"
-                     << path << ":\n" << ba;
 
             YAML::Node doc = YAML::Load( ba.constData() );
             if ( !doc.IsMap() )
