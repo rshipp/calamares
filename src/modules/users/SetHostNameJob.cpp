@@ -60,9 +60,26 @@ Calamares::JobResult SetHostNameJob::exec()
         return Calamares::JobResult::error( tr( "Cannot write hostname to target system" ) );
     }
 
-    QTextStream out( &hostfile );
-    out << m_hostname << "\n";
+    QTextStream hostfileout( &hostfile );
+    hostfileout << m_hostname << "\n";
     hostfile.close();
+
+    QFile hostsfile( destDir + "/etc/hosts" );
+    if ( !hostfile.open( QFile::WriteOnly ) )
+    {
+        cLog() << "Can't write to hosts file";
+        return Calamares::JobResult::error( tr( "Cannot write hostname to target system" ) );
+    }
+
+    // We also need to write the appropriate entries for /etc/hosts
+    QTextStream hostsfileout( &hostsfile );
+    // ipv4 support
+    hostsfileout << "127.0.0.1" << "\t" << "localhost" << "\n";
+    hostsfileout << "127.0.1.1" << "\t" << m_hostname << "\n";
+    // ipv6 support
+    hostsfileout << "::1" << "\t" << "localhost ip6-localhost ip6-loopback" << "\n";
+    hostsfileout << "ff02::1 ip6-allnodes" << "\n" << "ff02::2 ip6-allrouters" << "\n";
+    hostsfile.close();
 
     return Calamares::JobResult::ok();
 }
