@@ -20,6 +20,7 @@
 
 #include "timezonewidget/timezonewidget.h"
 #include "SetTimezoneJob.h"
+#include "utils/Retranslator.h"
 
 #include <QBoxLayout>
 #include <QComboBox>
@@ -43,23 +44,23 @@ LocalePage::LocalePage( QWidget* parent )
     QBoxLayout* bottomLayout = new QHBoxLayout;
     mainLayout->addLayout( bottomLayout );
 
-    QLabel* cityLabel = new QLabel( tr( "Region:" ), this );
-    bottomLayout->addWidget( cityLabel );
+    m_cityLabel = new QLabel( this );
+    bottomLayout->addWidget( m_cityLabel );
 
     m_regionCombo = new QComboBox( this );
     bottomLayout->addWidget( m_regionCombo );
     m_regionCombo->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Preferred );
-    cityLabel->setBuddy( m_regionCombo );
+    m_cityLabel->setBuddy( m_regionCombo );
 
     bottomLayout->addSpacing( 20 );
 
-    QLabel* timezoneLabel = new QLabel( tr( "Zone:" ), this );
-    bottomLayout->addWidget( timezoneLabel );
+    m_timezoneLabel = new QLabel( this );
+    bottomLayout->addWidget( m_timezoneLabel );
 
     m_timezoneCombo = new QComboBox( this );
     m_timezoneCombo->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Preferred );
     bottomLayout->addWidget( m_timezoneCombo );
-    timezoneLabel->setBuddy( m_timezoneCombo );
+    m_timezoneLabel->setBuddy( m_timezoneCombo );
 
     mainLayout->addStretch();
 
@@ -119,6 +120,11 @@ LocalePage::LocalePage( QWidget* parent )
 
         m_blockTzWidgetSet = false;
     });
+
+    CALAMARES_RETRANSLATE(
+        m_cityLabel->setText( tr( "Region:" ) );
+        m_timezoneLabel->setText( tr( "Zone:" ) );
+    )
 }
 
 
@@ -192,3 +198,4 @@ LocalePage::createJobs()
 
     return list;
 }
+

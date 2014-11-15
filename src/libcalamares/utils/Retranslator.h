@@ -16,26 +16,41 @@
  *   along with Calamares. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef GREETINGPAGE_H
-#define GREETINGPAGE_H
+#ifndef CALAMARESUTILS_RETRANSLATOR_H
+#define CALAMARESUTILS_RETRANSLATOR_H
 
-#include <QWidget>
+#include <QList>
+#include <QObject>
 
-class QLabel;
-class QListWidget;
+#include <functional>
 
-class GreetingPage : public QWidget
+class QEvent;
+
+namespace CalamaresUtils
+{
+
+class Retranslator : public QObject
 {
     Q_OBJECT
 public:
-    explicit GreetingPage( QWidget* parent = nullptr );
+    static void attachRetranslator( QObject* parent,
+                                    std::function< void( void ) > retranslateFunc );
+
+    void addRetranslateFunc( std::function< void( void ) > retranslateFunc );
 
 protected:
-    void focusInEvent( QFocusEvent* e ) override; //choose the child widget to focus
+    bool eventFilter( QObject* obj, QEvent* e ) override;
 
 private:
-    QListWidget* m_languageWidget;
-    QLabel* m_text;
+    explicit Retranslator( QObject* parent );
+
+    QList< std::function< void( void ) > > m_retranslateFuncList;
 };
 
-#endif // GREETINGPAGE_H
+
+} // namespace CalamaresUtils
+
+#define CALAMARES_RETRANSLATE(a) \
+    CalamaresUtils::Retranslator::attachRetranslator( this, [=] { a } );
+
+#endif // CALAMARESUTILS_RETRANSLATOR_H

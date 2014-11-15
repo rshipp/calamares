@@ -18,8 +18,17 @@
 
 #include "GreetingPage.h"
 
+#include "CalamaresVersion.h"
+#include "utils/Logger.h"
+#include "utils/CalamaresUtils.h"
+#include "utils/Retranslator.h"
+#include "ViewManager.h"
+
+#include <QApplication>
 #include <QBoxLayout>
+#include <QFocusEvent>
 #include <QLabel>
+#include <QListWidget>
 
 #include "Branding.h"
 
@@ -30,18 +39,71 @@ GreetingPage::GreetingPage( QWidget* parent )
     QBoxLayout *mainLayout = new QHBoxLayout;
     setLayout( mainLayout );
 
-    QLabel* text = new QLabel( tr( "<h1>Welcome to the %1 installer.</h1><br/>"
-                                   "This program will ask you some questions and "
-                                   "set up %2 on your computer." )
-                               .arg( Calamares::Branding::instance()->
-                                     string( Calamares::Branding::VersionedName ) )
-                               .arg( Calamares::Branding::instance()->
-                                     string( Calamares::Branding::ProductName ) ), this );
-    text->setAlignment( Qt::AlignCenter );
-    text->setWordWrap( true );
-    text->setOpenExternalLinks( true );
+    QString defaultLocale = QLocale::system().name();
+
+    m_languageWidget = new QListWidget( this );
+    mainLayout->addWidget( m_languageWidget );
+    {
+        foreach ( const QString& locale, QString( CALAMARES_TRANSLATION_LANGUAGES ).split( ';') )
+        {
+            QLocale thisLocale = QLocale( locale );
+            QString lang = QLocale::languageToString( thisLocale.language() );
+            if ( QLocale::countriesForLanguage( thisLocale.language() ).count() > 2 )
+                lang.append( QString( " (%1)" )
+                             .arg( QLocale::countryToString( thisLocale.country() ) ) );
+
+            m_languageWidget->addItem( lang );
+            m_languageWidget->item( m_languageWidget->count() - 1 )
+                            ->setData( Qt::UserRole, thisLocale );
+            if ( thisLocale.language() == QLocale( defaultLocale ).language() &&
+                 thisLocale.country() == QLocale( defaultLocale ).country() )
+                m_languageWidget->setCurrentRow( m_languageWidget->count() - 1 );
+        }
+        m_languageWidget->sortItems();
+
+        connect( m_languageWidget, &QListWidget::currentItemChanged,
+                 this, [ & ]( QListWidgetItem *current, QListWidgetItem *previous )
+        {
+            QLocale selectedLocale = current->data( Qt::UserRole ).toLocale();
+            cDebug() << "Selected locale" << selectedLocale.name();
+
+            QLocale::setDefault( selectedLocale );
+            CalamaresUtils::installTranslator( selectedLocale.name(), qApp );
+        } );
+
+        connect( m_languageWidget, &QListWidget::itemActivated,
+                 this, []
+        {
+            Calamares::ViewManager::instance()->next();
+        } );
+    }
+
+    m_text = new QLabel( this );
+    m_text->setAlignment( Qt::AlignCenter );
+    m_text->setWordWrap( true );
+    m_text->setOpenExternalLinks( true );
 
     mainLayout->addStretch();
-    mainLayout->addWidget( text );
+    mainLayout->addWidget( m_text );
     mainLayout->addStretch();
+
+    CALAMARES_RETRANSLATE(
+        m_text->setText( tr( "<h1>Welcome to the %1 installer.</h1><br/>"
+                             "This program will ask you some questions and "
+                             "set up %2 on your computer." )
+                         .arg( Calamares::Branding::instance()->
+                               string( Calamares::Branding::VersionedName ) )
+                         .arg( Calamares::Branding::instance()->
+                               string( Calamares::Branding::ProductName ) ) );
+    )
 }
+
+
+void
+GreetingPage::focusInEvent( QFocusEvent* e )
+{
+    if ( m_languageWidget )
+        m_languageWidget->setFocus();
+    e->accept();
+}
+

@@ -24,10 +24,12 @@
 
 #include "ui_KeyboardPage.h"
 #include "keyboardwidget/keyboardpreview.h"
+#include "SetKeyboardLayoutJob.h"
 
 #include "GlobalStorage.h"
 #include "JobQueue.h"
 #include "utils/Logger.h"
+#include "utils/Retranslator.h"
 
 #include <QComboBox>
 #include <QProcess>
@@ -66,6 +68,8 @@ KeyboardPage::KeyboardPage( QWidget* parent )
         QProcess::execute( QString( "setxkbmap -model \"%1\"" )
                            .arg( model ).toUtf8() );
     });
+
+    CALAMARES_RETRANSLATE( ui->retranslateUi( this ); )
 }
 
 
@@ -185,6 +189,25 @@ KeyboardPage::prettyStatus() const
               .arg( ui->listVariant->currentItem()->text() );
 
     return status;
+}
+
+
+QList< Calamares::job_ptr >
+KeyboardPage::createJobs( const QString& xOrgConfFileName,
+                          const QString& convertedKeymapPath )
+{
+    QList< Calamares::job_ptr > list;
+    QString selectedModel = m_models.value( ui->comboBoxModel->currentText(),
+                                            "pc105" );
+
+    Calamares::Job* j = new SetKeyboardLayoutJob( selectedModel,
+                                                  m_selectedLayout,
+                                                  m_selectedVariant,
+                                                  xOrgConfFileName,
+                                                  convertedKeymapPath );
+    list.append( Calamares::job_ptr( j ) );
+
+    return list;
 }
 
 

@@ -24,6 +24,7 @@
 #include <QWidget>
 
 class QComboBox;
+class QLabel;
 class TimeZoneWidget;
 
 class LocalePage : public QWidget
@@ -42,6 +43,9 @@ private:
     TimeZoneWidget* m_tzWidget;
     QComboBox* m_regionCombo;
     QComboBox* m_timezoneCombo;
+
+    QLabel* m_cityLabel;
+    QLabel* m_timezoneLabel;
 
     bool m_blockTzWidgetSet;
 };

@@ -3,7 +3,6 @@
 # === This file is part of Calamares - <http://github.com/calamares> ===
 #
 #   Copyright 2014, Philip Müller <philm@manjaro.org>
-#   Copyright 2014, Teo Mrnjavac <teo@kde.org>
 #
 #   Calamares is free software: you can redistribute it and/or modify
 #   it under the terms of the GNU General Public License as published by
@@ -18,13 +17,9 @@
 #   You should have received a copy of the GNU General Public License
 #   along with Calamares. If not, see <http://www.gnu.org/licenses/>.
 
-import libcalamares
 from libcalamares.utils import chroot_call
 
-def run_dracut():
-    return chroot_call(['dracut', '-f'])
-
 def run():
-    returnCode = run_dracut()
+    returnCode = chroot_call(["update-initramfs", "-k", "all", "-u"])
     if returnCode != 0:
-        return ("Failed to run dracut on the target", "The exit code was {}".format(returnCode))
+        return ("Failed to run update-initramfs on the target", "The exit code was {}".format(returnCode))
