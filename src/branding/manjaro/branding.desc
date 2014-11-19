@@ -2,15 +2,17 @@
 componentName:  manjaro
 
 strings:
-    productName:        Manjaro Linux
-    version:            0.9.0-dev
-    shortVersion:       0.9
-    versionedName:      Manjaro Linux 0.9.0 "Spasimira"
-    shortVersionedName: Manjaro 0.9
+    productName:         Manjaro Linux
+    shortProductName:    Manjaro
+    version:             0.9.0-dev
+    shortVersion:        0.9
+    versionedName:       Manjaro Linux 0.9.0 "Brax"
+    shortVersionedName:  Manjaro 0.9
+    bootloaderEntryName: Manjaro
 
 images:
-    productLogo:        "squid.png"
-    productIcon:        "logo.png"
+    productLogo:         "squid.png"
+    productIcon:         "logo.png"
 
 slideshow:
     - "slide.png"
