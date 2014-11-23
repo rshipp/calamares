@@ -38,7 +38,7 @@ desktop_environments = [
     DesktopEnvironment('/usr/bin/openbox-session', 'openbox'),
     DesktopEnvironment('/usr/bin/lxsession', 'LXDE'),
     DesktopEnvironment('/usr/bin/startlxde', 'LXDE'),
-    DesktopEnvironment('/usr/bin/lxqt-session', 'lxqt',
+    DesktopEnvironment('/usr/bin/lxqt-session', 'lxqt'),
     DesktopEnvironment('/usr/bin/pekwm', 'pekwm')
 ]
 
