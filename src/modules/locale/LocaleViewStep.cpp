@@ -25,6 +25,7 @@
 #include "GlobalStorage.h"
 
 #include "utils/CalamaresUtilsGui.h"
+#include "utils/Logger.h"
 
 #include <QBoxLayout>
 #include <QLabel>
@@ -96,8 +97,6 @@ LocaleViewStep::widget()
 void
 LocaleViewStep::next()
 {
-    Calamares::JobQueue::instance()->globalStorage()->insert( "lcLocale",
-                                                              m_actualWidget->lcLocale() );
     emit done();
 }
 
@@ -136,12 +135,22 @@ LocaleViewStep::jobs() const
 
 
 void
+LocaleViewStep::onActivate()
+{
+    m_actualWidget->onActivate();
+}
+
+
+void
 LocaleViewStep::onLeave()
 {
     m_jobs.clear();
     m_jobs.append( m_actualWidget->createJobs() );
 
     m_prettyStatus = m_actualWidget->prettyStatus();
+
+    Calamares::JobQueue::instance()->globalStorage()->insert( "lcLocale",
+                                                              m_actualWidget->lcLocale() );
 }
 
 

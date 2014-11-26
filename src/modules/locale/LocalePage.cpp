@@ -154,7 +154,7 @@ LocalePage::LocalePage( QWidget* parent )
              !dlg->selectedLCLocale().isEmpty() )
         {
             m_selectedLocale = dlg->selectedLCLocale();
-            m_localeLabel->setText( tr( "The system encoding is set to %1." )
+            m_localeLabel->setText( tr( "The system locale is set to %1." )
                                     .arg( prettyLCLocale( m_selectedLocale ) ) );
         }
 
@@ -165,7 +165,7 @@ LocalePage::LocalePage( QWidget* parent )
         m_regionLabel->setText( tr( "Region:" ) );
         m_zoneLabel->setText( tr( "Zone:" ) );
 
-        m_localeLabel->setText( tr( "The system encoding is set to %1." )
+        m_localeLabel->setText( tr( "The system locale is set to %1." )
                                 .arg( prettyLCLocale( lcLocale() ) ) );
 
         m_localeChangeButton->setText( tr( "&Change..." ) );
@@ -290,6 +290,13 @@ LocalePage::lcLocale()
 }
 
 
+void
+LocalePage::onActivate()
+{
+    m_regionCombo->setFocus();
+}
+
+
 QString
 LocalePage::guessLCLocale()
 {
@@ -298,7 +305,7 @@ LocalePage::guessLCLocale()
     if ( m_localeGenLines.isEmpty() )
         return "en_US.UTF-8 UTF-8";
 
-    QString myLanguage = QLocale::languageToString( myLocale.language() );
+    QString myLanguage = myLocale.name().split( '_' ).first();
     QStringList linesForLanguage;
     foreach ( QString line, m_localeGenLines )
     {
