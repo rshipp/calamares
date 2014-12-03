@@ -67,4 +67,23 @@ def run():
     os.system("cp -a /etc/pacman.d/gnupg %s/etc/pacman.d/" % install_path)
     libcalamares.utils.chroot_call(['pacman-key', '--populate', 'archlinux', 'manjaro'])
 
+    if os.path.exists("%s/etc/pacman.d/gnupg" % install_path):
+        # Set /etc/keyboard.conf (keyboardctl is depreciated)
+        keyboard_layout = libcalamares.globalstorage.value("keyboardLayout")
+        keyboard_variant = libcalamares.globalstorage.value("keyboardVariant")
+        consolefh = open("%s/etc/keyboard.conf" % install_path, "r")
+        newconsolefh = open("%s/etc/keyboard.new" % install_path, "w")
+        for line in consolefh:
+        line = line.rstrip("\r\n")
+            if(line.startswith("XKBLAYOUT=")):
+                newconsolefh.write("XKBLAYOUT=\"%s\"\n" % keyboard_layout)
+            elif(line.startswith("XKBVARIANT=") and keyboard_variant != ''):
+                newconsolefh.write("XKBVARIANT=\"%s\"\n" % keyboard_variant)
+            else:
+                newconsolefh.write("%s\n" % line)
+        consolefh.close()
+        newconsolefh.close()
+        libcalamares.utils.chroot_call(['mv', '/etc/keyboard.conf', '/etc/keyboard.conf.old'])
+        libcalamares.utils.chroot_call(['mv', '/etc/keyboard.new', '/etc/keyboard.conf'])
+
     return None
