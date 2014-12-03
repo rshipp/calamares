@@ -28,14 +28,6 @@ def run():
 
     install_path = libcalamares.globalstorage.value( "rootMountPoint" )
 
-    # Add hostname
-    # TODO: get hostname
-
-    hostname = 'manjaro'
-    hostname_path = os.path.join(install_path, "etc/hostname")
-    with open(hostname_path, "w") as hostname_file:
-        hostname_file.write(hostname)
-
     # Add BROWSER var
     os.system("echo \"BROWSER=/usr/bin/xdg-open\" >> %s/etc/environment" % install_path)
     os.system("echo \"BROWSER=/usr/bin/xdg-open\" >> %s/etc/skel/.bashrc" % install_path)
