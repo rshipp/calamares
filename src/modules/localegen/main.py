@@ -67,6 +67,6 @@ def run():
     # Set /etc/environment
     environment_path = os.path.join(install_path, "etc/environment")
     with open(environment_path, "w") as environment:
-        environment.write('LANG=%s\n' % locale)
+        environment.write('LANG=%s\n' % locale.split(' ')[0])
 
     return None
