@@ -68,7 +68,7 @@ def run():
     libcalamares.utils.chroot_call(['pacman-key', '--populate', 'archlinux', 'manjaro'])
 
     # Set /etc/keyboard.conf (keyboardctl is depreciated)
-    if os.path.exists("%s/etc/pacman.d/gnupg" % install_path):
+    if os.path.exists("%s/etc/keyboard.conf" % install_path):
         keyboard_layout = libcalamares.globalstorage.value("keyboardLayout")
         keyboard_variant = libcalamares.globalstorage.value("keyboardVariant")
         consolefh = open("%s/etc/keyboard.conf" % install_path, "r")
