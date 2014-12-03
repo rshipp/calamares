@@ -74,7 +74,7 @@ def run():
         consolefh = open("%s/etc/keyboard.conf" % install_path, "r")
         newconsolefh = open("%s/etc/keyboard.new" % install_path, "w")
         for line in consolefh:
-        line = line.rstrip("\r\n")
+            line = line.rstrip("\r\n")
             if(line.startswith("XKBLAYOUT=")):
                 newconsolefh.write("XKBLAYOUT=\"%s\"\n" % keyboard_layout)
             elif(line.startswith("XKBVARIANT=") and keyboard_variant != ''):
