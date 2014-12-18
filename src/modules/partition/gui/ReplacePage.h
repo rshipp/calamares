@@ -1,6 +1,7 @@
 /* === This file is part of Calamares - <http://github.com/calamares> ===
  *
  *   Copyright 2014, Teo Mrnjavac <teo@kde.org>
+ *   Copyright 2014, Aurélien Gâteau <agateau@kde.org>
  *
  *   Calamares is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -16,52 +17,49 @@
  *   along with Calamares. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CHOICEPAGE_H
-#define CHOICEPAGE_H
+#ifndef REPLACEPAGE_H
+#define REPLACEPAGE_H
 
 #include <QWidget>
+#include <QScopedPointer>
 
-#include "OsproberEntry.h"
-
-class QBoxLayout;
-class QLabel;
-
+class Ui_ReplacePage;
 class PartitionCoreModule;
+namespace CalamaresUtils
+{
+enum ImageType : int;
+}
 
-class ChoicePage : public QWidget
+class ReplacePage : public QWidget
 {
     Q_OBJECT
 public:
-    enum Choice
-    {
-        NoChoice,
-        Alongside,
-        Erase,
-        Replace,
-        Manual
-    };
+    explicit ReplacePage( PartitionCoreModule* core , QWidget* parent = nullptr );
+    virtual ~ReplacePage();
 
-    explicit ChoicePage( QWidget* parent = nullptr );
-    virtual ~ChoicePage();
+    bool isNextEnabled() const;
 
-    void init( PartitionCoreModule* core, const OsproberEntryList& osproberEntries );
-
-    bool isNextEnabled();
-
-    Choice currentChoice();
+    void applyChanges();
 
 signals:
     void nextStatusChanged( bool );
 
+private slots:
+    void onPartitionSelected();
+
 private:
+    QScopedPointer< Ui_ReplacePage > m_ui;
     void setNextEnabled( bool enabled );
 
-    bool m_nextEnabled;
-    PartitionCoreModule* m_core;
-    QBoxLayout* m_itemsLayout;
-    QLabel* m_messageLabel;
+    void updateStatus( CalamaresUtils::ImageType imageType, const QString& text );
 
-    Choice m_choice;
+    PartitionCoreModule* m_core;
+
+    bool m_nextEnabled;
+
+    void updateFromCurrentDevice();
+    void onPartitionViewActivated();
+    void onPartitionModelReset();
 };
 
-#endif // CHOICEPAGE_H
+#endif // REPLACEPAGE_H
