@@ -53,9 +53,6 @@ ReplacePage::ReplacePage( PartitionCoreModule* core, QWidget* parent )
         updateFromCurrentDevice();
     } );
 
-    connect( m_ui->partitionTreeView->selectionModel(), &QItemSelectionModel::currentRowChanged,
-             this, &ReplacePage::onPartitionViewActivated );
-
     CALAMARES_RETRANSLATE(
         m_ui->retranslateUi( this );
         onPartitionSelected();
@@ -110,7 +107,7 @@ ReplacePage::onPartitionSelected()
     {
         updateStatus( CalamaresUtils::Partitions,
                       tr( "Select where to install %1.<br/>"
-                          "<font color=\"red\">Warning: </font>This will delete all files "
+                          "<font color=\"red\">Warning: </font>this will delete all files "
                           "on the selected partition." )
                           .arg( Calamares::Branding::instance()->
                                 string( Calamares::Branding::VersionedName ) ) );
@@ -127,6 +124,10 @@ ReplacePage::onPartitionSelected()
     PartitionModel* model = qobject_cast< PartitionModel* >( m_ui->partitionTreeView->model() );
     if ( model && ok )
     {
+        QStringList osproberLines = Calamares::JobQueue::instance()
+                                    ->globalStorage()
+                                    ->value( "osproberLines" ).toStringList();
+
         Partition* partition = model->partitionForIndex( m_ui->partitionTreeView->currentIndex() );
         if ( !partition ||
              partition->state() != Partition::StateNone )
@@ -169,25 +170,61 @@ ReplacePage::onPartitionSelected()
             return;
         }
 
+        QString prettyName = tr( "Data partition (%1)" )
+                             .arg( partition->fileSystem().name() );
+        foreach ( const QString& line, osproberLines )
+        {
+            QStringList lineColumns = line.split( ':' );
+
+            QString path = lineColumns.value( 0 ).simplified();
+            if ( path == partition->partitionPath() )
+            {
+                QString osName;
+                if ( !lineColumns.value( 1 ).simplified().isEmpty() )
+                    osName = lineColumns.value( 1 ).simplified();
+                else if ( !lineColumns.value( 2 ).simplified().isEmpty() )
+                    osName = lineColumns.value( 2 ).simplified();
+
+                if ( osName.isEmpty() )
+                {
+                    prettyName = tr( "Unknown system partition (%1)" )
+                                 .arg( partition->fileSystem().name() );
+                }
+                else
+                {
+                    prettyName = tr ( "%1 system partition (%2)" )
+                                 .arg( osName.replace( 0, 1, osName.at( 0 ).toUpper() ) )
+                                 .arg( partition->fileSystem().name() );
+                }
+                break;
+            }
+        }
+
         if ( partition->capacity() < requiredSpaceB )
         {
             updateStatus( CalamaresUtils::Fail,
-                          tr( "The partition %1 is too small for %2. Please select a partition "
+                          tr( "<b>%4</b><br/><br/>"
+                              "The partition %1 is too small for %2. Please select a partition "
                               "with capacity at least %3 GiB." )
                           .arg( partition->partitionPath() )
                           .arg( Calamares::Branding::instance()->
                                 string( Calamares::Branding::VersionedName ) )
                           .arg( requiredSpaceB / ( 1024. * 1024. * 1024. ),
-                                0, 'f', 1 ) );
+                                0, 'f', 1 )
+                          .arg( prettyName ) );
             setNextEnabled( false );
             return;
         }
 
         updateStatus( CalamaresUtils::Partitions,
-                      tr( "%1 will be installed on %2." )
+                      tr( "<b>%3</b><br/><br/>"
+                          "%1 will be installed on %2.<br/>"
+                          "<font color=\"red\">Warning: </font>all data on partition"
+                          "%2 will be lost.")
                         .arg( Calamares::Branding::instance()->
                             string( Calamares::Branding::VersionedName ) )
-                        .arg( partition->partitionPath() ) );
+                        .arg( partition->partitionPath() )
+                        .arg( prettyName ) );
         setNextEnabled( true );
     }
 }
@@ -243,11 +280,9 @@ ReplacePage::updateFromCurrentDevice()
     //updateButtons();
     // Establish connection here because selection model is destroyed when
     // model changes
-    connect( m_ui->partitionTreeView->selectionModel(), &QItemSelectionModel::currentChanged,
-             [ this ]( const QModelIndex& index, const QModelIndex& oldIndex )
-    {
-    //    updateButtons();
-    } );
+    connect( m_ui->partitionTreeView->selectionModel(), &QItemSelectionModel::currentRowChanged,
+             this, &ReplacePage::onPartitionViewActivated );
+
     connect( model, &QAbstractItemModel::modelReset, this, &ReplacePage::onPartitionModelReset );
 }
 
