@@ -1,0 +1,17 @@
+---
+componentName:  chakra
+
+strings:
+    productName:         Chakra GNU/Linux
+    shortProductName:    Chakra
+    version:             UnknownName
+    shortVersion:        2014
+    versionedName:       Chakra GNU/Linux 2014 "UnknownName"
+    shortVersionedName:  Chakra "UnknownName"
+    bootloaderEntryName: Chakra
+
+images:
+    productLogo:         "chakra.png"
+    productIcon:         "chakra.png"
+
+slideshow:               "show.qml"
