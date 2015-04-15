@@ -31,33 +31,182 @@ Presentation
     }
     
     Slide {
-
         Image {
             id: background
-            source: "squid.png"
-            width: 200; height: 200
+            source: "img/screenshot01.png"
+            width: 626; height: 386
             fillMode: Image.PreserveAspectFit
             anchors.centerIn: parent
         }
         Text {
             anchors.horizontalCenter: background.horizontalCenter
             anchors.top: background.bottom
-            text: "This is a customizable QML slideshow.<br/>"+
-                  "Distributions should provide their own slideshow and list it in <br/>"+
-                  "their custom branding.desc file.<br/>"+
-                  "To create a Calamares presentation in QML, import calamares.slideshow,<br/>"+
-                  "define a Presentation element with as many Slide elements as needed."
+            text: ""
             wrapMode: Text.WordWrap
-            width: root.width
+            width: 600
             horizontalAlignment: Text.Center
         }
     }
 
     Slide {
-        centeredText: "This is a second Slide element."
+        Image {
+            id: background
+            source: "img/screenshot02.png"
+            width: 626; height: 386
+            fillMode: Image.PreserveAspectFit
+            anchors.centerIn: parent
+        }
+        Text {
+            anchors.horizontalCenter: background.horizontalCenter
+            anchors.top: background.bottom
+            text: ""
+            wrapMode: Text.WordWrap
+            width: 600
+            horizontalAlignment: Text.Center
+        }
     }
 
     Slide {
-        centeredText: "This is a third Slide element."
+        Image {
+            id: background
+            source: "img/screenshot03.png"
+            width: 626; height: 386
+            fillMode: Image.PreserveAspectFit
+            anchors.centerIn: parent
+        }
+        Text {
+            anchors.horizontalCenter: background.horizontalCenter
+            anchors.top: background.bottom
+            text: ""
+            wrapMode: Text.WordWrap
+            width: 600
+            horizontalAlignment: Text.Center
+        }
+    }
+
+    Slide {
+        Image {
+            id: background
+            source: "img/screenshot04.png"
+            width: 626; height: 386
+            fillMode: Image.PreserveAspectFit
+            anchors.centerIn: parent
+        }
+        Text {
+            anchors.horizontalCenter: background.horizontalCenter
+            anchors.top: background.bottom
+            text: ""
+            wrapMode: Text.WordWrap
+            width: 600
+            horizontalAlignment: Text.Center
+        }
+    }
+
+    Slide {
+        Image {
+            id: background
+            source: "img/screenshot05.png"
+            width: 626; height: 386
+            fillMode: Image.PreserveAspectFit
+            anchors.centerIn: parent
+        }
+        Text {
+            anchors.horizontalCenter: background.horizontalCenter
+            anchors.top: background.bottom
+            text: ""
+            wrapMode: Text.WordWrap
+            width: 600
+            horizontalAlignment: Text.Center
+        }
+    }
+
+    Slide {
+        Image {
+            id: background
+            source: "img/screenshot06.png"
+            width: 626; height: 386
+            fillMode: Image.PreserveAspectFit
+            anchors.centerIn: parent
+        }
+        Text {
+            anchors.horizontalCenter: background.horizontalCenter
+            anchors.top: background.bottom
+            text: ""
+            wrapMode: Text.WordWrap
+            width: 600
+            horizontalAlignment: Text.Center
+        }
+    }
+
+    Slide {
+        Image {
+            id: background
+            source: "img/screenshot07.png"
+            width: 626; height: 386
+            fillMode: Image.PreserveAspectFit
+            anchors.centerIn: parent
+        }
+        Text {
+            anchors.horizontalCenter: background.horizontalCenter
+            anchors.top: background.bottom
+            text: ""
+            wrapMode: Text.WordWrap
+            width: 600
+            horizontalAlignment: Text.Center
+        }
+    }
+
+    Slide {
+        Image {
+            id: background
+            source: "img/screenshot08.png"
+            width: 626; height: 386
+            fillMode: Image.PreserveAspectFit
+            anchors.centerIn: parent
+        }
+        Text {
+            anchors.horizontalCenter: background.horizontalCenter
+            anchors.top: background.bottom
+            text: ""
+            wrapMode: Text.WordWrap
+            width: 600
+            horizontalAlignment: Text.Center
+        }
+    }
+
+    Slide {
+        Image {
+            id: background
+            source: "img/screenshot09.png"
+            width: 626; height: 386
+            fillMode: Image.PreserveAspectFit
+            anchors.centerIn: parent
+        }
+        Text {
+            anchors.horizontalCenter: background.horizontalCenter
+            anchors.top: background.bottom
+            text: ""
+            wrapMode: Text.WordWrap
+            width: 600
+            horizontalAlignment: Text.Center
+        }
+    }
+
+    Slide {
+        Image {
+            id: background
+            source: "img/screenshot10.png"
+            width: 626; height: 386
+            fillMode: Image.PreserveAspectFit
+            anchors.centerIn: parent
+        }
+        Text {
+            anchors.horizontalCenter: background.horizontalCenter
+            anchors.top: background.bottom
+            text: ""
+            wrapMode: Text.WordWrap
+            width: 600
+            horizontalAlignment: Text.Center
+        }
     }
 }
