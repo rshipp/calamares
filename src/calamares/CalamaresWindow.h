@@ -1,6 +1,6 @@
 /* === This file is part of Calamares - <http://github.com/calamares> ===
  *
- *   Copyright 2014, Teo Mrnjavac <teo@kde.org>
+ *   Copyright 2014-2015, Teo Mrnjavac <teo@kde.org>
  *
  *   Calamares is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -19,7 +19,13 @@
 #ifndef CALAMARESWINDOW_H
 #define CALAMARESWINDOW_H
 
+#include <QPointer>
 #include <QWidget>
+
+namespace Calamares
+{
+class DebugWindow;
+}
 
 class CalamaresWindow : public QWidget
 {
@@ -28,6 +34,8 @@ public:
     CalamaresWindow( QWidget* parent = nullptr );
     virtual ~CalamaresWindow() {}
 
+private:
+    QPointer< Calamares::DebugWindow > m_debugWindow;
 };
 
 #endif //CALAMARESWINDOW_H

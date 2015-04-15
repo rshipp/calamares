@@ -1,6 +1,6 @@
 /* === This file is part of Calamares - <http://github.com/calamares> ===
  *
- *   Copyright 2014, Teo Mrnjavac <teo@kde.org>
+ *   Copyright 2015, Teo Mrnjavac <teo@kde.org>
  *
  *   Calamares is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -16,20 +16,30 @@
  *   along with Calamares. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CALAMARESSTYLE_H
-#define CALAMARESSTYLE_H
+#ifndef CALAMARES_DEBUGWINDOW_H
+#define CALAMARES_DEBUGWINDOW_H
 
-#include "../UiDllMacro.h"
+#include "ui_DebugWindow.h"
 
-#include <QColor>
+#include <QWidget>
+
+namespace Calamares {
+
+class DebugWindow : public QWidget, private Ui::DebugWindow
+{
+    Q_OBJECT
+
+public:
+    explicit DebugWindow();
+
+signals:
+    void closed();
+
+protected:
+    void closeEvent( QCloseEvent* e ) override;
+
+};
 
 
-namespace CalamaresStyle {
-
-static const QColor SIDEBAR_BACKGROUND =  "#292F34";
-static const QColor SIDEBAR_TEXT =        "#FFFFFF";
-static const QColor SIDEBAR_TEXT_SELECT = "#292F34";
-
-} // namespace CalamaresStyle
-
-#endif // CALAMARESSTYLE_H
+} // namespace Calamares
+#endif // CALAMARES_DEBUGWINDOW_H

@@ -21,8 +21,10 @@
 #include "ViewManager.h"
 #include "progresstree/ProgressTreeView.h"
 #include "utils/CalamaresUtilsGui.h"
-#include "utils/CalamaresStyle.h"
 #include "utils/Logger.h"
+#include "utils/DebugWindow.h"
+#include "utils/Retranslator.h"
+#include "Settings.h"
 #include "Branding.h"
 
 #include <QApplication>
@@ -33,13 +35,16 @@
 
 CalamaresWindow::CalamaresWindow( QWidget* parent )
     : QWidget( parent )
+    , m_debugWindow( nullptr )
 {
     // Hide close button
     setWindowFlags( Qt::Window | Qt::WindowTitleHint | Qt::CustomizeWindowHint );
 
-    setWindowTitle( tr( "%1 Installer" )
-                    .arg( Calamares::Branding::instance()->
-                          string( Calamares::Branding::ProductName ) ) );
+    CALAMARES_RETRANSLATE(
+        setWindowTitle( tr( "%1 Installer" )
+                        .arg( Calamares::Branding::instance()->
+                              string( Calamares::Branding::ProductName ) ) );
+    )
 
     setMinimumSize( 1010, 520 );
     QSize availableSize = qApp->desktop()->screenGeometry( this ).size();
@@ -67,8 +72,10 @@ CalamaresWindow::CalamaresWindow( QWidget* parent )
     {
         QPalette plt = sideBox->palette();
         sideBox->setAutoFillBackground( true );
-        plt.setColor( sideBox->backgroundRole(), CalamaresStyle::SIDEBAR_BACKGROUND );
-        plt.setColor( sideBox->foregroundRole(), CalamaresStyle::SIDEBAR_TEXT );
+        plt.setColor( sideBox->backgroundRole(), Calamares::Branding::instance()->
+                      styleString( Calamares::Branding::SidebarBackground ) );
+        plt.setColor( sideBox->foregroundRole(), Calamares::Branding::instance()->
+                      styleString( Calamares::Branding::SidebarText ) );
         sideBox->setPalette( plt );
         logoLabel->setPalette( plt );
     }
@@ -83,6 +90,40 @@ CalamaresWindow::CalamaresWindow( QWidget* parent )
     ProgressTreeView* tv = new ProgressTreeView( sideBox );
     sideLayout->addWidget( tv );
     tv->setFocusPolicy( Qt::NoFocus );
+
+    if ( Calamares::Settings::instance()->debugMode() )
+    {
+        QPushButton* debugWindowBtn = new QPushButton;
+        CALAMARES_RETRANSLATE(
+            debugWindowBtn->setText( tr( "Show debug information" ) );
+        )
+        sideLayout->addWidget( debugWindowBtn );
+        debugWindowBtn->setFlat( true );
+        debugWindowBtn->setCheckable( true );
+        connect( debugWindowBtn, &QPushButton::clicked,
+                 [ this, debugWindowBtn ]( bool checked )
+        {
+            if ( checked )
+            {
+                m_debugWindow = new Calamares::DebugWindow();
+                m_debugWindow->show();
+                connect( m_debugWindow, &Calamares::DebugWindow::closed,
+                         [ this, debugWindowBtn ]
+                {
+                    m_debugWindow->deleteLater();
+                    debugWindowBtn->setChecked( false );
+                } );
+            }
+            else
+            {
+                if ( m_debugWindow )
+                {
+                    m_debugWindow->deleteLater();
+                }
+            }
+        } );
+    }
+
     CalamaresUtils::unmarginLayout( sideLayout );
     CalamaresUtils::unmarginLayout( mainLayout );
 
