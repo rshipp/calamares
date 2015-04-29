@@ -1,0 +1,6 @@
+---
+type:       "job"
+name:       "_nonfree_drivers"
+interface:  "python"
+requires:   []
+script:     "main.py"
