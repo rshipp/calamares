@@ -1,6 +1,7 @@
 /* === This file is part of Calamares - <http://github.com/calamares> ===
  *
  *   Copyright 2014, Aurélien Gâteau <agateau@kde.org>
+ *   Copyright 2015, Teo Mrnjavac <teo@kde.org>
  *
  *   Calamares is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -30,13 +31,10 @@
 class PartitionPreview : public QAbstractItemView
 {
 public:
-    explicit PartitionPreview( QWidget* parent = 0 );
+    explicit PartitionPreview( QWidget* parent = nullptr );
     ~PartitionPreview();
 
-    QSize minimumSizeHint() const override
-    {
-        return sizeHint();
-    }
+    QSize minimumSizeHint() const override;
 
     QSize sizeHint() const override;
 
@@ -47,6 +45,8 @@ public:
     QRect visualRect( const QModelIndex& index ) const override;
     void scrollTo( const QModelIndex& index, ScrollHint hint = EnsureVisible ) override;
 
+    void setLabelsVisible( bool visible = true );
+
 protected:
     // QAbstractItemView API
     QRegion visualRegionForSelection( const QItemSelection& selection ) const override;
@@ -56,8 +56,18 @@ protected:
     QModelIndex moveCursor( CursorAction cursorAction, Qt::KeyboardModifiers modifiers ) override;
     void setSelection( const QRect& rect, QItemSelectionModel::SelectionFlags flags ) override;
 
+protected slots:
+    void updateGeometries() override;
+
 private:
     void drawPartitions( QPainter* painter, const QRect& rect, const QModelIndex& parent );
+    void drawLabels( QPainter* painter, const QRect& rect, const QModelIndex& parent );
+    QSize sizeForAllLabels( int maxLineWidth ) const;
+    QSize sizeForLabel( const QStringList& text ) const;
+    void drawLabel( QPainter* painter, const QStringList& text, const QColor& color, const QPoint& pos );
+    QModelIndexList getIndexesToDraw( const QModelIndex& parent ) const;
+
+    bool m_showLabels;
 };
 
 #endif /* PARTITIONPREVIEW_H */

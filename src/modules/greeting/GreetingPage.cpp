@@ -147,13 +147,13 @@ GreetingPage::GreetingPage( QWidget* parent )
                                 "<h1>%1</h1><br/>"
                                 "<strong>%2<br/>"
                                 "for %3</strong><br/><br/>"
-                                "Copyright 2014 Teo Mrnjavac &lt;teo@kde.org&gt;<br/>"
+                                "Copyright 2014-2015 Teo Mrnjavac &lt;teo@kde.org&gt;<br/>"
                                 "Thanks to: Anke Boersma, Aurélien Gâteau, Kevin Kofler, Philip Müller, "
                                 "Pier Luigi Fiorini and Rohan Garg.<br/><br/>"
-                                "<a href=\"https://calamares.io/\">Calamares</a> "
+                                "<a href=\"http://calamares.io/\">Calamares</a> "
                                 "development is sponsored by <br/>"
                                 "<a href=\"http://www.blue-systems.com/\">Blue Systems</a> - "
-                                "technologies for a better world."
+                                "Liberating Software."
                             )
                             .arg( CALAMARES_APPLICATION_NAME )
                             .arg( CALAMARES_VERSION )

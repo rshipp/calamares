@@ -262,11 +262,13 @@ PartitionViewStep::createSummaryWidget() const
         PartitionPreview* preview;
 
         preview = new PartitionPreview;
+        preview->setLabelsVisible( true );
         preview->setModel( info.partitionModelBefore );
         info.partitionModelBefore->setParent( widget );
         formLayout->addRow( tr( "Before:" ), preview );
 
         preview = new PartitionPreview;
+        preview->setLabelsVisible( true );
         preview->setModel( info.partitionModelAfter );
         info.partitionModelAfter->setParent( widget );
         formLayout->addRow( tr( "After:" ), preview );
@@ -380,6 +382,17 @@ PartitionViewStep::isAtEnd() const
     if ( m_choicePage == m_widget->currentWidget() )
         return false;
     return true;
+}
+
+
+void
+PartitionViewStep::onActivate()
+{
+    // if we're coming back to PVS from the next VS
+    if ( m_widget->currentWidget() == m_replacePage )
+    {
+        m_replacePage->reset();
+    }
 }
 
 

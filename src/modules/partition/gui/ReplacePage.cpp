@@ -42,6 +42,7 @@ ReplacePage::ReplacePage( PartitionCoreModule* core, QWidget* parent )
 {
     m_ui->setupUi( this );
     m_ui->deviceComboBox->setModel( m_core->deviceModel() );
+    m_ui->partitionPreview->setLabelsVisible( true );
 
 //    updateButtons();
 
@@ -68,6 +69,16 @@ bool
 ReplacePage::isNextEnabled() const
 {
     return m_nextEnabled;
+}
+
+
+void
+ReplacePage::reset()
+{
+    int oldDeviceIndex = m_ui->deviceComboBox->currentIndex();
+    m_core->revert();
+    m_ui->deviceComboBox->setCurrentIndex( oldDeviceIndex );
+    updateFromCurrentDevice();
 }
 
 
