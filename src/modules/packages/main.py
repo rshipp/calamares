@@ -34,27 +34,34 @@ class PackageManager:
         """ Installs packages.
 
         :param pkgs:
+        :param from_local:
         """
         if self.backend == "packagekit":
             for pkg in pkgs:
                 check_chroot_call(["pkcon", "-py", "install", pkg])
         elif self.backend == "zypp":
-            check_chroot_call(
-                ["zypper", "--non-interactive", "--quiet-install", "install",
-                 "--auto-agree-with-licenses", "install"] + pkgs)
+            check_chroot_call(["zypper", "--non-interactive", "--quiet-install", "install",
+                               "--auto-agree-with-licenses", "install"] + pkgs)
         elif self.backend == "yum":
             check_chroot_call(["yum", "install", "-y"] + pkgs)
         elif self.backend == "dnf":
             check_chroot_call(["dnf", "install", "-y"] + pkgs)
         elif self.backend == "urpmi":
-            check_chroot_call(
-                ["urpmi", "--download-all", "--no-suggests", "--no-verify-rpm",
-                 "--fastunsafe", "--ignoresize", "--nolock", "--auto"] + pkgs)
+            check_chroot_call(["urpmi", "--download-all", "--no-suggests", "--no-verify-rpm",
+                               "--fastunsafe", "--ignoresize", "--nolock", "--auto"] + pkgs)
         elif self.backend == "apt":
             check_chroot_call(["apt-get", "-q", "-y", "install"] + pkgs)
         elif self.backend == "pacman":
-            pacman_flags = "-U" if from_local else "-Sy"
+            if from_local:
+                pacman_flags = "-U"
+            else:
+                pacman_flags = "-Sy"
+
             check_chroot_call(["pacman", pacman_flags, "--noconfirm"] + pkgs)
+        elif self.backend == "portage":
+            check_chroot_call(["emerge", "-v"] + pkgs)
+        elif self.backend == "entropy":
+            check_chroot_call(["equo", "i"] + pkgs)
 
     def remove(self, pkgs):
         """ Removes packages.
@@ -78,6 +85,10 @@ class PackageManager:
             check_chroot_call(["apt-get", "--purge", "-q", "-y", "autoremove"])
         elif self.backend == "pacman":
             check_chroot_call(["pacman", "-Rs", "--noconfirm"] + pkgs)
+        elif self.backend == "portage":
+            check_chroot_call(["emerge", "-C"] + pkgs)
+        elif self.backend == "entropy":
+            check_chroot_call(["equo", "rm"] + pkgs)
 
 
 def run_operations(pkgman, entry):
@@ -102,17 +113,19 @@ def run():
     :return:
     """
     backend = libcalamares.job.configuration.get("backend")
-    if backend not in ("packagekit", "zypp", "yum", "dnf", "urpmi", "apt", "pacman"):
-        return ("Bad backend", "backend=\"{}\"".format(backend))
+
+    if backend not in ("packagekit", "zypp", "yum", "dnf", "urpmi", "apt", "pacman", "portage", "entropy"):
+        return "Bad backend", "backend=\"{}\"".format(backend)
 
     pkgman = PackageManager(backend)
-
     operations = libcalamares.job.configuration.get("operations", [])
+
     for entry in operations:
         run_operations(pkgman, entry)
 
     if libcalamares.globalstorage.contains("packageOperations"):
         operations = libcalamares.globalstorage.value("packageOperations")
+
         for entry in operations:
             run_operations(pkgman, entry)
 

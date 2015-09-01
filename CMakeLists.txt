@@ -1,4 +1,4 @@
-project( calamares )
+project( calamares CXX )
 
 # The partition manager uses ECM but ECMConfig.cmake
 # will complain if we require CMake less than 2.8.13,
@@ -6,8 +6,29 @@ project( calamares )
 cmake_minimum_required( VERSION 2.8.12 )
 
 set( CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/CMakeModules" )
-set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wl,--no-undefined" )
-set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wl,--fatal-warnings -Wnon-virtual-dtor -Woverloaded-virtual -Werror=return-type" )
+
+if( CMAKE_CXX_COMPILER_ID MATCHES "Clang" )
+    message( STATUS "Found Clang ${CMAKE_CXX_COMPILER_VERSION}, setting up Clang-specific compiler flags." )
+    set( CMAKE_C_FLAGS                  "${CMAKE_C_FLAGS} -Wall -std=c99" )
+    set( CMAKE_C_FLAGS_DEBUG            "-g" )
+    set( CMAKE_C_FLAGS_MINSIZEREL       "-Os -DNDEBUG" )
+    set( CMAKE_C_FLAGS_RELEASE          "-O4 -DNDEBUG" )
+    set( CMAKE_C_FLAGS_RELWITHDEBINFO   "-O2 -g" )
+
+    set( CMAKE_CXX_FLAGS                "${CMAKE_CXX_FLAGS} -Weverything -std=c++11" )
+    set( CMAKE_CXX_FLAGS_DEBUG          "-g" )
+    set( CMAKE_CXX_FLAGS_MINSIZEREL     "-Os -DNDEBUG" )
+    set( CMAKE_CXX_FLAGS_RELEASE        "-O4 -DNDEBUG" )
+    set( CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O2 -g" )
+
+    set( CMAKE_TOOLCHAIN_PREFIX "llvm-" )
+
+    set( CMAKE_SHARED_LINKER_FLAGS "-Wl,--no-undefined" )
+else()
+    set( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c99" )
+    set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wl,--no-undefined" )
+    set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wl,--fatal-warnings -Wnon-virtual-dtor -Woverloaded-virtual -Werror=return-type" )
+endif()
 
 if( CMAKE_COMPILER_IS_GNUCXX )
     if( CMAKE_CXX_COMPILER_VERSION VERSION_GREATER 4.9 OR
@@ -69,12 +90,12 @@ set( CALAMARES_ORGANIZATION_NAME "Calamares" )
 set( CALAMARES_ORGANIZATION_DOMAIN "github.com/calamares" )
 set( CALAMARES_APPLICATION_NAME  "Calamares" )
 set( CALAMARES_DESCRIPTION_SUMMARY "The distribution-independent installer framework" )
-set( CALAMARES_TRANSLATION_LANGUAGES ar ast ca cs_CZ da de en en_GB es_MX es fi_FI fr hr hu id it_IT ja lt nl pl pt_BR pt_PT ro ru sk sl sv tr_TR zh_CN zh_TW )
+set( CALAMARES_TRANSLATION_LANGUAGES ar ast ca cs_CZ da de en en_GB es_MX es fi_FI fr hr hu id it_IT ja lt nl pl pt_BR pt_PT ro ru sk sl sv th tr_TR zh_CN zh_TW )
 
 set( CALAMARES_VERSION_MAJOR 1 )
-set( CALAMARES_VERSION_MINOR 0 )
-set( CALAMARES_VERSION_PATCH 0 )
-#set( CALAMARES_VERSION_RC 0 )
+set( CALAMARES_VERSION_MINOR 1 )
+set( CALAMARES_VERSION_PATCH 2 )
+set( CALAMARES_VERSION_RC 0 )
 
 set( CALAMARES_VERSION ${CALAMARES_VERSION_MAJOR}.${CALAMARES_VERSION_MINOR}.${CALAMARES_VERSION_PATCH} )
 set( CALAMARES_VERSION_SHORT "${CALAMARES_VERSION}" )

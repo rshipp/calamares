@@ -32,12 +32,14 @@
 
 #include <QBoxLayout>
 #include <QButtonGroup>
+#include <QDir>
 #include <QLabel>
 
 ChoicePage::ChoicePage( QWidget* parent )
     : QWidget( parent )
     , m_choice( NoChoice )
     , m_nextEnabled( false )
+    , m_core( nullptr )
 {
     QBoxLayout* mainLayout = new QVBoxLayout;
     setLayout( mainLayout );
@@ -181,7 +183,9 @@ ChoicePage::init( PartitionCoreModule* core, const OsproberEntryList& osproberEn
                                               "You can choose which operating system you want each time the "
                                               "computer starts up." )
                                             .arg( Calamares::Branding::instance()->
-                                                  string( Calamares::Branding::ShortVersionedName ) ) );
+                                                  string( Calamares::Branding::ShortVersionedName ) )
+                                            .arg( Calamares::Branding::instance()->
+                                                  string( Calamares::Branding::ShortProductName ) ) );
 
                 if ( core->deviceModel()->rowCount() < 2 )
                     eraseButton->setText( tr( "<strong>Erase disk and install %1</strong><br/>"
@@ -228,7 +232,9 @@ ChoicePage::init( PartitionCoreModule* core, const OsproberEntryList& osproberEn
                                           "You can choose which operating system you want each time the "
                                           "computer starts up." )
                                         .arg( Calamares::Branding::instance()->
-                                              string( Calamares::Branding::ShortVersionedName ) ) );
+                                              string( Calamares::Branding::ShortVersionedName ) )
+                                        .arg( Calamares::Branding::instance()->
+                                              string( Calamares::Branding::ShortProductName ) ) );
 
             if ( core->deviceModel()->rowCount() < 2 )
                 eraseButton->setText( tr( "<strong>Erase disk and install %1</strong><br/>"
@@ -250,6 +256,17 @@ ChoicePage::init( PartitionCoreModule* core, const OsproberEntryList& osproberEn
 
         if ( !atLeastOneCanBeResized )
             alongsideButton->hide();
+    }
+
+    bool isEfi = QDir( "/sys/firmware/efi/efivars" ).exists();
+    bool efiSystemPartitionFound = !m_core->efiSystemPartitions().isEmpty();
+
+    if ( isEfi && !efiSystemPartitionFound )
+    {
+        cDebug() << "WARNING: system is EFI but there's not EFI system partition, "
+                    "DISABLING alongside and replace features.";
+        alongsideButton->hide();
+        replaceButton->hide();
     }
 
     QFrame* hLine = new QFrame;

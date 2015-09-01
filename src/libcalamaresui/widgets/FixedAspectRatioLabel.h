@@ -1,6 +1,6 @@
 /* === This file is part of Calamares - <http://github.com/calamares> ===
  *
- *   Copyright 2014, Teo Mrnjavac <teo@kde.org>
+ *   Copyright 2015, Teo Mrnjavac <teo@kde.org>
  *
  *   Calamares is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -16,24 +16,25 @@
  *   along with Calamares. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef PREPAREPAGE_H
-#define PREPAREPAGE_H
+#ifndef FIXEDASPECTRATIOLABEL_H
+#define FIXEDASPECTRATIOLABEL_H
 
-#include "PrepareViewStep.h"
+#include <QLabel>
+#include <QPixmap>
 
-#include <QBoxLayout>
-#include <QWidget>
-
-class PreparePage : public QWidget
+class FixedAspectRatioLabel : public QLabel
 {
     Q_OBJECT
 public:
-    explicit PreparePage( QWidget* parent = nullptr );
+    explicit FixedAspectRatioLabel( QWidget* parent = nullptr );
+    virtual ~FixedAspectRatioLabel();
 
-    void init( const QList< PrepareEntry >& checkEntries );
+public slots:
+    virtual void setPixmap( const QPixmap &pixmap );
+    void resizeEvent( QResizeEvent* event ) override;
 
 private:
-    QBoxLayout* m_entriesLayout;
+    QPixmap m_pixmap;
 };
 
-#endif // PREPAREPAGE_H
+#endif // FIXEDASPECTRATIOLABEL_H

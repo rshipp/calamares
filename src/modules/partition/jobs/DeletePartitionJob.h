@@ -40,6 +40,7 @@ public:
     DeletePartitionJob( Device* device, Partition* partition );
     QString prettyName() const override;
     QString prettyDescription() const override;
+    QString prettyStatusMessage() const override;
     Calamares::JobResult exec() override;
 
     void updatePreview();
@@ -50,7 +51,6 @@ public:
 
 private:
     Device* m_device;
-    FileSystem* m_fs;
 };
 
 #endif /* DELETEPARTITIONJOB_H */

@@ -47,7 +47,7 @@ CalamaresWindow::CalamaresWindow( QWidget* parent )
     )
 
     setMinimumSize( 1010, 520 );
-    QSize availableSize = qApp->desktop()->screenGeometry( this ).size();
+    QSize availableSize = qApp->desktop()->availableGeometry( this ).size();
     int w = qBound( 1010, CalamaresUtils::defaultFontHeight() * 60, availableSize.width() );
     int h = qBound( 520,  CalamaresUtils::defaultFontHeight() * 36, availableSize.height() );
 
@@ -101,14 +101,14 @@ CalamaresWindow::CalamaresWindow( QWidget* parent )
         debugWindowBtn->setFlat( true );
         debugWindowBtn->setCheckable( true );
         connect( debugWindowBtn, &QPushButton::clicked,
-                 [ this, debugWindowBtn ]( bool checked )
+                 this, [ = ]( bool checked )
         {
             if ( checked )
             {
                 m_debugWindow = new Calamares::DebugWindow();
                 m_debugWindow->show();
-                connect( m_debugWindow, &Calamares::DebugWindow::closed,
-                         [ this, debugWindowBtn ]
+                connect( m_debugWindow.data(), &Calamares::DebugWindow::closed,
+                         this, [ = ]()
                 {
                     m_debugWindow->deleteLater();
                     debugWindowBtn->setChecked( false );

@@ -151,5 +151,19 @@ UsersViewStep::setConfigurationMap( const QVariantMap& configurationMap )
         Calamares::JobQueue::instance()->globalStorage()->insert( "sudoersGroup",
                         configurationMap.value( "sudoersGroup" ).toString() );
     }
+
+    if ( configurationMap.contains( "setRootPassword" ) &&
+         configurationMap.value( "setRootPassword" ).type() == QVariant::Bool )
+    {
+        Calamares::JobQueue::instance()->globalStorage()->insert( "setRootPassword",
+                        configurationMap.value( "setRootPassword" ).toBool() );
+        m_widget->setShowRootPassword( configurationMap.value( "setRootPassword" ).toBool() );
+    }
+
+    if ( configurationMap.contains( "doAutologin" ) &&
+         configurationMap.value( "doAutologin" ).type() == QVariant::Bool )
+    {
+        m_widget->setAutologinDefault( configurationMap.value( "doAutologin" ).toBool() );
+    }
 }
 

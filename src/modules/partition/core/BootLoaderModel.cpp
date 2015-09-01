@@ -1,6 +1,7 @@
 /* === This file is part of Calamares - <http://github.com/calamares> ===
  *
  *   Copyright 2014, Aurélien Gâteau <agateau@kde.org>
+ *   Copyright 2015, Teo Mrnjavac <teo@kde.org>
  *
  *   Calamares is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -65,6 +66,9 @@ BootLoaderModel::createMbrItems()
 void
 BootLoaderModel::update()
 {
+    clear();
+    createMbrItems();
+
     QString partitionText;
     Partition* partition = PMUtils::findPartitionByMountPoint( m_devices, "/boot" );
     if ( partition )
@@ -85,20 +89,42 @@ BootLoaderModel::update()
     {
         if ( lastIsPartition )
             takeRow( rowCount() - 1 );
-        return;
-    }
-
-    QString mountPoint = PartitionInfo::mountPoint( partition );
-    if ( lastIsPartition )
-    {
-        last->setText( partitionText );
-        last->setData( mountPoint, BootLoaderPathRole );
     }
     else
     {
+        QString mountPoint = PartitionInfo::mountPoint( partition );
+        if ( lastIsPartition )
+        {
+            last->setText( partitionText );
+            last->setData( mountPoint, BootLoaderPathRole );
+        }
+        else
+        {
+            appendRow(
+                createBootLoaderItem( partitionText, PartitionInfo::mountPoint( partition ), true )
+            );
+        }
+
+        // Create "don't install bootloader" item
         appendRow(
-            createBootLoaderItem( partitionText, PartitionInfo::mountPoint( partition ), true )
+            createBootLoaderItem( tr( "Do not install a boot loader" ), QString(), false )
         );
     }
+}
+
+
+QVariant
+BootLoaderModel::data( const QModelIndex& index, int role ) const
+{
+    if ( role == Qt::DisplayRole )
+    {
+        if ( QStandardItemModel::data( index, BootLoaderModel::BootLoaderPathRole ).toString().isEmpty() )
+            return QStandardItemModel::data( index, Qt::DisplayRole ).toString();
+
+        return tr( "%1 (%2)" )
+                .arg( QStandardItemModel::data( index, Qt::DisplayRole ).toString() )
+                .arg( QStandardItemModel::data( index, BootLoaderModel::BootLoaderPathRole ).toString() );
+    }
+    return QStandardItemModel::data( index, role );
 }
 

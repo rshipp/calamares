@@ -89,10 +89,9 @@ public:
 
     QList< Calamares::job_ptr > jobs() const;
 
-    bool hasRootMountPoint() const
-    {
-        return m_hasRootMountPoint;
-    }
+    bool hasRootMountPoint() const;
+
+    QList< Partition* > efiSystemPartitions() const;
 
     void revert();
 
@@ -137,6 +136,7 @@ private:
         bool isDirty() const;
     };
     QList< DeviceInfo* > m_deviceInfos;
+    QList< Partition* > m_efiSystemPartitions;
 
     DeviceModel* m_deviceModel;
     BootLoaderModel* m_bootLoaderModel;
@@ -147,6 +147,7 @@ private:
     void init();
     void updateHasRootMountPoint();
     void updateIsDirty();
+    void scanForEfiSystemPartitions();
 
     DeviceInfo* infoForDevice( Device* ) const;
 

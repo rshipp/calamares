@@ -16,24 +16,28 @@
  *   along with Calamares. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "TextTreeItem.h"
+#ifndef CHECKERWIDGET_H
+#define CHECKERWIDGET_H
 
-#include "ProgressTreeModel.h"
+#include "RequirementsChecker.h"
 
-TextTreeItem::TextTreeItem( std::function< QString() > textReturner,
-                            ProgressTreeItem* parent )
-    : ProgressTreeItem( parent )
+#include <QBoxLayout>
+#include <QWidget>
+
+class CheckerWidget : public QWidget
 {
-    m_textReturner = textReturner;
-}
+    Q_OBJECT
+public:
+    explicit CheckerWidget( QWidget* parent = nullptr );
 
+    void init( const QList< PrepareEntry >& checkEntries );
 
-QVariant
-TextTreeItem::data( int role ) const
-{
-    if ( role == ProgressTreeModel::ProgressTreeItemRole )
-        return this;
-    if ( role == Qt::DisplayRole )
-        return m_textReturner();
-    return QVariant();
-}
+private:
+    void showDetailsDialog( const QList< PrepareEntry >& checkEntries );
+
+    QBoxLayout* m_mainLayout;
+    QBoxLayout* m_entriesLayout;
+    int m_paddingSize;
+};
+
+#endif // CHECKERWIDGET_H

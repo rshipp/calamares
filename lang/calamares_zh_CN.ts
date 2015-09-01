@@ -2,19 +2,34 @@
 <context>
     <name>AlongsidePage</name>
     <message>
-        <location filename="../src/modules/partition/gui/AlongsidePage.cpp" line="72"/>
+        <location filename="../src/modules/partition/gui/AlongsidePage.cpp" line="73"/>
         <source>Choose partition to shrink:</source>
         <translation>选择要缩小的分区：</translation>
     </message>
     <message>
-        <location filename="../src/modules/partition/gui/AlongsidePage.cpp" line="73"/>
+        <location filename="../src/modules/partition/gui/AlongsidePage.cpp" line="74"/>
         <source>Allocate drive space by dragging the divider below:</source>
         <translation>拖动下方的分隔来调整分区空间：</translation>
     </message>
     <message>
-        <location filename="../src/modules/partition/gui/AlongsidePage.cpp" line="180"/>
+        <location filename="../src/modules/partition/gui/AlongsidePage.cpp" line="117"/>
         <source>With this operation, the partition &lt;strong&gt;%1&lt;/strong&gt; which contains %4 will be shrunk to %2MB and a new %3MB partition will be created for %5.</source>
+        <translation>在此操作后，带有 %4 的分区 &lt;strong&gt;%1&lt;/strong&gt; 将缩小到 %2MB，而后将为 %5 创建一个 %3MB 大小的分区。</translation>
+    </message>
+    <message>
+        <location filename="../src/modules/partition/gui/AlongsidePage.cpp" line="217"/>
+        <source>An EFI system partition cannot be found anywhere on this system. Please go back and use manual partitioning to set up %1.</source>
         <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../src/modules/partition/gui/AlongsidePage.cpp" line="227"/>
+        <source>The EFI system partition at %1 will be used for starting %2.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../src/modules/partition/gui/AlongsidePage.cpp" line="237"/>
+        <source>EFI system partition:</source>
+        <translation>EFI 系统分区: </translation>
     </message>
 </context>
 <context>
@@ -170,19 +185,29 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>BootLoaderModel</name>
     <message>
-        <location filename="../src/modules/partition/core/BootLoaderModel.cpp" line="57"/>
+        <location filename="../src/modules/partition/core/BootLoaderModel.cpp" line="58"/>
         <source>Master Boot Record of %1</source>
         <translation>主引导记录 %1</translation>
     </message>
     <message>
-        <location filename="../src/modules/partition/core/BootLoaderModel.cpp" line="71"/>
+        <location filename="../src/modules/partition/core/BootLoaderModel.cpp" line="75"/>
         <source>Boot Partition</source>
         <translation>引导分区</translation>
     </message>
     <message>
-        <location filename="../src/modules/partition/core/BootLoaderModel.cpp" line="76"/>
+        <location filename="../src/modules/partition/core/BootLoaderModel.cpp" line="80"/>
         <source>System Partition</source>
         <translation>系统分区</translation>
+    </message>
+    <message>
+        <location filename="../src/modules/partition/core/BootLoaderModel.cpp" line="110"/>
+        <source>Do not install a boot loader</source>
+        <translation>不要安装引导器</translation>
+    </message>
+    <message>
+        <location filename="../src/modules/partition/core/BootLoaderModel.cpp" line="124"/>
+        <source>%1 (%2)</source>
+        <translation>%1 (%2)</translation>
     </message>
 </context>
 <context>
@@ -208,7 +233,7 @@ p, li { white-space: pre-wrap; }
         <translation>模块</translation>
     </message>
     <message>
-        <location filename="../src/libcalamaresui/utils/DebugWindow.cpp" line="95"/>
+        <location filename="../src/libcalamaresui/utils/DebugWindow.cpp" line="96"/>
         <source>Debug information</source>
         <translation>调试信息</translation>
     </message>
@@ -216,7 +241,7 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>Calamares::InstallationViewStep</name>
     <message>
-        <location filename="../src/libcalamaresui/InstallationViewStep.cpp" line="75"/>
+        <location filename="../src/libcalamaresui/InstallationViewStep.cpp" line="71"/>
         <source>Install</source>
         <translation>安装</translation>
     </message>
@@ -224,7 +249,7 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>Calamares::JobThread</name>
     <message>
-        <location filename="../src/libcalamares/JobQueue.cpp" line="88"/>
+        <location filename="../src/libcalamares/JobQueue.cpp" line="89"/>
         <source>Done</source>
         <translation>完成</translation>
     </message>
@@ -237,12 +262,17 @@ p, li { white-space: pre-wrap; }
         <translation>运行命令 %1 %2</translation>
     </message>
     <message>
-        <location filename="../src/libcalamares/ProcessJob.cpp" line="79"/>
+        <location filename="../src/libcalamares/ProcessJob.cpp" line="60"/>
+        <source>Running command %1 %2</source>
+        <translation>正在运行命令 %1 %2</translation>
+    </message>
+    <message>
+        <location filename="../src/libcalamares/ProcessJob.cpp" line="88"/>
         <source>External command crashed</source>
         <translation>外部命令崩溃</translation>
     </message>
     <message>
-        <location filename="../src/libcalamares/ProcessJob.cpp" line="80"/>
+        <location filename="../src/libcalamares/ProcessJob.cpp" line="89"/>
         <source>Command %1 crashed.
 Output:
 %2</source>
@@ -251,32 +281,32 @@ Output:
 %2</translation>
     </message>
     <message>
-        <location filename="../src/libcalamares/ProcessJob.cpp" line="85"/>
+        <location filename="../src/libcalamares/ProcessJob.cpp" line="94"/>
         <source>External command failed to start</source>
         <translation>外部命令启动失败</translation>
     </message>
     <message>
-        <location filename="../src/libcalamares/ProcessJob.cpp" line="86"/>
+        <location filename="../src/libcalamares/ProcessJob.cpp" line="95"/>
         <source>Command %1 failed to start.</source>
         <translation>命令 %1 启动失败。</translation>
     </message>
     <message>
-        <location filename="../src/libcalamares/ProcessJob.cpp" line="90"/>
+        <location filename="../src/libcalamares/ProcessJob.cpp" line="99"/>
         <source>Internal error when starting command</source>
         <translation>启动命令时出现内部错误</translation>
     </message>
     <message>
-        <location filename="../src/libcalamares/ProcessJob.cpp" line="91"/>
+        <location filename="../src/libcalamares/ProcessJob.cpp" line="100"/>
         <source>Bad parameters for process job call.</source>
         <translation>呼叫进程任务出现错误参数</translation>
     </message>
     <message>
-        <location filename="../src/libcalamares/ProcessJob.cpp" line="94"/>
+        <location filename="../src/libcalamares/ProcessJob.cpp" line="103"/>
         <source>External command failed to finish</source>
         <translation>外部命令结束失败</translation>
     </message>
     <message>
-        <location filename="../src/libcalamares/ProcessJob.cpp" line="95"/>
+        <location filename="../src/libcalamares/ProcessJob.cpp" line="104"/>
         <source>Command %1 failed to finish in %2s.
 Output:
 %3</source>
@@ -285,12 +315,12 @@ Output:
 %3</translation>
     </message>
     <message>
-        <location filename="../src/libcalamares/ProcessJob.cpp" line="101"/>
+        <location filename="../src/libcalamares/ProcessJob.cpp" line="110"/>
         <source>External command finished with errors</source>
         <translation>外部命令完成且有错误信息</translation>
     </message>
     <message>
-        <location filename="../src/libcalamares/ProcessJob.cpp" line="102"/>
+        <location filename="../src/libcalamares/ProcessJob.cpp" line="111"/>
         <source>Command %1 finished with exit code %2.
 Output:
 %3</source>
@@ -302,32 +332,32 @@ Output:
 <context>
     <name>Calamares::PythonJob</name>
     <message>
-        <location filename="../src/libcalamares/PythonJob.cpp" line="234"/>
-        <source>Run script %1</source>
-        <translation>运行脚本 %1</translation>
+        <location filename="../src/libcalamares/PythonJob.cpp" line="241"/>
+        <source>Running %1 operation.</source>
+        <translation>正在运行 %1 个操作。</translation>
     </message>
     <message>
-        <location filename="../src/libcalamares/PythonJob.cpp" line="249"/>
+        <location filename="../src/libcalamares/PythonJob.cpp" line="254"/>
         <source>Bad working directory path</source>
         <translation>错误的工作目录路径</translation>
     </message>
     <message>
-        <location filename="../src/libcalamares/PythonJob.cpp" line="250"/>
+        <location filename="../src/libcalamares/PythonJob.cpp" line="255"/>
         <source>Working directory %1 for python job %2 is not readable.</source>
         <translation>用于 python 任务 %2 的工作目录 %1 不可读。</translation>
     </message>
     <message>
-        <location filename="../src/libcalamares/PythonJob.cpp" line="260"/>
+        <location filename="../src/libcalamares/PythonJob.cpp" line="265"/>
         <source>Bad main script file</source>
         <translation>错误的主脚本文件</translation>
     </message>
     <message>
-        <location filename="../src/libcalamares/PythonJob.cpp" line="261"/>
+        <location filename="../src/libcalamares/PythonJob.cpp" line="266"/>
         <source>Main script file %1 for python job %2 is not readable.</source>
         <translation>用于 python 任务 %2 的主脚本文件 %1 不可读。</translation>
     </message>
     <message>
-        <location filename="../src/libcalamares/PythonJob.cpp" line="306"/>
+        <location filename="../src/libcalamares/PythonJob.cpp" line="311"/>
         <source>Boost.Python error in job &quot;%1&quot;.</source>
         <translation>任务“%1”出现 Boost.Python 错误。</translation>
     </message>
@@ -346,54 +376,54 @@ Output:
     </message>
     <message>
         <location filename="../src/libcalamaresui/ViewManager.cpp" line="68"/>
-        <location filename="../src/libcalamaresui/ViewManager.cpp" line="330"/>
+        <location filename="../src/libcalamaresui/ViewManager.cpp" line="334"/>
         <source>&amp;Cancel</source>
         <translation>取消(&amp;C)</translation>
     </message>
     <message>
-        <location filename="../src/libcalamaresui/ViewManager.cpp" line="88"/>
+        <location filename="../src/libcalamaresui/ViewManager.cpp" line="93"/>
         <source>Cancel installation?</source>
         <translation>取消安装？</translation>
     </message>
     <message>
-        <location filename="../src/libcalamaresui/ViewManager.cpp" line="89"/>
+        <location filename="../src/libcalamaresui/ViewManager.cpp" line="94"/>
         <source>Do you really want to cancel the current install process?
 The installer will quit and all changes will be lost.</source>
         <translation>确定要取消当前的安装吗？
 安装程序将退出，所有修改都会丢失。</translation>
     </message>
     <message>
-        <location filename="../src/libcalamaresui/ViewManager.cpp" line="252"/>
+        <location filename="../src/libcalamaresui/ViewManager.cpp" line="256"/>
         <source>Continue with setup?</source>
-        <translation type="unfinished"/>
+        <translation>要继续进行安装吗？</translation>
     </message>
     <message>
-        <location filename="../src/libcalamaresui/ViewManager.cpp" line="253"/>
+        <location filename="../src/libcalamaresui/ViewManager.cpp" line="257"/>
         <source>The %1 installer is about to make changes to your disk in order to install %2.&lt;br/&gt;&lt;strong&gt;You will not be able to undo these changes.&lt;/strong&gt;</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../src/libcalamaresui/ViewManager.cpp" line="260"/>
+        <location filename="../src/libcalamaresui/ViewManager.cpp" line="264"/>
         <source>&amp;Install now</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../src/libcalamaresui/ViewManager.cpp" line="261"/>
+        <location filename="../src/libcalamaresui/ViewManager.cpp" line="265"/>
         <source>Go &amp;back</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../src/libcalamaresui/ViewManager.cpp" line="300"/>
+        <location filename="../src/libcalamaresui/ViewManager.cpp" line="304"/>
         <source>&amp;Quit</source>
         <translation>退出(&amp;Q)</translation>
     </message>
     <message>
-        <location filename="../src/libcalamaresui/ViewManager.cpp" line="185"/>
+        <location filename="../src/libcalamaresui/ViewManager.cpp" line="189"/>
         <source>Error</source>
         <translation>错误</translation>
     </message>
     <message>
-        <location filename="../src/libcalamaresui/ViewManager.cpp" line="186"/>
+        <location filename="../src/libcalamaresui/ViewManager.cpp" line="190"/>
         <source>Installation Failed</source>
         <translation>安装失败</translation>
     </message>
@@ -442,77 +472,105 @@ The installer will quit and all changes will be lost.</source>
         <translation>正在检查分区 %1 的文件系统。</translation>
     </message>
     <message>
-        <location filename="../src/modules/partition/jobs/CheckFileSystemJob.cpp" line="50"/>
+        <location filename="../src/modules/partition/jobs/CheckFileSystemJob.cpp" line="58"/>
         <source>The file system check on partition %1 failed.</source>
         <translation>检查分区 %1 上的文件系统失败。</translation>
     </message>
 </context>
 <context>
+    <name>CheckerWidget</name>
+    <message>
+        <location filename="../src/modules/welcome/checker/CheckerWidget.cpp" line="95"/>
+        <source>This computer does not satisfy the minimum requirements for installing %1.&lt;br/&gt;Installation cannot continue. &lt;a href=&quot;#details&quot;&gt;Details...&lt;/a&gt;</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../src/modules/welcome/checker/CheckerWidget.cpp" line="113"/>
+        <source>This computer does not satisfy some of the recommended requirements for installing %1.&lt;br/&gt;Installation can continue, but some features might be disabled.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../src/modules/welcome/checker/CheckerWidget.cpp" line="142"/>
+        <source>This program will ask you some questions and set up %2 on your computer.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../src/modules/welcome/checker/CheckerWidget.cpp" line="166"/>
+        <source>For best results, please ensure that this computer:</source>
+        <translation>为了更好的体验，请确定这台电脑: </translation>
+    </message>
+    <message>
+        <location filename="../src/modules/welcome/checker/CheckerWidget.cpp" line="194"/>
+        <source>System requirements</source>
+        <translation>系统需求</translation>
+    </message>
+</context>
+<context>
     <name>ChoicePage</name>
     <message>
-        <location filename="../src/modules/partition/gui/ChoicePage.cpp" line="115"/>
+        <location filename="../src/modules/partition/gui/ChoicePage.cpp" line="117"/>
         <source>This computer currently does not seem to have an operating system on it. What would you like to do?</source>
         <translation>看起来此计算机上现在没有操作系统。您希望做什么?</translation>
     </message>
     <message>
-        <location filename="../src/modules/partition/gui/ChoicePage.cpp" line="141"/>
+        <location filename="../src/modules/partition/gui/ChoicePage.cpp" line="143"/>
         <source>This computer currently has %1 on it. What would you like to do?</source>
         <translation>此计算机现在安装有 %1。您希望做什么？</translation>
     </message>
     <message>
-        <location filename="../src/modules/partition/gui/ChoicePage.cpp" line="119"/>
-        <location filename="../src/modules/partition/gui/ChoicePage.cpp" line="187"/>
-        <location filename="../src/modules/partition/gui/ChoicePage.cpp" line="234"/>
+        <location filename="../src/modules/partition/gui/ChoicePage.cpp" line="121"/>
+        <location filename="../src/modules/partition/gui/ChoicePage.cpp" line="191"/>
+        <location filename="../src/modules/partition/gui/ChoicePage.cpp" line="240"/>
         <source>&lt;strong&gt;Erase disk and install %1&lt;/strong&gt;&lt;br/&gt;&lt;font color=&quot;red&quot;&gt;Warning: &lt;/font&gt;This will delete all of your programs, documents, photos, music, and any other files.</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../src/modules/partition/gui/ChoicePage.cpp" line="125"/>
-        <location filename="../src/modules/partition/gui/ChoicePage.cpp" line="162"/>
-        <location filename="../src/modules/partition/gui/ChoicePage.cpp" line="193"/>
-        <location filename="../src/modules/partition/gui/ChoicePage.cpp" line="240"/>
+        <location filename="../src/modules/partition/gui/ChoicePage.cpp" line="127"/>
+        <location filename="../src/modules/partition/gui/ChoicePage.cpp" line="164"/>
+        <location filename="../src/modules/partition/gui/ChoicePage.cpp" line="197"/>
+        <location filename="../src/modules/partition/gui/ChoicePage.cpp" line="246"/>
         <source>&lt;strong&gt;Erase disk and install %1&lt;/strong&gt;&lt;br/&gt;You will be offered a choice of which disk to erase.</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../src/modules/partition/gui/ChoicePage.cpp" line="145"/>
+        <location filename="../src/modules/partition/gui/ChoicePage.cpp" line="147"/>
         <source>&lt;strong&gt;Install %2 alongside %1&lt;/strong&gt;&lt;br/&gt;The installer will shrink the %1 volume to make room for %2. You can choose which operating system you want each time the computer starts up.</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../src/modules/partition/gui/ChoicePage.cpp" line="154"/>
+        <location filename="../src/modules/partition/gui/ChoicePage.cpp" line="156"/>
         <source>&lt;strong&gt;Erase entire disk with %1 and install %2&lt;/strong&gt;&lt;br/&gt;&lt;font color=&quot;red&quot;&gt;Warning: &lt;/font&gt;This will erase the whole disk and delete all of your %1 programs, documents, photos, music, and any other files.</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../src/modules/partition/gui/ChoicePage.cpp" line="167"/>
-        <location filename="../src/modules/partition/gui/ChoicePage.cpp" line="198"/>
-        <location filename="../src/modules/partition/gui/ChoicePage.cpp" line="245"/>
+        <location filename="../src/modules/partition/gui/ChoicePage.cpp" line="169"/>
+        <location filename="../src/modules/partition/gui/ChoicePage.cpp" line="202"/>
+        <location filename="../src/modules/partition/gui/ChoicePage.cpp" line="251"/>
         <source>&lt;strong&gt;Replace a partition with %1&lt;/strong&gt;&lt;br/&gt;You will be offered a choice of which partition to erase.</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../src/modules/partition/gui/ChoicePage.cpp" line="176"/>
+        <location filename="../src/modules/partition/gui/ChoicePage.cpp" line="178"/>
         <source>This computer already has an operating system on it. What would you like to do?</source>
         <translation>此计算机已安装了一个操作系统。您希望做什么？</translation>
     </message>
     <message>
-        <location filename="../src/modules/partition/gui/ChoicePage.cpp" line="179"/>
+        <location filename="../src/modules/partition/gui/ChoicePage.cpp" line="181"/>
         <source>&lt;strong&gt;Install %1 alongside your current operating system&lt;/strong&gt;&lt;br/&gt;The installer will shrink an existing volume to make room for %2. You can choose which operating system you want each time the computer starts up.</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../src/modules/partition/gui/ChoicePage.cpp" line="223"/>
+        <location filename="../src/modules/partition/gui/ChoicePage.cpp" line="227"/>
         <source>This computer currently has multiple operating systems on it. What would you like to do?</source>
         <translation>此计算机已安装了多个操作系统。您希望做什么？</translation>
     </message>
     <message>
-        <location filename="../src/modules/partition/gui/ChoicePage.cpp" line="226"/>
+        <location filename="../src/modules/partition/gui/ChoicePage.cpp" line="230"/>
         <source>&lt;strong&gt;Install %1 alongside your current operating systems&lt;/strong&gt;&lt;br/&gt;The installer will shrink an existing volume to make room for %2. You can choose which operating system you want each time the computer starts up.</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../src/modules/partition/gui/ChoicePage.cpp" line="261"/>
+        <location filename="../src/modules/partition/gui/ChoicePage.cpp" line="278"/>
         <source>&lt;strong&gt;Manual partitioning&lt;/strong&gt;&lt;br/&gt;You can create or resize partitions yourself, or choose multiple partitions for %1.</source>
         <translation type="unfinished"/>
     </message>
@@ -522,10 +580,15 @@ The installer will quit and all changes will be lost.</source>
     <message>
         <location filename="../src/modules/partition/jobs/ClearMountsJob.cpp" line="42"/>
         <source>Clear mounts for partitioning operations on %1</source>
-        <translation type="unfinished"/>
+        <translation>清理挂载了的分区以在 %1 进行分区操作</translation>
     </message>
     <message>
-        <location filename="../src/modules/partition/jobs/ClearMountsJob.cpp" line="81"/>
+        <location filename="../src/modules/partition/jobs/ClearMountsJob.cpp" line="50"/>
+        <source>Clearing mounts for partitioning operations on %1.</source>
+        <translation>正在清理挂载了的分区以在 %1 进行分区操作。</translation>
+    </message>
+    <message>
+        <location filename="../src/modules/partition/jobs/ClearMountsJob.cpp" line="169"/>
         <source>Cleared all mounts for %1</source>
         <translation type="unfinished"/>
     </message>
@@ -538,12 +601,17 @@ The installer will quit and all changes will be lost.</source>
         <translation>清除所有临时挂载点</translation>
     </message>
     <message>
-        <location filename="../src/modules/partition/jobs/ClearTempMountsJob.cpp" line="49"/>
+        <location filename="../src/modules/partition/jobs/ClearTempMountsJob.cpp" line="45"/>
+        <source>Clearing all temporary mounts.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../src/modules/partition/jobs/ClearTempMountsJob.cpp" line="56"/>
         <source>Cannot get list of temporary mounts.</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../src/modules/partition/jobs/ClearTempMountsJob.cpp" line="88"/>
+        <location filename="../src/modules/partition/jobs/ClearTempMountsJob.cpp" line="95"/>
         <source>Cleared all temporary mounts.</source>
         <translation>所有临时挂载点都已经清除</translation>
     </message>
@@ -880,17 +948,17 @@ The installer will quit and all changes will be lost.</source>
         <translation> MB</translation>
     </message>
     <message>
-        <location filename="../src/modules/partition/gui/CreatePartitionDialog.cpp" line="95"/>
+        <location filename="../src/modules/partition/gui/CreatePartitionDialog.cpp" line="99"/>
         <source>Logical</source>
         <translation>逻辑分区</translation>
     </message>
     <message>
-        <location filename="../src/modules/partition/gui/CreatePartitionDialog.cpp" line="100"/>
+        <location filename="../src/modules/partition/gui/CreatePartitionDialog.cpp" line="104"/>
         <source>Primary</source>
         <translation>主分区</translation>
     </message>
     <message>
-        <location filename="../src/modules/partition/gui/CreatePartitionDialog.cpp" line="117"/>
+        <location filename="../src/modules/partition/gui/CreatePartitionDialog.cpp" line="121"/>
         <source>GPT</source>
         <translation>GPT</translation>
     </message>
@@ -908,27 +976,32 @@ The installer will quit and all changes will be lost.</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../src/modules/partition/jobs/CreatePartitionJob.cpp" line="74"/>
+        <location filename="../src/modules/partition/jobs/CreatePartitionJob.cpp" line="71"/>
+        <source>Creating new %1 partition on %2.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../src/modules/partition/jobs/CreatePartitionJob.cpp" line="83"/>
         <source>The installer failed to create partition on disk &apos;%1&apos;.</source>
         <translation>安装程序在磁盘“%1”创建分区失败。</translation>
     </message>
     <message>
-        <location filename="../src/modules/partition/jobs/CreatePartitionJob.cpp" line="83"/>
+        <location filename="../src/modules/partition/jobs/CreatePartitionJob.cpp" line="92"/>
         <source>Could not open device &apos;%1&apos;.</source>
         <translation>无法打开设备“%1”。</translation>
     </message>
     <message>
-        <location filename="../src/modules/partition/jobs/CreatePartitionJob.cpp" line="93"/>
+        <location filename="../src/modules/partition/jobs/CreatePartitionJob.cpp" line="102"/>
         <source>Could not open partition table.</source>
         <translation>无法打开分区表。</translation>
     </message>
     <message>
-        <location filename="../src/modules/partition/jobs/CreatePartitionJob.cpp" line="117"/>
+        <location filename="../src/modules/partition/jobs/CreatePartitionJob.cpp" line="126"/>
         <source>The installer failed to create file system on partition %1.</source>
         <translation>安装程序在分区 %1 创建文件系统失败。</translation>
     </message>
     <message>
-        <location filename="../src/modules/partition/jobs/CreatePartitionJob.cpp" line="125"/>
+        <location filename="../src/modules/partition/jobs/CreatePartitionJob.cpp" line="134"/>
         <source>The installer failed to update partition table on disk &apos;%1&apos;.</source>
         <translation>安装程序更新磁盘“%1”分区表失败。</translation>
     </message>
@@ -975,11 +1048,16 @@ The installer will quit and all changes will be lost.</source>
     </message>
     <message>
         <location filename="../src/modules/partition/jobs/CreatePartitionTableJob.cpp" line="66"/>
+        <source>Creating new %1 partition table on %2.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../src/modules/partition/jobs/CreatePartitionTableJob.cpp" line="76"/>
         <source>The installer failed to create a partition table on %1.</source>
         <translation>安装程序于 %1 创建分区表失败。</translation>
     </message>
     <message>
-        <location filename="../src/modules/partition/jobs/CreatePartitionTableJob.cpp" line="74"/>
+        <location filename="../src/modules/partition/jobs/CreatePartitionTableJob.cpp" line="84"/>
         <source>Could not open device %1.</source>
         <translation>无法打开设备 %1。</translation>
     </message>
@@ -1020,52 +1098,62 @@ The installer will quit and all changes will be lost.</source>
         <translation>创建用户 %1</translation>
     </message>
     <message>
-        <location filename="../src/modules/users/CreateUserJob.cpp" line="67"/>
+        <location filename="../src/modules/users/CreateUserJob.cpp" line="58"/>
+        <source>Create user &lt;strong&gt;%1&lt;/strong&gt;.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../src/modules/users/CreateUserJob.cpp" line="65"/>
+        <source>Creating user %1.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../src/modules/users/CreateUserJob.cpp" line="81"/>
         <source>Sudoers dir is not writable.</source>
         <translation>Sudoers 目录不可写。</translation>
     </message>
     <message>
-        <location filename="../src/modules/users/CreateUserJob.cpp" line="71"/>
+        <location filename="../src/modules/users/CreateUserJob.cpp" line="85"/>
         <source>Cannot create sudoers file for writing.</source>
         <translation>无法创建要写入的 sudoers 文件。</translation>
     </message>
     <message>
-        <location filename="../src/modules/users/CreateUserJob.cpp" line="79"/>
+        <location filename="../src/modules/users/CreateUserJob.cpp" line="93"/>
         <source>Cannot chmod sudoers file.</source>
         <translation>无法修改 sudoers 文件权限。</translation>
     </message>
     <message>
-        <location filename="../src/modules/users/CreateUserJob.cpp" line="85"/>
+        <location filename="../src/modules/users/CreateUserJob.cpp" line="99"/>
         <source>Cannot open groups file for reading.</source>
         <translation>无法打开要读取的 groups 文件。</translation>
     </message>
     <message>
-        <location filename="../src/modules/users/CreateUserJob.cpp" line="123"/>
+        <location filename="../src/modules/users/CreateUserJob.cpp" line="137"/>
         <source>Cannot create user %1.</source>
         <translation>无法创建用户 %1。</translation>
     </message>
     <message>
-        <location filename="../src/modules/users/CreateUserJob.cpp" line="125"/>
+        <location filename="../src/modules/users/CreateUserJob.cpp" line="139"/>
         <source>useradd terminated with error code %1.</source>
         <translation>useradd 以错误代码 %1 中止。</translation>
     </message>
     <message>
-        <location filename="../src/modules/users/CreateUserJob.cpp" line="130"/>
+        <location filename="../src/modules/users/CreateUserJob.cpp" line="144"/>
         <source>Cannot set full name for user %1.</source>
         <translation>无法设置用户 %1 的全名。</translation>
     </message>
     <message>
-        <location filename="../src/modules/users/CreateUserJob.cpp" line="132"/>
+        <location filename="../src/modules/users/CreateUserJob.cpp" line="146"/>
         <source>chfn terminated with error code %1.</source>
         <translation>chfn 以错误代码 %1 中止。</translation>
     </message>
     <message>
-        <location filename="../src/modules/users/CreateUserJob.cpp" line="141"/>
+        <location filename="../src/modules/users/CreateUserJob.cpp" line="155"/>
         <source>Cannot set home directory ownership for user %1.</source>
         <translation>无法设置用户 %1 的主文件夹所有者。</translation>
     </message>
     <message>
-        <location filename="../src/modules/users/CreateUserJob.cpp" line="143"/>
+        <location filename="../src/modules/users/CreateUserJob.cpp" line="157"/>
         <source>chown terminated with error code %1.</source>
         <translation>chown 以错误代码 %1 中止。</translation>
     </message>
@@ -1097,21 +1185,26 @@ The installer will quit and all changes will be lost.</source>
     </message>
     <message>
         <location filename="../src/modules/partition/jobs/DeletePartitionJob.cpp" line="58"/>
+        <source>Deleting partition %1.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../src/modules/partition/jobs/DeletePartitionJob.cpp" line="67"/>
         <source>The installer failed to delete partition %1.</source>
         <translation>安装程序删除分区 %1 失败。</translation>
     </message>
     <message>
-        <location filename="../src/modules/partition/jobs/DeletePartitionJob.cpp" line="64"/>
+        <location filename="../src/modules/partition/jobs/DeletePartitionJob.cpp" line="73"/>
         <source>Partition (%1) and device (%2) do not match.</source>
         <translation>分区 (%1) 与设备 (%2) 不匹配。</translation>
     </message>
     <message>
-        <location filename="../src/modules/partition/jobs/DeletePartitionJob.cpp" line="76"/>
+        <location filename="../src/modules/partition/jobs/DeletePartitionJob.cpp" line="85"/>
         <source>Could not open device %1.</source>
         <translation>无法打开设备 %1。</translation>
     </message>
     <message>
-        <location filename="../src/modules/partition/jobs/DeletePartitionJob.cpp" line="85"/>
+        <location filename="../src/modules/partition/jobs/DeletePartitionJob.cpp" line="94"/>
         <source>Could not open partition table.</source>
         <translation>无法打开分区表。</translation>
     </message>
@@ -1201,8 +1294,8 @@ The installer will quit and all changes will be lost.</source>
     </message>
     <message>
         <location filename="../src/modules/partition/gui/EditExistingPartitionDialog.ui" line="60"/>
-        <source>Keep</source>
-        <translation>保留</translation>
+        <source>&amp;Keep</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/modules/partition/gui/EditExistingPartitionDialog.ui" line="70"/>
@@ -1210,19 +1303,24 @@ The installer will quit and all changes will be lost.</source>
         <translation>格式化</translation>
     </message>
     <message>
-        <location filename="../src/modules/partition/gui/EditExistingPartitionDialog.ui" line="83"/>
+        <location filename="../src/modules/partition/gui/EditExistingPartitionDialog.ui" line="89"/>
         <source>Warning: Formatting the partition will erase all existing data.</source>
         <translation>警告：格式化分区将删除所有已有数据。</translation>
     </message>
     <message>
-        <location filename="../src/modules/partition/gui/EditExistingPartitionDialog.ui" line="93"/>
+        <location filename="../src/modules/partition/gui/EditExistingPartitionDialog.ui" line="99"/>
         <source>&amp;Mount Point:</source>
         <translation>挂载点(&amp;M)：</translation>
     </message>
     <message>
-        <location filename="../src/modules/partition/gui/EditExistingPartitionDialog.ui" line="113"/>
-        <source>Size:</source>
-        <translation>大小：</translation>
+        <location filename="../src/modules/partition/gui/EditExistingPartitionDialog.ui" line="119"/>
+        <source>Si&amp;ze:</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../src/modules/partition/gui/EditExistingPartitionDialog.ui" line="132"/>
+        <source>Fi&amp;le System:</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -1339,17 +1437,17 @@ The installer will quit and all changes will be lost.</source>
 <context>
     <name>EraseDiskPage</name>
     <message>
-        <location filename="../src/modules/partition/gui/EraseDiskPage.cpp" line="53"/>
+        <location filename="../src/modules/partition/gui/EraseDiskPage.cpp" line="54"/>
         <source>Select drive:</source>
         <translation>选择驱动器：</translation>
     </message>
     <message>
-        <location filename="../src/modules/partition/gui/EraseDiskPage.cpp" line="230"/>
+        <location filename="../src/modules/partition/gui/EraseDiskPage.cpp" line="264"/>
         <source>Before:</source>
         <translation>之前：</translation>
     </message>
     <message>
-        <location filename="../src/modules/partition/gui/EraseDiskPage.cpp" line="236"/>
+        <location filename="../src/modules/partition/gui/EraseDiskPage.cpp" line="270"/>
         <source>After:</source>
         <translation>之后：</translation>
     </message>
@@ -1438,39 +1536,39 @@ Some file systems need external tools to be installed for them to be supported. 
 <context>
     <name>FillGlobalStorageJob</name>
     <message>
-        <location filename="../src/modules/partition/jobs/FillGlobalStorageJob.cpp" line="77"/>
+        <location filename="../src/modules/partition/jobs/FillGlobalStorageJob.cpp" line="88"/>
         <source>Set partition information</source>
         <translation>设置分区信息</translation>
     </message>
     <message>
-        <location filename="../src/modules/partition/jobs/FillGlobalStorageJob.cpp" line="100"/>
+        <location filename="../src/modules/partition/jobs/FillGlobalStorageJob.cpp" line="111"/>
         <source>Install %1 on &lt;strong&gt;new&lt;/strong&gt; %2 system partition.</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../src/modules/partition/jobs/FillGlobalStorageJob.cpp" line="105"/>
+        <location filename="../src/modules/partition/jobs/FillGlobalStorageJob.cpp" line="116"/>
         <source>Set up &lt;strong&gt;new&lt;/strong&gt; %2 partition with mount point &lt;strong&gt;%1&lt;/strong&gt;.</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../src/modules/partition/jobs/FillGlobalStorageJob.cpp" line="113"/>
+        <location filename="../src/modules/partition/jobs/FillGlobalStorageJob.cpp" line="124"/>
         <source>Install %2 on %3 system partition &lt;strong&gt;%1&lt;/strong&gt;.</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../src/modules/partition/jobs/FillGlobalStorageJob.cpp" line="119"/>
+        <location filename="../src/modules/partition/jobs/FillGlobalStorageJob.cpp" line="130"/>
         <source>Set up %3 partition &lt;strong&gt;%1&lt;/strong&gt; with mount point &lt;strong&gt;%2&lt;/strong&gt;.</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../src/modules/partition/jobs/FillGlobalStorageJob.cpp" line="131"/>
+        <location filename="../src/modules/partition/jobs/FillGlobalStorageJob.cpp" line="142"/>
         <source>Install boot loader on &lt;strong&gt;%1&lt;/strong&gt;.</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../src/modules/partition/jobs/FillGlobalStorageJob.cpp" line="144"/>
-        <source>Failed to find path for boot loader</source>
-        <translation>无法找到引导程序的路径。</translation>
+        <location filename="../src/modules/partition/jobs/FillGlobalStorageJob.cpp" line="152"/>
+        <source>Setting up mount points.</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -1512,96 +1610,45 @@ Some file systems need external tools to be installed for them to be supported. 
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../src/modules/partition/jobs/FormatPartitionJob.cpp" line="71"/>
+        <location filename="../src/modules/partition/jobs/FormatPartitionJob.cpp" line="70"/>
+        <source>Formatting partition %1 with file system %2.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../src/modules/partition/jobs/FormatPartitionJob.cpp" line="82"/>
         <source>The installer failed to format partition %1 on disk &apos;%2&apos;.</source>
         <translation>安装程序格式化磁盘“%2”上的分区 %1 失败。</translation>
     </message>
     <message>
-        <location filename="../src/modules/partition/jobs/FormatPartitionJob.cpp" line="79"/>
+        <location filename="../src/modules/partition/jobs/FormatPartitionJob.cpp" line="90"/>
         <source>Could not open device &apos;%1&apos;.</source>
         <translation>无法打开设备“%1”。</translation>
     </message>
     <message>
-        <location filename="../src/modules/partition/jobs/FormatPartitionJob.cpp" line="88"/>
+        <location filename="../src/modules/partition/jobs/FormatPartitionJob.cpp" line="99"/>
         <source>Could not open partition table.</source>
         <translation>无法打开分区表。</translation>
     </message>
     <message>
-        <location filename="../src/modules/partition/jobs/FormatPartitionJob.cpp" line="96"/>
+        <location filename="../src/modules/partition/jobs/FormatPartitionJob.cpp" line="107"/>
         <source>The installer failed to create file system on partition %1.</source>
         <translation>安装程序于分区 %1 创建文件系统失败。</translation>
     </message>
     <message>
-        <location filename="../src/modules/partition/jobs/FormatPartitionJob.cpp" line="104"/>
+        <location filename="../src/modules/partition/jobs/FormatPartitionJob.cpp" line="115"/>
         <source>The installer failed to update partition table on disk &apos;%1&apos;.</source>
         <translation>安装程序于磁盘“%1”更新分区表失败。</translation>
     </message>
 </context>
 <context>
-    <name>GreetingPage</name>
-    <message>
-        <location filename="../src/modules/greeting/GreetingPage.cpp" line="126"/>
-        <source>&lt;h1&gt;Welcome to the %1 installer.&lt;/h1&gt;&lt;br/&gt;This program will ask you some questions and set up %2 on your computer.</source>
-        <translation>&lt;h1&gt;欢迎来到 %1 安装程序。&lt;/h1&gt;&lt;br/&gt;这个程序将询问您一些问题并在您的计算机上安装 %2。</translation>
-    </message>
-    <message>
-        <location filename="../src/modules/greeting/GreetingPage.cpp" line="144"/>
-        <source>About %1 installer</source>
-        <translation>关于 %1 安装程序</translation>
-    </message>
-    <message>
-        <location filename="../src/modules/greeting/GreetingPage.cpp" line="146"/>
-        <source>&lt;h1&gt;%1&lt;/h1&gt;&lt;br/&gt;&lt;strong&gt;%2&lt;br/&gt;for %3&lt;/strong&gt;&lt;br/&gt;&lt;br/&gt;Copyright 2014-2015 Teo Mrnjavac &amp;lt;teo@kde.org&amp;gt;&lt;br/&gt;Thanks to: Anke Boersma, Aurélien Gâteau, Kevin Kofler, Philip Müller, Pier Luigi Fiorini and Rohan Garg.&lt;br/&gt;&lt;br/&gt;&lt;a href=&quot;http://calamares.io/&quot;&gt;Calamares&lt;/a&gt; development is sponsored by &lt;br/&gt;&lt;a href=&quot;http://www.blue-systems.com/&quot;&gt;Blue Systems&lt;/a&gt; - Liberating Software.</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../src/modules/greeting/GreetingPage.cpp" line="176"/>
-        <source>%1 support</source>
-        <translation>%1 支持</translation>
-    </message>
-    <message>
-        <location filename="../src/modules/greeting/GreetingPage.ui" line="14"/>
-        <source>Form</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../src/modules/greeting/GreetingPage.ui" line="104"/>
-        <source>&amp;Release notes</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../src/modules/greeting/GreetingPage.ui" line="114"/>
-        <source>&amp;Known issues</source>
-        <translation>已知问题(&amp;K)</translation>
-    </message>
-    <message>
-        <location filename="../src/modules/greeting/GreetingPage.ui" line="124"/>
-        <source>&amp;Support</source>
-        <translation>支持(&amp;S)</translation>
-    </message>
-    <message>
-        <location filename="../src/modules/greeting/GreetingPage.ui" line="134"/>
-        <source>&amp;About</source>
-        <translation>关于(&amp;A)</translation>
-    </message>
-</context>
-<context>
-    <name>GreetingViewStep</name>
-    <message>
-        <location filename="../src/modules/greeting/GreetingViewStep.cpp" line="43"/>
-        <source>Welcome</source>
-        <translation>欢迎</translation>
-    </message>
-</context>
-<context>
     <name>KeyboardPage</name>
     <message>
-        <location filename="../src/modules/keyboard/KeyboardPage.cpp" line="200"/>
+        <location filename="../src/modules/keyboard/KeyboardPage.cpp" line="201"/>
         <source>Set keyboard model to %1.&lt;br/&gt;</source>
         <translation>设置键盘型号为 %1。&lt;br/&gt;</translation>
     </message>
     <message>
-        <location filename="../src/modules/keyboard/KeyboardPage.cpp" line="202"/>
+        <location filename="../src/modules/keyboard/KeyboardPage.cpp" line="203"/>
         <source>Set keyboard layout to %1/%2.</source>
         <translation>设置键盘布局为 %1/%2。</translation>
     </message>
@@ -1630,28 +1677,28 @@ Some file systems need external tools to be installed for them to be supported. 
 <context>
     <name>LocalePage</name>
     <message>
-        <location filename="../src/modules/locale/LocalePage.cpp" line="159"/>
-        <location filename="../src/modules/locale/LocalePage.cpp" line="170"/>
+        <location filename="../src/modules/locale/LocalePage.cpp" line="158"/>
+        <location filename="../src/modules/locale/LocalePage.cpp" line="169"/>
         <source>The system locale is set to %1.</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../src/modules/locale/LocalePage.cpp" line="167"/>
+        <location filename="../src/modules/locale/LocalePage.cpp" line="166"/>
         <source>Region:</source>
         <translation>地区：</translation>
     </message>
     <message>
-        <location filename="../src/modules/locale/LocalePage.cpp" line="168"/>
+        <location filename="../src/modules/locale/LocalePage.cpp" line="167"/>
         <source>Zone:</source>
         <translation>区域：</translation>
     </message>
     <message>
-        <location filename="../src/modules/locale/LocalePage.cpp" line="173"/>
+        <location filename="../src/modules/locale/LocalePage.cpp" line="172"/>
         <source>&amp;Change...</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../src/modules/locale/LocalePage.cpp" line="267"/>
+        <location filename="../src/modules/locale/LocalePage.cpp" line="266"/>
         <source>Set timezone to %1/%2.&lt;br/&gt;</source>
         <translation>设置时区为 %1/%2。&lt;br/&gt;</translation>
     </message>
@@ -1740,13 +1787,13 @@ Some file systems need external tools to be installed for them to be supported. 
         <translation>源的逻辑扇区大小与目标不同。目前并不支持。</translation>
     </message>
     <message>
-        <location filename="../src/modules/partition/jobs/MoveFileSystemJob.cpp" line="200"/>
+        <location filename="../src/modules/partition/jobs/MoveFileSystemJob.cpp" line="197"/>
         <source>Source and target for copying do not overlap: Rollback is not required.</source>
         <translation>要复制的源和目标没有交集：不需要回滚。</translation>
     </message>
     <message>
-        <location filename="../src/modules/partition/jobs/MoveFileSystemJob.cpp" line="224"/>
-        <location filename="../src/modules/partition/jobs/MoveFileSystemJob.cpp" line="232"/>
+        <location filename="../src/modules/partition/jobs/MoveFileSystemJob.cpp" line="221"/>
+        <location filename="../src/modules/partition/jobs/MoveFileSystemJob.cpp" line="229"/>
         <source>Could not open device %1 to rollback copying.</source>
         <translation>无法打开设备 %1 来回滚复制。</translation>
     </message>
@@ -1831,13 +1878,13 @@ Some file systems need external tools to be installed for them to be supported. 
     </message>
     <message>
         <location filename="../src/modules/users/page_usersetup.ui" line="596"/>
-        <source>Log in automatically</source>
-        <translation>自动登录</translation>
+        <source>&amp;Log in automatically</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/modules/users/page_usersetup.ui" line="606"/>
-        <source>Require my password to log in</source>
-        <translation>需要密码登录</translation>
+        <source>Require &amp;my password to log in</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -2005,32 +2052,32 @@ Some file systems need external tools to be installed for them to be supported. 
 <context>
     <name>PartitionModel</name>
     <message>
-        <location filename="../src/modules/partition/core/PartitionModel.cpp" line="132"/>
+        <location filename="../src/modules/partition/core/PartitionModel.cpp" line="135"/>
         <source>Free Space</source>
         <translation>空闲空间</translation>
     </message>
     <message>
-        <location filename="../src/modules/partition/core/PartitionModel.cpp" line="136"/>
+        <location filename="../src/modules/partition/core/PartitionModel.cpp" line="139"/>
         <source>New partition</source>
         <translation>新建分区</translation>
     </message>
     <message>
-        <location filename="../src/modules/partition/core/PartitionModel.cpp" line="175"/>
+        <location filename="../src/modules/partition/core/PartitionModel.cpp" line="178"/>
         <source>Name</source>
         <translation>名称</translation>
     </message>
     <message>
-        <location filename="../src/modules/partition/core/PartitionModel.cpp" line="177"/>
+        <location filename="../src/modules/partition/core/PartitionModel.cpp" line="180"/>
         <source>File System</source>
         <translation>文件系统</translation>
     </message>
     <message>
-        <location filename="../src/modules/partition/core/PartitionModel.cpp" line="179"/>
+        <location filename="../src/modules/partition/core/PartitionModel.cpp" line="182"/>
         <source>Mount Point</source>
         <translation>挂载点</translation>
     </message>
     <message>
-        <location filename="../src/modules/partition/core/PartitionModel.cpp" line="181"/>
+        <location filename="../src/modules/partition/core/PartitionModel.cpp" line="184"/>
         <source>Size</source>
         <translation>大小</translation>
     </message>
@@ -2086,140 +2133,80 @@ Some file systems need external tools to be installed for them to be supported. 
 <context>
     <name>PartitionViewStep</name>
     <message>
-        <location filename="../src/modules/partition/gui/PartitionViewStep.cpp" line="68"/>
+        <location filename="../src/modules/partition/gui/PartitionViewStep.cpp" line="67"/>
         <source>Gathering system information...</source>
         <translation>正在收集系统信息...</translation>
     </message>
     <message>
-        <location filename="../src/modules/partition/gui/PartitionViewStep.cpp" line="162"/>
+        <location filename="../src/modules/partition/gui/PartitionViewStep.cpp" line="171"/>
         <source>Partitions</source>
         <translation>分区</translation>
     </message>
     <message>
-        <location filename="../src/modules/partition/gui/PartitionViewStep.cpp" line="199"/>
+        <location filename="../src/modules/partition/gui/PartitionViewStep.cpp" line="208"/>
         <source>Install %1 &lt;strong&gt;alongside&lt;/strong&gt; another operating system.</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../src/modules/partition/gui/PartitionViewStep.cpp" line="204"/>
+        <location filename="../src/modules/partition/gui/PartitionViewStep.cpp" line="213"/>
         <source>&lt;strong&gt;Erase&lt;/strong&gt; disk and install %1.</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../src/modules/partition/gui/PartitionViewStep.cpp" line="209"/>
+        <location filename="../src/modules/partition/gui/PartitionViewStep.cpp" line="218"/>
         <source>&lt;strong&gt;Replace&lt;/strong&gt; a partition with %1.</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../src/modules/partition/gui/PartitionViewStep.cpp" line="214"/>
+        <location filename="../src/modules/partition/gui/PartitionViewStep.cpp" line="223"/>
         <source>&lt;strong&gt;Manual&lt;/strong&gt; partitioning.</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../src/modules/partition/gui/PartitionViewStep.cpp" line="227"/>
+        <location filename="../src/modules/partition/gui/PartitionViewStep.cpp" line="236"/>
         <source>Install %1 &lt;strong&gt;alongside&lt;/strong&gt; another operating system on disk &lt;strong&gt;%2&lt;/strong&gt; (%3).</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../src/modules/partition/gui/PartitionViewStep.cpp" line="234"/>
+        <location filename="../src/modules/partition/gui/PartitionViewStep.cpp" line="243"/>
         <source>&lt;strong&gt;Erase&lt;/strong&gt; disk &lt;strong&gt;%2&lt;/strong&gt; (%3) and install %1.</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../src/modules/partition/gui/PartitionViewStep.cpp" line="241"/>
+        <location filename="../src/modules/partition/gui/PartitionViewStep.cpp" line="250"/>
         <source>&lt;strong&gt;Replace&lt;/strong&gt; a partition on disk &lt;strong&gt;%2&lt;/strong&gt; (%3) with %1.</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../src/modules/partition/gui/PartitionViewStep.cpp" line="248"/>
+        <location filename="../src/modules/partition/gui/PartitionViewStep.cpp" line="257"/>
         <source>&lt;strong&gt;Manual&lt;/strong&gt; partitioning on disk &lt;strong&gt;%1&lt;/strong&gt; (%2).</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../src/modules/partition/gui/PartitionViewStep.cpp" line="256"/>
+        <location filename="../src/modules/partition/gui/PartitionViewStep.cpp" line="265"/>
         <source>Disk &lt;strong&gt;%1&lt;/strong&gt; (%2)</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../src/modules/partition/gui/PartitionViewStep.cpp" line="268"/>
+        <location filename="../src/modules/partition/gui/PartitionViewStep.cpp" line="277"/>
         <source>Before:</source>
         <translation>之前：</translation>
     </message>
     <message>
-        <location filename="../src/modules/partition/gui/PartitionViewStep.cpp" line="274"/>
+        <location filename="../src/modules/partition/gui/PartitionViewStep.cpp" line="283"/>
         <source>After:</source>
         <translation>之后：</translation>
     </message>
 </context>
 <context>
-    <name>PreparePage</name>
-    <message>
-        <location filename="../src/modules/prepare/PreparePage.cpp" line="39"/>
-        <source>For best results, please ensure that this computer:</source>
-        <translation>为了更好的效果，请保证此计算机：</translation>
-    </message>
-    <message>
-        <location filename="../src/modules/prepare/PreparePage.cpp" line="96"/>
-        <source>This computer does not satisfy the minimum requirements for installing %1.
-Installation cannot continue.</source>
-        <translation>此计算机不满足安装 %1 的最低配置。
-安装无法继续。</translation>
-    </message>
-    <message>
-        <location filename="../src/modules/prepare/PreparePage.cpp" line="109"/>
-        <source>This computer does not satisfy some of the recommended requirements for installing %1.
-Installation can continue, but some features might be disabled.</source>
-        <translation>此计算机不满足安装 %1 的某些推荐配置。
-安装可以继续，但是一些特性可能被禁用。</translation>
-    </message>
-</context>
-<context>
-    <name>PrepareViewStep</name>
-    <message>
-        <location filename="../src/modules/prepare/PrepareViewStep.cpp" line="54"/>
-        <source>Gathering system information...</source>
-        <translation>正在收集系统信息...</translation>
-    </message>
-    <message>
-        <location filename="../src/modules/prepare/PrepareViewStep.cpp" line="91"/>
-        <source>has at least %1 GB available drive space</source>
-        <translation>有至少 %1 GB 可用磁盘空间</translation>
-    </message>
-    <message>
-        <location filename="../src/modules/prepare/PrepareViewStep.cpp" line="99"/>
-        <source>has at least %1 GB working memory</source>
-        <translation>有至少 %1 GB 可用内存</translation>
-    </message>
-    <message>
-        <location filename="../src/modules/prepare/PrepareViewStep.cpp" line="107"/>
-        <source>is plugged in to a power source</source>
-        <translation>已连接到电源</translation>
-    </message>
-    <message>
-        <location filename="../src/modules/prepare/PrepareViewStep.cpp" line="114"/>
-        <source>is connected to the Internet</source>
-        <translation>已连接到网络</translation>
-    </message>
-    <message>
-        <location filename="../src/modules/prepare/PrepareViewStep.cpp" line="158"/>
-        <source>Prepare</source>
-        <translation>准备</translation>
-    </message>
-</context>
-<context>
     <name>ProgressTreeModel</name>
     <message>
-        <location filename="../src/calamares/progresstree/ProgressTreeModel.cpp" line="138"/>
-        <source>Prepare</source>
-        <translation>准备</translation>
-    </message>
-    <message>
-        <location filename="../src/calamares/progresstree/ProgressTreeModel.cpp" line="151"/>
+        <location filename="../src/calamares/progresstree/ProgressTreeModel.cpp" line="143"/>
         <source>Install</source>
         <translation>安装</translation>
     </message>
     <message>
-        <location filename="../src/calamares/progresstree/ProgressTreeModel.cpp" line="161"/>
+        <location filename="../src/calamares/progresstree/ProgressTreeModel.cpp" line="153"/>
         <source>Finish</source>
         <translation>完成</translation>
     </message>
@@ -2365,57 +2352,127 @@ Installation can continue, but some features might be disabled.</source>
     </message>
     <message>
         <location filename="../src/modules/partition/gui/ReplacePage.ui" line="22"/>
-        <source>&amp;Disk:</source>
+        <source>Dis&amp;k:</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../src/modules/partition/gui/ReplacePage.cpp" line="110"/>
+        <location filename="../src/modules/partition/gui/ReplacePage.cpp" line="160"/>
         <source>Select where to install %1.&lt;br/&gt;&lt;font color=&quot;red&quot;&gt;Warning: &lt;/font&gt;this will delete all files on the selected partition.</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../src/modules/partition/gui/ReplacePage.cpp" line="137"/>
+        <location filename="../src/modules/partition/gui/ReplacePage.cpp" line="187"/>
         <source>The selected item does not appear to be a valid partition.</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../src/modules/partition/gui/ReplacePage.cpp" line="145"/>
+        <location filename="../src/modules/partition/gui/ReplacePage.cpp" line="195"/>
         <source>%1 cannot be installed on empty space. Please select an existing partition.</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../src/modules/partition/gui/ReplacePage.cpp" line="156"/>
+        <location filename="../src/modules/partition/gui/ReplacePage.cpp" line="206"/>
         <source>%1 cannot be installed on an extended partition. Please select an existing primary or logical partition.</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../src/modules/partition/gui/ReplacePage.cpp" line="167"/>
+        <location filename="../src/modules/partition/gui/ReplacePage.cpp" line="217"/>
         <source>%1 cannot be installed on this partition.</source>
         <translation>无法安装(%1)到此分区.</translation>
     </message>
     <message>
-        <location filename="../src/modules/partition/gui/ReplacePage.cpp" line="174"/>
+        <location filename="../src/modules/partition/gui/ReplacePage.cpp" line="224"/>
         <source>Data partition (%1)</source>
         <translation>数据分区(%1)</translation>
     </message>
     <message>
-        <location filename="../src/modules/partition/gui/ReplacePage.cpp" line="191"/>
+        <location filename="../src/modules/partition/gui/ReplacePage.cpp" line="241"/>
         <source>Unknown system partition (%1)</source>
         <translation>未知系统分区(%1)</translation>
     </message>
     <message>
-        <location filename="../src/modules/partition/gui/ReplacePage.cpp" line="196"/>
+        <location filename="../src/modules/partition/gui/ReplacePage.cpp" line="246"/>
         <source>%1 system partition (%2)</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../src/modules/partition/gui/ReplacePage.cpp" line="207"/>
+        <location filename="../src/modules/partition/gui/ReplacePage.cpp" line="257"/>
         <source>&lt;strong&gt;%4&lt;/strong&gt;&lt;br/&gt;&lt;br/&gt;The partition %1 is too small for %2. Please select a partition with capacity at least %3 GiB.</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../src/modules/partition/gui/ReplacePage.cpp" line="221"/>
-        <source>&lt;strong&gt;%3&lt;/strong&gt;&lt;br/&gt;&lt;br/&gt;%1 will be installed on %2.&lt;br/&gt;&lt;font color=&quot;red&quot;&gt;Warning: &lt;/font&gt;all data on partition%2 will be lost.</source>
+        <location filename="../src/modules/partition/gui/ReplacePage.cpp" line="281"/>
+        <source>&lt;strong&gt;%2&lt;/strong&gt;&lt;br/&gt;&lt;br/&gt;An EFI system partition cannot be found anywhere on this system. Please go back and use manual partitioning to set up %1.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../src/modules/partition/gui/ReplacePage.cpp" line="293"/>
+        <location filename="../src/modules/partition/gui/ReplacePage.cpp" line="312"/>
+        <location filename="../src/modules/partition/gui/ReplacePage.cpp" line="337"/>
+        <source>&lt;strong&gt;%3&lt;/strong&gt;&lt;br/&gt;&lt;br/&gt;%1 will be installed on %2.&lt;br/&gt;&lt;font color=&quot;red&quot;&gt;Warning: &lt;/font&gt;all data on partition %2 will be lost.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../src/modules/partition/gui/ReplacePage.cpp" line="303"/>
+        <source>The EFI system partition at %1 will be used for starting %2.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../src/modules/partition/gui/ReplacePage.cpp" line="321"/>
+        <source>EFI system partition:</source>
+        <translation type="unfinished"/>
+    </message>
+</context>
+<context>
+    <name>RequirementsChecker</name>
+    <message>
+        <location filename="../src/modules/welcome/checker/RequirementsChecker.cpp" line="57"/>
+        <source>Gathering system information...</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../src/modules/welcome/checker/RequirementsChecker.cpp" line="98"/>
+        <source>has at least %1 GB available drive space</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../src/modules/welcome/checker/RequirementsChecker.cpp" line="100"/>
+        <source>There is not enough drive space. At least %1 GB is required.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../src/modules/welcome/checker/RequirementsChecker.cpp" line="108"/>
+        <source>has at least %1 GB working memory</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../src/modules/welcome/checker/RequirementsChecker.cpp" line="110"/>
+        <source>The system does not have enough working memory. At least %1 GB is required.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../src/modules/welcome/checker/RequirementsChecker.cpp" line="118"/>
+        <source>is plugged in to a power source</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../src/modules/welcome/checker/RequirementsChecker.cpp" line="119"/>
+        <source>The system is not plugged in to a power source.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../src/modules/welcome/checker/RequirementsChecker.cpp" line="126"/>
+        <source>is connected to the Internet</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../src/modules/welcome/checker/RequirementsChecker.cpp" line="127"/>
+        <source>The system is not connected to the Internet.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../src/modules/welcome/checker/RequirementsChecker.cpp" line="135"/>
+        <source>The installer is not running with administrator rights.</source>
         <translation type="unfinished"/>
     </message>
 </context>
@@ -2450,13 +2507,18 @@ Installation can continue, but some features might be disabled.</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../src/modules/partition/jobs/ResizePartitionJob.cpp" line="220"/>
-        <location filename="../src/modules/partition/jobs/ResizePartitionJob.cpp" line="278"/>
+        <location filename="../src/modules/partition/jobs/ResizePartitionJob.cpp" line="205"/>
+        <source>Resizing %2MB partition %1 to %3MB.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../src/modules/partition/jobs/ResizePartitionJob.cpp" line="232"/>
+        <location filename="../src/modules/partition/jobs/ResizePartitionJob.cpp" line="290"/>
         <source>The installer failed to resize partition %1 on disk &apos;%2&apos;.</source>
         <translation>安装程序调整磁盘“%2”上的分区 %1 大小失败。</translation>
     </message>
     <message>
-        <location filename="../src/modules/partition/jobs/ResizePartitionJob.cpp" line="225"/>
+        <location filename="../src/modules/partition/jobs/ResizePartitionJob.cpp" line="237"/>
         <source>Could not open device &apos;%1&apos;.</source>
         <translation>无法打开设备“%1”。</translation>
     </message>
@@ -2464,19 +2526,29 @@ Installation can continue, but some features might be disabled.</source>
 <context>
     <name>SetHostNameJob</name>
     <message>
-        <location filename="../src/modules/users/SetHostNameJob.cpp" line="36"/>
+        <location filename="../src/modules/users/SetHostNameJob.cpp" line="37"/>
         <source>Set hostname %1</source>
         <translation>设置主机名 %1</translation>
     </message>
     <message>
-        <location filename="../src/modules/users/SetHostNameJob.cpp" line="46"/>
-        <location filename="../src/modules/users/SetHostNameJob.cpp" line="53"/>
+        <location filename="../src/modules/users/SetHostNameJob.cpp" line="44"/>
+        <source>Set hostname &lt;strong&gt;%1&lt;/strong&gt;.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../src/modules/users/SetHostNameJob.cpp" line="51"/>
+        <source>Setting hostname %1.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../src/modules/users/SetHostNameJob.cpp" line="61"/>
+        <location filename="../src/modules/users/SetHostNameJob.cpp" line="68"/>
         <source>Internal Error</source>
         <translation>内部错误</translation>
     </message>
     <message>
-        <location filename="../src/modules/users/SetHostNameJob.cpp" line="60"/>
-        <location filename="../src/modules/users/SetHostNameJob.cpp" line="71"/>
+        <location filename="../src/modules/users/SetHostNameJob.cpp" line="75"/>
+        <location filename="../src/modules/users/SetHostNameJob.cpp" line="86"/>
         <source>Cannot write hostname to target system</source>
         <translation>无法向目标系统写入主机名</translation>
     </message>
@@ -2526,22 +2598,27 @@ Installation can continue, but some features might be disabled.</source>
         <translation>设置用户 %1 的密码</translation>
     </message>
     <message>
-        <location filename="../src/modules/users/SetPasswordJob.cpp" line="52"/>
+        <location filename="../src/modules/users/SetPasswordJob.cpp" line="49"/>
+        <source>Setting password for user %1.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../src/modules/users/SetPasswordJob.cpp" line="59"/>
         <source>Bad destination system path.</source>
         <translation>非法的目标系统路径。</translation>
     </message>
     <message>
-        <location filename="../src/modules/users/SetPasswordJob.cpp" line="53"/>
+        <location filename="../src/modules/users/SetPasswordJob.cpp" line="60"/>
         <source>rootMountPoint is %1</source>
         <translation>根挂载点为 %1</translation>
     </message>
     <message>
-        <location filename="../src/modules/users/SetPasswordJob.cpp" line="62"/>
+        <location filename="../src/modules/users/SetPasswordJob.cpp" line="69"/>
         <source>Cannot set password for user %1.</source>
         <translation>无法设置用户 %1 的密码。</translation>
     </message>
     <message>
-        <location filename="../src/modules/users/SetPasswordJob.cpp" line="64"/>
+        <location filename="../src/modules/users/SetPasswordJob.cpp" line="71"/>
         <source>usermod terminated with error code %1.</source>
         <translation>usermod 以错误代码 %1 中止。</translation>
     </message>
@@ -2814,33 +2891,33 @@ Installation can continue, but some features might be disabled.</source>
 <context>
     <name>UsersPage</name>
     <message>
-        <location filename="../src/modules/users/UsersPage.cpp" line="233"/>
+        <location filename="../src/modules/users/UsersPage.cpp" line="253"/>
         <source>Your username is too long.</source>
         <translation>用户名太长。</translation>
     </message>
     <message>
-        <location filename="../src/modules/users/UsersPage.cpp" line="243"/>
+        <location filename="../src/modules/users/UsersPage.cpp" line="263"/>
         <source>Your username contains invalid characters. Only lowercase letters and numbers are allowed.</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../src/modules/users/UsersPage.cpp" line="287"/>
+        <location filename="../src/modules/users/UsersPage.cpp" line="307"/>
         <source>Your hostname is too short.</source>
         <translation>主机名太短。</translation>
     </message>
     <message>
-        <location filename="../src/modules/users/UsersPage.cpp" line="298"/>
+        <location filename="../src/modules/users/UsersPage.cpp" line="318"/>
         <source>Your hostname is too long.</source>
         <translation>主机名太长。</translation>
     </message>
     <message>
-        <location filename="../src/modules/users/UsersPage.cpp" line="309"/>
+        <location filename="../src/modules/users/UsersPage.cpp" line="329"/>
         <source>Your hostname contains invalid characters. Only letters, numbers and dashes are allowed.</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../src/modules/users/UsersPage.cpp" line="340"/>
-        <location filename="../src/modules/users/UsersPage.cpp" line="373"/>
+        <location filename="../src/modules/users/UsersPage.cpp" line="360"/>
+        <location filename="../src/modules/users/UsersPage.cpp" line="393"/>
         <source>Your passwords do not match!</source>
         <translation>密码不匹配！</translation>
     </message>
@@ -2851,6 +2928,67 @@ Installation can continue, but some features might be disabled.</source>
         <location filename="../src/modules/users/UsersViewStep.cpp" line="46"/>
         <source>Users</source>
         <translation>用户</translation>
+    </message>
+</context>
+<context>
+    <name>WelcomePage</name>
+    <message>
+        <location filename="../src/modules/welcome/WelcomePage.ui" line="14"/>
+        <source>Form</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../src/modules/welcome/WelcomePage.ui" line="75"/>
+        <source>&amp;Language:</source>
+        <translation>语言 (&amp;L) : </translation>
+    </message>
+    <message>
+        <location filename="../src/modules/welcome/WelcomePage.ui" line="176"/>
+        <source>&amp;Release notes</source>
+        <translation>发行注记 (&amp;R)</translation>
+    </message>
+    <message>
+        <location filename="../src/modules/welcome/WelcomePage.ui" line="166"/>
+        <source>&amp;Known issues</source>
+        <translation>已知问题 (&amp;K)</translation>
+    </message>
+    <message>
+        <location filename="../src/modules/welcome/WelcomePage.ui" line="156"/>
+        <source>&amp;Support</source>
+        <translation>支持信息 (&amp;S)</translation>
+    </message>
+    <message>
+        <location filename="../src/modules/welcome/WelcomePage.ui" line="146"/>
+        <source>&amp;About</source>
+        <translation>关于 (&amp;A)</translation>
+    </message>
+    <message>
+        <location filename="../src/modules/welcome/WelcomePage.cpp" line="56"/>
+        <source>&lt;h1&gt;Welcome to the %1 installer.&lt;/h1&gt;</source>
+        <translation>&lt;h1&gt;欢迎来到 %1 安装程序。&lt;/h1&gt;</translation>
+    </message>
+    <message>
+        <location filename="../src/modules/welcome/WelcomePage.cpp" line="70"/>
+        <source>About %1 installer</source>
+        <translation>关于 %1 安装程序</translation>
+    </message>
+    <message>
+        <location filename="../src/modules/welcome/WelcomePage.cpp" line="72"/>
+        <source>&lt;h1&gt;%1&lt;/h1&gt;&lt;br/&gt;&lt;strong&gt;%2&lt;br/&gt;for %3&lt;/strong&gt;&lt;br/&gt;&lt;br/&gt;Copyright 2014-2015 Teo Mrnjavac &amp;lt;teo@kde.org&amp;gt;&lt;br/&gt;Thanks to: Anke Boersma, Aurélien Gâteau, Kevin Kofler, Philip Müller, Pier Luigi Fiorini and Rohan Garg.&lt;br/&gt;&lt;br/&gt;&lt;a href=&quot;http://calamares.io/&quot;&gt;Calamares&lt;/a&gt; development is sponsored by &lt;br/&gt;&lt;a href=&quot;http://www.blue-systems.com/&quot;&gt;Blue Systems&lt;/a&gt; - Liberating Software.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../src/modules/welcome/WelcomePage.cpp" line="193"/>
+        <source>%1 support</source>
+        <translation>%1 的支持信息</translation>
+    </message>
+</context>
+<context>
+    <name>WelcomeViewStep</name>
+    <message>
+        <location filename="../src/modules/welcome/WelcomeViewStep.cpp" line="48"/>
+        <source>Welcome</source>
+        <translation>欢迎</translation>
     </message>
 </context>
 </TS>

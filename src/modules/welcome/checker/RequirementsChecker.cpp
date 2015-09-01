@@ -16,15 +16,16 @@
  *   along with Calamares. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "PrepareViewStep.h"
+#include "RequirementsChecker.h"
 
-#include "PreparePage.h"
+#include "CheckerWidget.h"
 #include "partman_devices.h"
 
 #include "widgets/WaitingWidget.h"
 #include "utils/CalamaresUtilsGui.h"
 #include "utils/Logger.h"
 #include "utils/Retranslator.h"
+#include "utils/CalamaresUtilsSystem.h"
 #include "JobQueue.h"
 #include "GlobalStorage.h"
 
@@ -38,11 +39,13 @@
 #include <QProcess>
 #include <QTimer>
 
-PrepareViewStep::PrepareViewStep( QObject* parent )
-    : Calamares::ViewStep( parent )
+#include <unistd.h> //geteuid
+
+RequirementsChecker::RequirementsChecker( QObject* parent )
+    : QObject( parent )
     , m_widget( new QWidget() )
-    , m_actualWidget( new PreparePage() )
-    , m_nextEnabled( false )
+    , m_actualWidget( new CheckerWidget() )
+    , m_verdict( false )
     , m_requiredStorageGB( -1 )
 {
     QBoxLayout* mainLayout = new QHBoxLayout;
@@ -62,6 +65,7 @@ PrepareViewStep::PrepareViewStep( QObject* parent )
         bool enoughRam = false;
         bool hasPower = false;
         bool hasInternet = false;
+        bool isRoot = false;
 
         qint64 requiredStorageB = m_requiredStorageGB * 1073741824L; /*powers of 2*/
         cDebug() << "Need at least storage bytes:" << requiredStorageB;
@@ -79,8 +83,11 @@ PrepareViewStep::PrepareViewStep( QObject* parent )
         if ( m_entriesToCheck.contains( "internet" ) )
             hasInternet = checkHasInternet();
 
-        cDebug() << "enoughStorage, enoughRam, hasPower, hasInternet: "
-                 << enoughStorage << enoughRam << hasPower << hasInternet;
+        if ( m_entriesToCheck.contains( "root" ) )
+            isRoot = checkIsRoot();
+
+        cDebug() << "enoughStorage, enoughRam, hasPower, hasInternet, isRoot: "
+                 << enoughStorage << enoughRam << hasPower << hasInternet << isRoot;
 
         QList< PrepareEntry > checkEntries;
         foreach ( const QString& entry, m_entriesToCheck )
@@ -90,6 +97,8 @@ PrepareViewStep::PrepareViewStep( QObject* parent )
                     entry,
                     [this]{ return tr( "has at least %1 GB available drive space" )
                         .arg( m_requiredStorageGB ); },
+                    [this]{ return tr( "There is not enough drive space. At least %1 GB is required." )
+                        .arg( m_requiredStorageGB ); },
                     enoughStorage,
                     m_entriesToRequire.contains( entry )
                 } );
@@ -98,6 +107,8 @@ PrepareViewStep::PrepareViewStep( QObject* parent )
                     entry,
                     [this]{ return tr( "has at least %1 GB working memory" )
                         .arg( m_requiredRamGB ); },
+                    [this]{ return tr( "The system does not have enough working memory. At least %1 GB is required." )
+                        .arg( m_requiredRamGB ); },
                     enoughRam,
                     m_entriesToRequire.contains( entry )
                 } );
@@ -105,6 +116,7 @@ PrepareViewStep::PrepareViewStep( QObject* parent )
                 checkEntries.append( {
                     entry,
                     [this]{ return tr( "is plugged in to a power source" ); },
+                    [this]{ return tr( "The system is not plugged in to a power source." ); },
                     hasPower,
                     m_entriesToRequire.contains( entry )
                 } );
@@ -112,14 +124,25 @@ PrepareViewStep::PrepareViewStep( QObject* parent )
                 checkEntries.append( {
                     entry,
                     [this]{ return tr( "is connected to the Internet" ); },
+                    [this]{ return tr( "The system is not connected to the Internet." ); },
                     hasInternet,
                     m_entriesToRequire.contains( entry )
                 } );
+            else if ( entry == "root" )
+                checkEntries.append( {
+                    entry,
+                    [this]{ return QString(); }, //we hide it
+                    [this]{ return tr( "The installer is not running with administrator rights." ); },
+                    isRoot,
+                    m_entriesToRequire.contains( entry )
+                } );
+
         }
 
         m_actualWidget->init( checkEntries );
         m_widget->layout()->removeWidget( waitingWidget );
         waitingWidget->deleteLater();
+        m_actualWidget->setParent( m_widget );
         m_widget->layout()->addWidget( m_actualWidget );
 
         bool canGoNext = true;
@@ -131,8 +154,8 @@ PrepareViewStep::PrepareViewStep( QObject* parent )
                 break;
             }
         }
-        m_nextEnabled = canGoNext;
-        emit nextStatusChanged( m_nextEnabled );
+        m_verdict = canGoNext;
+        emit verdictChanged( m_verdict );
 
         if ( canGoNext )
             detectFirmwareType();
@@ -141,86 +164,26 @@ PrepareViewStep::PrepareViewStep( QObject* parent )
     } );
     timer->start( 0 );
 
-    emit nextStatusChanged( true );
+    emit verdictChanged( true );
 }
 
 
-PrepareViewStep::~PrepareViewStep()
+RequirementsChecker::~RequirementsChecker()
 {
     if ( m_widget && m_widget->parent() == nullptr )
         m_widget->deleteLater();
 }
 
 
-QString
-PrepareViewStep::prettyName() const
-{
-    return tr( "Prepare" );
-}
-
-
 QWidget*
-PrepareViewStep::widget()
+RequirementsChecker::widget() const
 {
     return m_widget;
 }
 
 
 void
-PrepareViewStep::next()
-{
-    emit done();
-}
-
-
-void
-PrepareViewStep::back()
-{}
-
-
-bool
-PrepareViewStep::isNextEnabled() const
-{
-    return m_nextEnabled;
-}
-
-
-bool
-PrepareViewStep::isBackEnabled() const
-{
-    return true;
-}
-
-
-bool
-PrepareViewStep::isAtBeginning() const
-{
-    return true;
-}
-
-
-bool
-PrepareViewStep::isAtEnd() const
-{
-    return true;
-}
-
-
-QList< Calamares::job_ptr >
-PrepareViewStep::jobs() const
-{
-    return QList< Calamares::job_ptr >();
-}
-
-
-void
-PrepareViewStep::onLeave()
-{
-}
-
-
-void
-PrepareViewStep::setConfigurationMap( const QVariantMap& configurationMap )
+RequirementsChecker::setConfigurationMap( const QVariantMap& configurationMap )
 {
     if ( configurationMap.contains( "requiredStorage" ) &&
          configurationMap.value( "requiredStorage" ).type() == QVariant::Double )
@@ -267,30 +230,31 @@ PrepareViewStep::setConfigurationMap( const QVariantMap& configurationMap )
 
 
 bool
-PrepareViewStep::checkEnoughStorage( qint64 requiredSpace )
+RequirementsChecker::verdict() const
+{
+    return m_verdict;
+}
+
+
+bool
+RequirementsChecker::checkEnoughStorage( qint64 requiredSpace )
 {
     return check_big_enough( requiredSpace );
 }
 
 
 bool
-PrepareViewStep::checkEnoughRam( qint64 requiredRam )
+RequirementsChecker::checkEnoughRam( qint64 requiredRam )
 {
-    // A line in meminfo looks like this, with {print $2} we grab the second column.
-    // MemTotal:        8133432 kB
-
-    QProcess p;
-    p.start( "awk", { "/MemTotal/ {print $2}", "/proc/meminfo" } );
-    p.waitForFinished();
-    QString memoryLine = p.readAllStandardOutput().simplified();
-    qint64 availableRam = memoryLine.toLongLong() * 1024;
-
-    return availableRam >= requiredRam;
+    qint64 availableRam = CalamaresUtils::getPhysicalMemoryB();
+    if ( !availableRam )
+        availableRam = CalamaresUtils::getTotalMemoryB();
+    return availableRam >= requiredRam * 0.95; // because MemTotal is variable
 }
 
 
 bool
-PrepareViewStep::checkBatteryExists()
+RequirementsChecker::checkBatteryExists()
 {
     const QFileInfo basePath( "/sys/class/power_supply" );
 
@@ -317,7 +281,7 @@ PrepareViewStep::checkBatteryExists()
 
 
 bool
-PrepareViewStep::checkHasPower()
+RequirementsChecker::checkHasPower()
 {
     const QString UPOWER_SVC_NAME( "org.freedesktop.UPower" );
     const QString UPOWER_INTF_NAME( "org.freedesktop.UPower" );
@@ -348,7 +312,7 @@ PrepareViewStep::checkHasPower()
 
 
 bool
-PrepareViewStep::checkHasInternet()
+RequirementsChecker::checkHasInternet()
 {
     const QString NM_SVC_NAME( "org.freedesktop.NetworkManager" );
     const QString NM_INTF_NAME( "org.freedesktop.NetworkManager" );
@@ -375,8 +339,15 @@ PrepareViewStep::checkHasInternet()
 }
 
 
+bool
+RequirementsChecker::checkIsRoot()
+{
+    return !geteuid();
+}
+
+
 void
-PrepareViewStep::detectFirmwareType()
+RequirementsChecker::detectFirmwareType()
 {
     QString fwType = QFile::exists( "/sys/firmware/efi/efivars" ) ? "efi" : "bios";
     Calamares::JobQueue::instance()->globalStorage()->insert( "firmwareType", fwType );

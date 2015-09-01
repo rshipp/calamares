@@ -40,10 +40,12 @@ def get_uuid():
     print("Root mount point: \"{!s}\"".format(root_mount_point))
     partitions = libcalamares.globalstorage.value("partitions")
     print("Partitions: \"{!s}\"".format(partitions))
+
     for partition in partitions:
         if partition["mountPoint"] == "/":
             print("Root partition uuid: \"{!s}\"".format(partition["uuid"]))
             return partition["uuid"]
+
     return ""
 
 
@@ -77,8 +79,8 @@ def get_kernel_line(kernel_type):
             return ""
 
 
-def create_conf(uuid, conf_path, kernel_line):
-    """ Creates gummiboot configuration files based on given parameters.
+def create_systemd_boot_conf(uuid, conf_path, kernel_line):
+    """ Creates systemd-boot configuration files based on given parameters.
 
     :param uuid:
     :param conf_path:
@@ -89,6 +91,7 @@ def create_conf(uuid, conf_path, kernel_line):
     img = libcalamares.job.configuration["img"]
     partitions = libcalamares.globalstorage.value("partitions")
     swap = ""
+
     for partition in partitions:
         if partition["fs"] == "linuxswap":
             swap = partition["uuid"]
@@ -97,7 +100,7 @@ def create_conf(uuid, conf_path, kernel_line):
         '## This is just an example config file.\n',
         '## Please edit the paths and kernel parameters according to your system.\n',
         '\n',
-        "title   {!s}{!s}\n".format(distribution,kernel_line),
+        "title   {!s}{!s}\n".format(distribution, kernel_line),
         "linux   {!s}\n".format(kernel),
         "initrd  {!s}\n".format(img),
         "options root=UUID={!s} quiet resume=UUID={!s} rw\n".format(uuid, swap),
@@ -106,7 +109,6 @@ def create_conf(uuid, conf_path, kernel_line):
     with open(conf_path, 'w') as f:
         for l in lines:
             f.write(l)
-    f.close()
 
 
 def create_loader(loader_path):
@@ -126,15 +128,14 @@ def create_loader(loader_path):
     with open(loader_path, 'w') as f:
         for l in lines:
             f.write(l)
-    f.close()
 
 
-def install_gummiboot(efi_directory):
-    """ Installs gummiboot as bootloader for EFI setups.
+def install_systemd_boot(efi_directory):
+    """ Installs systemd-boot as bootloader for EFI setups.
 
     :param efi_directory:
     """
-    print("Bootloader: gummiboot")
+    print("Bootloader: systemd-boot")
     install_path = libcalamares.globalstorage.value("rootMountPoint")
     install_efi_directory = install_path + efi_directory
     fallback_kernel_line = libcalamares.job.configuration["fallbackKernelLine"]
@@ -142,21 +143,18 @@ def install_gummiboot(efi_directory):
     distribution = get_bootloader_entry_name()
     file_name_sanitizer = str.maketrans(" /", "_-")
     distribution_translated = distribution.translate(file_name_sanitizer)
-    conf_path = os.path.join(
-        install_efi_directory, "loader", "entries",
-        "{!s}.conf".format(distribution_translated))
-    fallback_path = os.path.join(
-        install_efi_directory, "loader", "entries",
-        "{!s}-fallback.conf".format(distribution_translated))
-    loader_path = os.path.join(
-        install_efi_directory, "loader", "loader.conf")
-    subprocess.call(["gummiboot", "--path={!s}".format(install_efi_directory), "install"])
+    conf_path = os.path.join(install_efi_directory, "loader", "entries",
+                             "{!s}.conf".format(distribution_translated))
+    fallback_path = os.path.join(install_efi_directory, "loader", "entries",
+                                 "{!s}-fallback.conf".format(distribution_translated))
+    loader_path = os.path.join(install_efi_directory, "loader", "loader.conf")
+    subprocess.call(["bootctl", "--path={!s}".format(install_efi_directory), "install"])
     kernel_line = get_kernel_line("default")
     print("Configure: \"{!s}\"".format(kernel_line))
-    create_conf(uuid, conf_path, kernel_line)
+    create_systemd_boot_conf(uuid, conf_path, kernel_line)
     kernel_line = get_kernel_line("fallback")
     print("Configure: \"{!s}\"".format(kernel_line))
-    create_conf(uuid, fallback_path, kernel_line)
+    create_systemd_boot_conf(uuid, fallback_path, kernel_line)
     create_loader(loader_path)
 
 
@@ -170,6 +168,7 @@ def install_grub(efi_directory, fw_type):
         print("Bootloader: grub (efi)")
         efi_directory_firmware = efi_directory + "/EFI"
         check_chroot_call(["mkdir", "-p", "{!s}".format(efi_directory)])
+
         if "efiBootloaderId" in libcalamares.job.configuration:
             efi_bootloader_id = libcalamares.job.configuration["efiBootloaderId"]
         else:
@@ -177,21 +176,19 @@ def install_grub(efi_directory, fw_type):
             distribution = branding["bootloaderEntryName"]
             file_name_sanitizer = str.maketrans(" /", "_-")
             efi_bootloader_id = distribution.translate(file_name_sanitizer)
-        check_chroot_call(
-            [libcalamares.job.configuration["grubInstall"], "--target=x86_64-efi",
-             "--efi-directory={!s}".format(efi_directory),
-             "--bootloader-id={!s}".format(efi_bootloader_id)])
+        check_chroot_call([libcalamares.job.configuration["grubInstall"], "--target=x86_64-efi",
+                           "--efi-directory={!s}".format(efi_directory),
+                           "--bootloader-id={!s}".format(efi_bootloader_id),
+                           "--force"])
         # Workaround for some UEFI firmwares
         check_chroot_call(["mkdir", "-p", "{!s}/boot".format(efi_directory_firmware)])
-        check_chroot_call(["cp", "{!s}/{!s}/grubx64.efi".format(efi_directory_firmware,
-                                                                efi_bootloader_id),
+        check_chroot_call(["cp", "{!s}/{!s}/grubx64.efi".format(efi_directory_firmware, efi_bootloader_id),
                            "{!s}/boot/bootx64.efi".format(efi_directory_firmware)])
     else:
         print("Bootloader: grub (bios)")
         boot_loader = libcalamares.globalstorage.value("bootLoader")
-        check_chroot_call(
-            [libcalamares.job.configuration["grubInstall"], "--target=i386-pc",
-             "--recheck", "--force", boot_loader["installPath"]])
+        check_chroot_call([libcalamares.job.configuration["grubInstall"], "--target=i386-pc",
+                           "--recheck", "--force", boot_loader["installPath"]])
 
     check_chroot_call([libcalamares.job.configuration["grubMkconfig"], "-o",
                        libcalamares.job.configuration["grubCfg"]])
@@ -199,34 +196,38 @@ def install_grub(efi_directory, fw_type):
 
 def prepare_bootloader(fw_type):
     """ Prepares bootloader and set proper flags to EFI boot partition (esp,boot).
-    Based on value 'efi_boot_loader', it either calls gummiboot or grub to be installed.
+    Based on value 'efi_boot_loader', it either calls systemd-boot or grub to be installed.
 
     :param fw_type:
     :return:
     """
     efi_boot_loader = libcalamares.job.configuration["efiBootLoader"]
     efi_directory = libcalamares.globalstorage.value("efiSystemPartition")
+
     if fw_type == "efi":
         partitions = libcalamares.globalstorage.value("partitions")
         boot_p = ""
         device = ""
+
         for partition in partitions:
             if partition["mountPoint"] == efi_directory:
                 boot_device = partition["device"]
                 boot_p = boot_device[-1:]
                 device = boot_device[:-1]
-                if (not boot_p or not device):
+
+                if not boot_p or not device:
                     return ("EFI directory \"{!s}\" not found!",
                             "Boot partition: \"{!s}\"",
-                            "Boot device: \"{!s}\"".format(efi_directory,boot_p,device))
+                            "Boot device: \"{!s}\"".format(efi_directory, boot_p, device))
                 else:
                     print("EFI directory: \"{!s}\"".format(efi_directory))
                     print("Boot partition: \"{!s}\"".format(boot_p))
                     print("Boot device: \"{!s}\"".format(device))
         print("Set 'EF00' flag")
-        subprocess.call(["sgdisk", "--typecode={!s}:EF00".format(boot_p), "{!s}".format(device)])       
-    if (efi_boot_loader == "gummiboot" and fw_type == "efi"):
-        install_gummiboot(efi_directory)
+        subprocess.call(["sgdisk", "--typecode={!s}:EF00".format(boot_p), "{!s}".format(device)])
+
+    if efi_boot_loader == "systemd-boot" and fw_type == "efi":
+        install_systemd_boot(efi_directory)
     else:
         install_grub(efi_directory, fw_type)
 
@@ -236,6 +237,10 @@ def run():
 
     :return:
     """
+    if libcalamares.globalstorage.value("bootLoader") is None:
+        return None
+
     fw_type = libcalamares.globalstorage.value("firmwareType")
     prepare_bootloader(fw_type)
+
     return None

@@ -30,6 +30,7 @@
 #include "utils/CalamaresUtilsGui.h"
 #include "utils/Logger.h"
 #include "utils/Retranslator.h"
+#include "utils/CalamaresUtilsSystem.h"
 #include "GlobalStorage.h"
 #include "JobQueue.h"
 
@@ -135,7 +136,8 @@ EraseDiskPage::doAutopartition( Device* dev )
     if ( QDir( "/sys/firmware/efi/efivars" ).exists() )
         isEfi = true;
 
-#define MiB * 1024 * 1024
+#define MiB * static_cast< qint64 >( 1024 ) * 1024
+#define GiB * static_cast< qint64 >( 1024 ) * 1024 * 1024
 
     // Partition sizes are expressed in MiB, should be multiples of
     // the logical sector size (usually 512B).
@@ -143,7 +145,7 @@ EraseDiskPage::doAutopartition( Device* dev )
     int empty_space_size = 0;
     if ( isEfi )
     {
-        uefisys_part_size = 100;
+        uefisys_part_size = 300;
         empty_space_size = 2;
     }
     else
@@ -152,31 +154,49 @@ EraseDiskPage::doAutopartition( Device* dev )
         empty_space_size = 1;
     }
 
-    qint64 first_free_sector = empty_space_size MiB / dev->logicalSectorSize() + 1;
+    qint64 firstFreeSector = empty_space_size MiB / dev->logicalSectorSize() + 1;
 
     if ( isEfi )
     {
-        qint64 lastSector = first_free_sector + ( uefisys_part_size MiB / dev->logicalSectorSize() );
+        qint64 lastSector = firstFreeSector + ( uefisys_part_size MiB / dev->logicalSectorSize() );
         m_core->createPartitionTable( dev, PartitionTable::gpt );
         Partition* efiPartition = PMUtils::createNewPartition(
             dev->partitionTable(),
             *dev,
             PartitionRole( PartitionRole::Primary ),
             FileSystem::Fat32,
-            first_free_sector,
+            firstFreeSector,
             lastSector
         );
+        PartitionInfo::setFormat( efiPartition, true );
         PartitionInfo::setMountPoint( efiPartition, Calamares::JobQueue::instance()
                                                         ->globalStorage()
                                                         ->value( "efiSystemPartition" )
                                                         .toString() );
-        PartitionInfo::setFormat( efiPartition, true );
         m_core->createPartition( dev, efiPartition );
-        first_free_sector = lastSector + 1;
+        firstFreeSector = lastSector + 1;
     }
     else
     {
         m_core->createPartitionTable( dev, PartitionTable::msdos );
+    }
+
+    bool shouldCreateSwap = false;
+    qint64 availableSpaceB = ( dev->totalSectors() - firstFreeSector ) * dev->logicalSectorSize();
+    qint64 suggestedSwapSizeB = swapSuggestion( availableSpaceB );
+    qint64 requiredSpaceB =
+            ( Calamares::JobQueue::instance()->
+              globalStorage()->
+              value( "requiredStorageGB" ).toDouble() + 0.1 + 2.0 ) GiB +
+            suggestedSwapSizeB;
+
+    // If there is enough room for ESP + root + swap, create swap, otherwise don't.
+    shouldCreateSwap = availableSpaceB > requiredSpaceB;
+
+    qint64 lastSectorForRoot = dev->totalSectors() - 1; //last sector of the device
+    if ( shouldCreateSwap )
+    {
+        lastSectorForRoot -= suggestedSwapSizeB / dev->logicalSectorSize() + 1;
     }
 
     Partition* rootPartition = PMUtils::createNewPartition(
@@ -184,12 +204,26 @@ EraseDiskPage::doAutopartition( Device* dev )
         *dev,
         PartitionRole( PartitionRole::Primary ),
         FileSystem::Ext4,
-        first_free_sector,
-        dev->totalSectors() - 1 //last sector
+        firstFreeSector,
+        lastSectorForRoot
     );
-    PartitionInfo::setMountPoint( rootPartition, "/" );
     PartitionInfo::setFormat( rootPartition, true );
+    PartitionInfo::setMountPoint( rootPartition, "/" );
     m_core->createPartition( dev, rootPartition );
+
+    if ( shouldCreateSwap )
+    {
+        Partition* swapPartition = PMUtils::createNewPartition(
+            dev->partitionTable(),
+            *dev,
+            PartitionRole( PartitionRole::Primary ),
+            FileSystem::LinuxSwap,
+            lastSectorForRoot + 1,
+            dev->totalSectors() - 1
+        );
+        PartitionInfo::setFormat( swapPartition, true );
+        m_core->createPartition( dev, swapPartition );
+    }
 
     updatePreviews();
 
@@ -235,4 +269,65 @@ EraseDiskPage::updatePreviews()
         info.partitionModelAfter->setParent( m_previewFrame );
         layout->addRow( tr( "After:" ), preview );
     }
+}
+
+
+qint64
+EraseDiskPage::swapSuggestion( const qint64 availableSpaceB ) const {
+
+#define MiB * static_cast< qint64 >( 1024 ) * 1024
+#define GiB * static_cast< qint64 >( 1024 ) * 1024 * 1024
+
+    // swap(mem) = max(2, 2 * mem), if mem < 2 GiB
+    //           = mem,             if 2 GiB <= mem < 8 GiB
+    //           = mem / 2,         if 8 GIB <= mem < 64 GiB
+    //           = 4 GiB,           if mem >= 64 GiB
+
+    qint64 suggestedSwapSizeB = 0;
+    qint64 availableRamB = CalamaresUtils::getPhysicalMemoryB();
+    qreal overestimationFactor = 1.01;
+    if ( !availableRamB )
+    {
+        availableRamB = CalamaresUtils::getTotalMemoryB();
+        overestimationFactor = 1.10;
+    }
+
+    bool ensureSuspendToDisk =
+        Calamares::JobQueue::instance()->globalStorage()->
+            value( "ensureSuspendToDisk" ).toBool();
+
+    if ( ensureSuspendToDisk )
+    {
+        if ( availableRamB < 4 GiB )
+            suggestedSwapSizeB = qMax( 2 GiB, availableRamB * 2 );
+        else if ( availableRamB >= 4 GiB && availableRamB < 8 GiB )
+            suggestedSwapSizeB = 8 GiB;
+        else
+            suggestedSwapSizeB = availableRamB;
+
+        suggestedSwapSizeB *= overestimationFactor;
+    }
+    else //if we don't care about suspend to disk
+    {
+        if ( availableRamB < 2 GiB )
+            suggestedSwapSizeB = qMax( 2 GiB, availableRamB * 2 );
+        else if ( availableRamB >= 2 GiB && availableRamB < 8 GiB )
+            suggestedSwapSizeB = availableRamB;
+        else if ( availableRamB >= 8 GiB && availableRamB < 64 GiB )
+            suggestedSwapSizeB = availableRamB / 2;
+        else
+            suggestedSwapSizeB = 4 GiB;
+
+        suggestedSwapSizeB *= overestimationFactor;
+
+        // don't use more than 10% of available space
+        qreal maxSwapDiskRatio = 1.10;
+        qint64 maxSwapSizeB = availableSpaceB * maxSwapDiskRatio;
+        if ( suggestedSwapSizeB > maxSwapSizeB )
+            suggestedSwapSizeB = maxSwapSizeB;
+    }
+
+    cDebug() << "Suggested swap size:" << suggestedSwapSizeB / 1024. / 1024. /1024. << "GiB";
+
+    return suggestedSwapSizeB;
 }

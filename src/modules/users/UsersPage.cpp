@@ -47,6 +47,7 @@ UsersPage::UsersPage( QWidget* parent )
     , m_readyHostname( false )
     , m_readyPassword( false )
     , m_readyRootPassword( false )
+    , m_showRootPassword( true )
 {
     ui->setupUi( this );
 
@@ -69,6 +70,8 @@ UsersPage::UsersPage( QWidget* parent )
     m_customUsername = false;
     m_customHostname = false;
 
+    setShowRootPassword( true );
+
     CALAMARES_RETRANSLATE( ui->retranslateUi( this ); )
 }
 
@@ -85,7 +88,7 @@ UsersPage::isReady()
     return m_readyFullName &&
            m_readyHostname &&
            m_readyPassword &&
-           m_readyRootPassword &&
+           ( !m_showRootPassword || m_readyRootPassword ) &&
            m_readyUsername;
 }
 
@@ -109,9 +112,12 @@ UsersPage::createJobs( const QString& defaultUserGroup, const QStringList& defau
                             ui->textBoxUserPassword->text() );
     list.append( Calamares::job_ptr( j ) );
 
-    j = new SetPasswordJob( "root",
-                            ui->textBoxRootPassword->text() );
-    list.append( Calamares::job_ptr( j ) );
+    if ( m_showRootPassword )
+    {
+        j = new SetPasswordJob( "root",
+                                ui->textBoxRootPassword->text() );
+        list.append( Calamares::job_ptr( j ) );
+    }
 
     j = new SetHostNameJob( ui->textBoxHostname->text() );
     list.append( Calamares::job_ptr( j ) );
@@ -131,6 +137,20 @@ void
 UsersPage::onActivate()
 {
     ui->textBoxFullName->setFocus();
+}
+
+
+void
+UsersPage::setShowRootPassword( bool show )
+{
+    ui->labelChooseRootPassword->setVisible( show );
+    ui->labelExtraRootPassword->setVisible( show );
+    ui->labelRootPassword->setVisible( show );
+    ui->labelRootPasswordError->setVisible( show );
+    ui->textBoxRootPassword->setVisible( show );
+    ui->textBoxVerifiedRootPassword->setVisible( show );
+
+    m_showRootPassword = show;
 }
 
 
@@ -386,4 +406,12 @@ UsersPage::onRootPasswordTextChanged( const QString& )
     }
 
     emit checkReady( isReady() );
+}
+
+
+void
+UsersPage::setAutologinDefault( bool checked )
+{
+    ui->checkBoxLoginAuto->setChecked( checked );
+    ui->checkBoxLoginNormal->setChecked( !checked );
 }

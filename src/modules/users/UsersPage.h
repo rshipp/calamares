@@ -45,6 +45,9 @@ public:
 
     void onActivate();
 
+    void setShowRootPassword( bool show );
+    void setAutologinDefault( bool checked );
+
 protected slots:
     void onFullNameTextEdited( const QString& );
     void fillSuggestions();
@@ -75,6 +78,7 @@ private:
     bool m_readyPassword;
     bool m_readyRootPassword;
 
+    bool m_showRootPassword;
 };
 
 #endif // USERSPAGE_H

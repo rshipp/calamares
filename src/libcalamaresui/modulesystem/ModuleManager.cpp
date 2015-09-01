@@ -101,14 +101,16 @@ ModuleManager::loadModules( Phase phase )
     {
         foreach ( const QString& moduleName, Settings::instance()->modules( phase ) )
         {
-            if ( !m_availableModules.contains( moduleName ) )
+            if ( !m_availableModules.contains( moduleName ) ||
+                 !m_availableModules.value( moduleName ) )
             {
                 cDebug() << "Module" << moduleName << "not found in module search paths."
                          << "\nCalamares will now quit.";
                 qApp->exit( 1 );
                 return;
             }
-            if ( m_availableModules.value( moduleName )->isLoaded() )
+            Module* thisModule = m_availableModules.value( moduleName );
+            if ( thisModule && thisModule->isLoaded() )
             {
                 cDebug() << "Module" << moduleName << "already loaded.";
                 continue;
@@ -196,6 +198,12 @@ void
 ModuleManager::doLoad( const QString& moduleName )
 {
     Module* thisModule = m_availableModules.value( moduleName );
+    if ( !thisModule )
+    {
+        cDebug() << "Module" << moduleName << "loading IMPOSSIBLE, module does not exist";
+        return;
+    }
+
     thisModule->loadSelf();
     if ( !thisModule->isLoaded() )
         cDebug() << "Module" << moduleName << "loading FAILED";

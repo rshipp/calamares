@@ -231,10 +231,15 @@ PythonJob::~PythonJob()
 QString
 PythonJob::prettyName() const
 {
-    return tr( "Run script %1" )
-                .arg( QDir( m_workingPath ).dirName() +
-                      QDir::separator() +
-                      m_scriptFile );
+    return QDir( m_workingPath ).dirName();
+}
+
+
+QString
+PythonJob::prettyStatusMessage() const
+{
+    return tr( "Running %1 operation." )
+            .arg( QDir( m_workingPath ).dirName() );
 }
 
 
@@ -306,8 +311,6 @@ PythonJob::exec()
         return JobResult::error( tr( "Boost.Python error in job \"%1\"." ).arg( prettyName() ),
                                  msg );
     }
-
-    return JobResult::ok();
 }
 
 

@@ -43,7 +43,10 @@
 static QSet< FileSystem::Type > s_unmountableFS(
 {
     FileSystem::Unformatted,
-    FileSystem::LinuxSwap
+    FileSystem::LinuxSwap,
+    FileSystem::Extended,
+    FileSystem::Unknown,
+    FileSystem::Lvm2_PV
 } );
 
 CreatePartitionDialog::CreatePartitionDialog( Device* device, PartitionNode* parentPartition, QWidget* parentWidget )
@@ -62,7 +65,8 @@ CreatePartitionDialog::CreatePartitionDialog( Device* device, PartitionNode* par
     mountPoints.sort();
     m_ui->mountPointComboBox->addItems( mountPoints );
     
-    if ( device->partitionTable()->type() == PartitionTable::msdos )
+    if ( device->partitionTable()->type() == PartitionTable::msdos ||
+         device->partitionTable()->type() == PartitionTable::msdos_sectorbased )
         initMbrPartitionTypeUi();
     else
         initGptPartitionTypeUi();
@@ -159,6 +163,8 @@ CreatePartitionDialog::updateMountPointUi()
     }
     m_ui->mountPointLabel->setEnabled( enabled );
     m_ui->mountPointComboBox->setEnabled( enabled );
+    if ( !enabled )
+        m_ui->mountPointComboBox->setCurrentText( QString() );
 }
 
 void

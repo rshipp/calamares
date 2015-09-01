@@ -1,6 +1,6 @@
 /* === This file is part of Calamares - <http://github.com/calamares> ===
  *
- *   Copyright 2014, Teo Mrnjavac <teo@kde.org>
+ *   Copyright 2014-2015, Teo Mrnjavac <teo@kde.org>
  *   Copyright 2014, Aurélien Gâteau <agateau@kde.org>
  *
  *   Calamares is free software: you can redistribute it and/or modify
@@ -21,6 +21,7 @@
 #include "ui_ReplacePage.h"
 
 #include <core/PartitionCoreModule.h>
+#include <core/device.h>
 #include <core/DeviceModel.h>
 #include <core/partition.h>
 #include <fs/filesystem.h>
@@ -34,15 +35,24 @@
 #include <utils/Logger.h>
 #include <Branding.h>
 
+#include <QDir>
+#include <QProcess>
+
 
 ReplacePage::ReplacePage( PartitionCoreModule* core, QWidget* parent )
     : QWidget( parent )
     , m_ui( new Ui_ReplacePage )
     , m_core( core )
+    , m_isEfi( false )
 {
     m_ui->setupUi( this );
     m_ui->deviceComboBox->setModel( m_core->deviceModel() );
     m_ui->partitionPreview->setLabelsVisible( true );
+
+    m_ui->bootComboBox->hide();
+    m_ui->bootComboBox->clear();
+    m_ui->bootStatusLabel->hide();
+    m_ui->bootStatusLabel->clear();
 
 //    updateButtons();
 
@@ -77,6 +87,12 @@ ReplacePage::reset()
 {
     int oldDeviceIndex = m_ui->deviceComboBox->currentIndex();
     m_core->revert();
+
+    m_ui->bootComboBox->hide();
+    m_ui->bootComboBox->clear();
+    m_ui->bootStatusLabel->hide();
+    m_ui->bootStatusLabel->clear();
+
     m_ui->deviceComboBox->setCurrentIndex( oldDeviceIndex );
     updateFromCurrentDevice();
 }
@@ -105,6 +121,27 @@ ReplacePage::applyChanges()
             m_core->deletePartition( dev, partition );
             m_core->createPartition( dev, newPartition );
 
+            if ( m_isEfi )
+            {
+                QList< Partition* > efiSystemPartitions = m_core->efiSystemPartitions();
+                if ( efiSystemPartitions.count() == 1 )
+                {
+                    PartitionInfo::setMountPoint(
+                            efiSystemPartitions.first(),
+                            Calamares::JobQueue::instance()->
+                                globalStorage()->
+                                    value( "efiSystemPartition" ).toString() );
+                }
+                else if ( efiSystemPartitions.count() > 1 )
+                {
+                    PartitionInfo::setMountPoint(
+                            efiSystemPartitions.at( m_ui->bootComboBox->currentIndex() ),
+                            Calamares::JobQueue::instance()->
+                                globalStorage()->
+                                    value( "efiSystemPartition" ).toString() );
+                }
+            }
+
             m_core->dumpQueue();
         }
     }
@@ -114,6 +151,9 @@ ReplacePage::applyChanges()
 void
 ReplacePage::onPartitionSelected()
 {
+    if ( Calamares::JobQueue::instance()->globalStorage()->value( "firmwareType" ) == "efi" )
+        m_isEfi = true;
+
     if ( m_ui->partitionTreeView->currentIndex() == QModelIndex() )
     {
         updateStatus( CalamaresUtils::PartitionPartition,
@@ -227,16 +267,83 @@ ReplacePage::onPartitionSelected()
             return;
         }
 
-        updateStatus( CalamaresUtils::PartitionPartition,
-                      tr( "<strong>%3</strong><br/><br/>"
-                          "%1 will be installed on %2.<br/>"
-                          "<font color=\"red\">Warning: </font>all data on partition"
-                          "%2 will be lost.")
+        m_ui->bootComboBox->hide();
+        m_ui->bootComboBox->clear();
+        m_ui->bootStatusLabel->hide();
+        m_ui->bootStatusLabel->clear();
+
+        if ( m_isEfi )
+        {
+            QList< Partition* > efiSystemPartitions = m_core->efiSystemPartitions();
+            if ( efiSystemPartitions.count() == 0 )
+            {
+                updateStatus( CalamaresUtils::Fail,
+                              tr( "<strong>%2</strong><br/><br/>"
+                                  "An EFI system partition cannot be found anywhere "
+                                  "on this system. Please go back and use manual "
+                                  "partitioning to set up %1." )
+                              .arg( Calamares::Branding::instance()->
+                                    string( Calamares::Branding::ShortProductName ) )
+                              .arg( prettyName ) );
+                setNextEnabled( false );
+            }
+            else if ( efiSystemPartitions.count() == 1 )
+            {
+                updateStatus( CalamaresUtils::PartitionPartition,
+                              tr( "<strong>%3</strong><br/><br/>"
+                                  "%1 will be installed on %2.<br/>"
+                                  "<font color=\"red\">Warning: </font>all data on partition "
+                                  "%2 will be lost.")
+                                .arg( Calamares::Branding::instance()->
+                                    string( Calamares::Branding::VersionedName ) )
+                                .arg( partition->partitionPath() )
+                                .arg( prettyName ) );
+                m_ui->bootStatusLabel->show();
+                m_ui->bootStatusLabel->setText(
+                    tr( "The EFI system partition at %1 will be used for starting %2." )
+                        .arg( efiSystemPartitions.first()->partitionPath() )
                         .arg( Calamares::Branding::instance()->
-                            string( Calamares::Branding::VersionedName ) )
-                        .arg( partition->partitionPath() )
-                        .arg( prettyName ) );
-        setNextEnabled( true );
+                              string( Calamares::Branding::ShortProductName ) ) );
+                setNextEnabled( true );
+            }
+            else
+            {
+                updateStatus( CalamaresUtils::PartitionPartition,
+                              tr( "<strong>%3</strong><br/><br/>"
+                                  "%1 will be installed on %2.<br/>"
+                                  "<font color=\"red\">Warning: </font>all data on partition "
+                                  "%2 will be lost.")
+                                .arg( Calamares::Branding::instance()->
+                                    string( Calamares::Branding::VersionedName ) )
+                                .arg( partition->partitionPath() )
+                                .arg( prettyName ) );
+                m_ui->bootStatusLabel->show();
+                m_ui->bootStatusLabel->setText( tr( "EFI system partition:" ) );
+                m_ui->bootComboBox->show();
+                for ( int i = 0; i < efiSystemPartitions.count(); ++i )
+                {
+                    Partition* efiPartition = efiSystemPartitions.at( i );
+                    m_ui->bootComboBox->addItem( efiPartition->partitionPath(), i );
+                    if ( efiPartition->devicePath() == partition->devicePath() &&
+                         efiPartition->number() == 1 )
+                        m_ui->bootComboBox->setCurrentIndex( i );
+                }
+                setNextEnabled( true );
+            }
+        }
+        else
+        {
+            updateStatus( CalamaresUtils::PartitionPartition,
+                          tr( "<strong>%3</strong><br/><br/>"
+                              "%1 will be installed on %2.<br/>"
+                              "<font color=\"red\">Warning: </font>all data on partition "
+                              "%2 will be lost.")
+                            .arg( Calamares::Branding::instance()->
+                                string( Calamares::Branding::VersionedName ) )
+                            .arg( partition->partitionPath() )
+                            .arg( prettyName ) );
+            setNextEnabled( true );
+        }
     }
 }
 

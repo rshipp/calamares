@@ -1,6 +1,6 @@
 /* === This file is part of Calamares - <http://github.com/calamares> ===
  *
- *   Copyright 2014-2015, Teo Mrnjavac <teo@kde.org>
+ *   Copyright 2015, Rohan Garg <rohan@garg.io>
  *
  *   Calamares is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -16,8 +16,8 @@
  *   along with Calamares. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef GREETINGPAGEPLUGIN_H
-#define GREETINGPAGEPLUGIN_H
+#ifndef WEBVIEWPLUGIN_H
+#define WEBVIEWPLUGIN_H
 
 #include <QObject>
 
@@ -26,9 +26,9 @@
 
 #include <QVariantMap>
 
-class GreetingPage;
+class QWebView;
 
-class PLUGINDLLEXPORT GreetingViewStep : public Calamares::ViewStep
+class PLUGINDLLEXPORT WebViewStep : public Calamares::ViewStep
 {
     Q_OBJECT
     Q_PLUGIN_METADATA( IID "calamares.ViewModule/1.0" )
@@ -36,8 +36,8 @@ class PLUGINDLLEXPORT GreetingViewStep : public Calamares::ViewStep
     Q_INTERFACES( Calamares::ViewStep )
 
 public:
-    explicit GreetingViewStep( QObject* parent = nullptr );
-    virtual ~GreetingViewStep();
+    explicit WebViewStep( QObject* parent = nullptr );
+    virtual ~WebViewStep();
 
     QString prettyName() const override;
 
@@ -45,6 +45,7 @@ public:
 
     void next() override;
     void back() override;
+    void onActivate() override;
 
     bool isNextEnabled() const override;
     bool isBackEnabled() const override;
@@ -57,7 +58,9 @@ public:
     void setConfigurationMap( const QVariantMap& configurationMap ) override;
 
 private:
-    GreetingPage* m_widget;
+    QWebView *m_view;
+    QString m_url;
+    QString m_prettyName;
 };
 
-#endif // GREETINGPAGEPLUGIN_H
+#endif // WEBVIEWPLUGIN_H
