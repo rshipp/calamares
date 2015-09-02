@@ -24,7 +24,6 @@ import shutil
 import glob
 
 import libcalamares
-from .. import pacman_utils
 
 def run():
     """ Setup graphics drivers and sound """
