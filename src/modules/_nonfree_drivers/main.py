@@ -48,11 +48,11 @@ def run():
         print('installing driver')
         shutil.copytree(
             '/opt/chakra/pkgs', '%s/opt/chakra/pkgs' % install_path)
-        for nvidia_utils in glob.glob('/opt/chakra/pkgs/nvidia-utils-34*'):
+        for nvidia_utils in glob.glob('/opt/chakra/pkgs/nvidia-utils-3*'):
             if 'xx' not in nvidia_utils:
                 libcalamares.utils.chroot_call(
                     ['pacman', '-Ud', '--force', '--noconfirm', nvidia_utils])
-        for nvidia in glob.glob('/opt/chakra/pkgs/nvidia-34*'):
+        for nvidia in glob.glob('/opt/chakra/pkgs/nvidia-3*'):
             if 'xx' not in nvidia:
                 libcalamares.utils.chroot_call(
                     ['pacman', '-Ud', '--force', '--noconfirm', nvidia])
@@ -88,7 +88,7 @@ def run():
                 ['pacman', '-Ud', '--force', '--noconfirm', nvidia_304])
         shutil.rmtree('%s/opt/chakra/pkgs' % install_path)
     elif os.path.exists('/tmp/catalyst'):
-        print('nvidia-304xx detected')
+        print('catalyst detected')
         print('removing unneeded packages')
         libcalamares.utils.chroot_call(
             ['pacman', '-Rdd', '--noconfirm', 'libgl'])
