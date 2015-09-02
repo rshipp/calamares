@@ -23,7 +23,6 @@ import shutil
 import subprocess
 
 import libcalamares
-from .. import pacman_utils
 
 
 def run():
@@ -32,7 +31,10 @@ def run():
     install_path = libcalamares.globalstorage.value("rootMountPoint")
 
     # remove any db.lck
-    pacman_utils._nuke_pacman_db(install_path)
+    db_lock = os.path.join(install_path, "var/lib/pacman/db.lck")
+    if os.path.exists(db_lock):
+        with misc.raised_privileges():
+            os.remove(db_lock)
 
     ###################################################################################
     # Prepare locale string
