@@ -45,9 +45,9 @@ def run():
     #                                  we search zh only
     ###################################################################################
 
-    print("Calamares locale: " % libcalamares.globalstorage.value("lcLocale"))
+    print("Calamares locale:  \"{!s}\"".format(libcalamares.globalstorage.value("lcLocale")))
     this_locale = libcalamares.globalstorage.value("lcLocale")[:2]
-    print("Final locale: " % this_locale)
+    print("Final locale:  \"{!s}\"".format(this_locale))
 
     ###################################################################################
     # Remove KDE l10n
@@ -68,10 +68,13 @@ def remove_locales(basepkgname, keep_locale):
 
     cmd = ["pacman -Q | grep -i", str(basepkgname), "| awk '{print $1}'"]
 
-    p = subprocess.Popen(cmd, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
-    list_of_pkgs = p.communicate()
-    list_of_pkgs = {"code": p.returncode, "stdout": list_of_pkgs[0],
-        "stderr": list_of_pkgs[1].rstrip('\n')}
+    p = subprocess.Popen(cmd, shell=True, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
+
+    # Iterates over every found pkg and put each one in a list
+    for line in p.stdout.readlines():
+        s = line.decode('ascii')
+        s = s.rstrip('\n')
+        list_of_pkgs.append(s)
 
     print(list_of_pkgs)
 
