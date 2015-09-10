@@ -1,0 +1,5 @@
+---
+type:       "job"
+name:       "_systemd-boot_entries"
+interface:  "python"
+script:     "main.py"
