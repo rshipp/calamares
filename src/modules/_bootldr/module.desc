@@ -1,0 +1,5 @@
+---
+type:       "job"
+name:       "_bootldr"
+interface:  "python"
+script:     "main.py"
