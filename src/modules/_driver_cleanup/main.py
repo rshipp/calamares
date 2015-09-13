@@ -21,6 +21,7 @@
 #  MA 02110-1301, USA.
 
 import os
+import subprocess
 
 import libcalamares
 
@@ -38,48 +39,47 @@ def run():
         with misc.raised_privileges():
             os.remove(db_lock)
 
-    if os.path.exists("/tmp/used_drivers"):
-        with open("/tmp/used_drivers", "r") as searchfile:
-            for line in searchfile:
-                if "intel" in line:
-                    print(line)
-                else:
-                    try:
-                        libcalamares.utils.chroot_call(['pacman', '-R', '--noconfirm',
-                                                        'xf86-video-vmware'])
-                    except Exception as e:
-                        pass
-                if "nouveau" in line:
-                    print(line)
-                else:
-                    try:
-                        libcalamares.utils.chroot_call(['pacman', '-R', '--noconfirm',
-                                                        'xf86-video-nouveau'])
-                    except Exception as e:
-                        pass
-                if "ati" in line or "radeon" in line:
-                    print(line)
-                else:
-                    try:
-                        libcalamares.utils.chroot_call(['pacman', '-R', '--noconfirm',
-                                                        'xf86-video-ati'])
-                    except Exception as e:
-                        pass
-                if "vmware" in line:
-                    print(line)
-                else:
-                    try:
-                        libcalamares.utils.chroot_call(['pacman', '-R', '--noconfirm',
-                                                        'xf86-video-vmware'])
-                    except Exception as e:
-                        pass
-        searchfile.close()
-    else:
-        try:
-            libcalamares.utils.chroot_call(['pacman', '-R', '--noconfirm', 'xf86-video-ati',
-                                            'xf86-video-vmware'])
-        except Exception as e:
-            pass
+    """ Clean up Xorg drivers """
+    all_drivers = []
+    loaded_modules = []
+    # read the current installed xorg drivers
+    p = subprocess.Popen("pacman -Q | grep xf86-video | cut -d '-' -f 3 | cut -d ' ' -f 1",
+                         shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+
+    # Iterates over every found pkg and put each one in a list
+    for line in p.stdout.readlines():
+        s = line.decode('ascii')
+        s = s.rstrip('\n')
+        all_drivers.append(s)
+
+    # read the current used modules
+    p = subprocess.Popen("lsmod | cut -d' ' -f1",
+                         shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+
+    # Iterates over every module found and put each one in a list
+    for line in p.stdout.readlines():
+        s = line.decode('ascii')
+        s = s.rstrip('\n')
+        loaded_modules.append(s)
+
+    # adapt some special names to fit the xorg pkg name
+    if "radeon" in loaded_modules:
+        loaded_modules.append("ati")
+    if "i915" in loaded_modules:
+        loaded_modules.append("intel")
+
+    # get the list of used drivers by comparing the modules list and the installed drivers
+    keep_driver = list(set(all_drivers) & set(loaded_modules))
+    # do not remove vesa, add it to the list
+    keep_driver.append("vesa")
+    
+    # Remove every xorg driver not loaded
+    for driver in all_drivers:
+        if not driver in keep_driver:
+            print('Removing xorg driver: ', driver)
+            libcalamares.utils.chroot_call(
+                ['pacman', '-Rddn', '--noconfirm', 'xf86-video-%s' % (driver)])
+    
 
     print('video driver removal complete')
 
@@ -92,6 +92,14 @@ def run():
         try:
             libcalamares.utils.chroot_call(['pacman', '-Rncs', '--noconfirm',
                                             'xf86-input-wacom'])
+        except Exception as e:
+            pass
+    if 'synaptics' in xorg:
+        print('synaptics in use')
+    else:
+        try:
+            libcalamares.utils.chroot_call(['pacman', '-Rncs', '--noconfirm',
+                                            'xf86-input-synaptics'])
         except Exception as e:
             pass
 
