@@ -1,0 +1,6 @@
+---
+type:       "job"
+name:       "_pacmancfg"
+interface:  "python"
+requires:   []
+script:     "main.py"
