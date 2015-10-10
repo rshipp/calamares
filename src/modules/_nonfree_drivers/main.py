@@ -3,7 +3,6 @@
 #
 # === This file is part of Chakra - <http://www.chakraos.org> ===
 #
-#   Copyright 2014, KaOS (http://kaosx.us)
 #   Copyright 2015, Luca Giambonini <gluca86@gmail.com>
 #
 #   Calamares is free software: you can redistribute it and/or modify
@@ -28,7 +27,7 @@ import libcalamares
 def run():
     """ Setup graphics drivers and sound """
 
-    install_path = libcalamares.globalstorage.value("rootMountPoint")
+    install_path = libcalamares.globalstorage.value( "rootMountPoint" )
 
     # remove any db.lck
     db_lock = os.path.join(install_path, "var/lib/pacman/db.lck")
@@ -43,64 +42,50 @@ def run():
         print('nvidia detected')
         print('removing unneeded packages')
         libcalamares.utils.chroot_call(
-            ['pacman', '-Rdd', '--noconfirm', 'libgl', 'xf86-video-nouveau'])
+            ['pacman', '-Rdd', '--noconfirm', 'mesa-libgl', 'xf86-video-nouveau'])
         print('installing driver')
         shutil.copytree(
-            '/opt/chakra/pkgs', '%s/opt/chakra/pkgs' % install_path)
-        for nvidia_utils in glob.glob('/opt/chakra/pkgs/nvidia-utils-3*'):
-            if 'xx' not in nvidia_utils:
-                libcalamares.utils.chroot_call(
-                    ['pacman', '-Ud', '--force', '--noconfirm', nvidia_utils])
-        for nvidia in glob.glob('/opt/chakra/pkgs/nvidia-3*'):
-            if 'xx' not in nvidia:
-                libcalamares.utils.chroot_call(
-                    ['pacman', '-Ud', '--force', '--noconfirm', nvidia])
-        shutil.rmtree('%s/opt/chakra/pkgs' % install_path)
+            '/opt/chakra/pkgs', '%s/opt/chakra/pkgs' % (install_path))
+        # search for all nvidia packages and filter out those that have 'xx'
+        libcalamares.utils.chroot_call(
+                ['pacman', '-Ud', '--force', '--noconfirm'] + [ os.path.join(install_path, "opt/chakra/pkgs", pkg) for pkg in glob.glob('/opt/chakra/pkgs/*nvidia*') if "xx" not in pkg  ])
+        shutil.rmtree('%s/opt/chakra/pkgs' % (install_path))
+
     elif os.path.exists('/tmp/nvidia-340xx'):
         print('nvidia-340xx detected')
         print('removing unneeded packages')
         libcalamares.utils.chroot_call(
-            ['pacman', '-Rdd', '--noconfirm', 'libgl', 'xf86-video-nouveau'])
+            ['pacman', '-Rdd', '--noconfirm', 'mesa-libgl', 'xf86-video-nouveau'])
         print('installing driver')
         shutil.copytree(
-            '/opt/chakra/pkgs', '%s/opt/chakra/pkgs' % install_path)
-        for nvidia_340_utils in glob.glob('/opt/chakra/pkgs/nvidia-340xx-utils*'):
-            libcalamares.utils.chroot_call(
-                ['pacman', '-Ud', '--force', '--noconfirm', nvidia_340_utils])
-        for nvidia_340 in glob.glob('/opt/chakra/pkgs/nvidia-340xx*'):
-            libcalamares.utils.chroot_call(
-                ['pacman', '-Ud', '--force', '--noconfirm', nvidia_340])
-        shutil.rmtree('%s/opt/chakra/pkgs' % install_path)
+            '/opt/chakra/pkgs', '%s/opt/chakra/pkgs' % (install_path))
+        libcalamares.utils.chroot_call(
+                ['pacman', '-Ud', '--force', '--noconfirm'] + [ os.path.join(install_path, "opt/chakra/pkgs", pkg) for pkg in glob.glob('/opt/chakra/pkgs/*nvidia*340xx*') ])
+        shutil.rmtree('%s/opt/chakra/pkgs' % (install_path))
+
     elif os.path.exists('/tmp/nvidia-304xx'):
         print('nvidia-304xx detected')
         print('removing unneeded packages')
         libcalamares.utils.chroot_call(
-            ['pacman', '-Rdd', '--noconfirm', 'libgl', 'xf86-video-nouveau'])
+            ['pacman', '-Rdd', '--noconfirm', 'mesa-libgl', 'xf86-video-nouveau'])
         print('installing driver')
         shutil.copytree(
-            '/opt/chakra/pkgs', '%s/opt/chakra/pkgs' % install_path)
-        for nvidia_304_utils in glob.glob('/opt/chakra/pkgs/nvidia-304xx-utils*'):
-            libcalamares.utils.chroot_call(
-                ['pacman', '-Ud', '--force', '--noconfirm', nvidia_304_utils])
-        for nvidia_304 in glob.glob('/opt/chakra/pkgs/nvidia-304xx*'):
-            libcalamares.utils.chroot_call(
-                ['pacman', '-Ud', '--force', '--noconfirm', nvidia_304])
-        shutil.rmtree('%s/opt/chakra/pkgs' % install_path)
+            '/opt/chakra/pkgs', '%s/opt/chakra/pkgs' % (install_path))
+        libcalamares.utils.chroot_call(
+                ['pacman', '-Ud', '--force', '--noconfirm'] + [ os.path.join(install_path, "opt/chakra/pkgs", pkg) for pkg in glob.glob('/opt/chakra/pkgs/*nvidia*304xx*') ])
+        shutil.rmtree('%s/opt/chakra/pkgs' % (install_path))
+
     elif os.path.exists('/tmp/catalyst'):
         print('catalyst detected')
         print('removing unneeded packages')
         libcalamares.utils.chroot_call(
-            ['pacman', '-Rdd', '--noconfirm', 'libgl'])
+            ['pacman', '-Rdd', '--noconfirm', 'mesa-libgl'])
         print('installing driver')
         shutil.copytree(
-            '/opt/chakra/pkgs', '%s/opt/chakra/pkgs' % install_path)
-        for catalyst_utils in glob.glob('/opt/chakra/pkgs/catalyst-utils*'):
-            libcalamares.utils.chroot_call(
-                ['pacman', '-Ud', '--force', '--noconfirm', catalyst_utils])
-        for catalyst in glob.glob('/opt/chakra/pkgs/catalyst-1*'):
-            libcalamares.utils.chroot_call(
-                ['pacman', '-Ud', '--force', '--noconfirm', catalyst])
-        shutil.rmtree('%s/opt/chakra/pkgs' % install_path)
+            '/opt/chakra/pkgs', '%s/opt/chakra/pkgs' % (install_path))
+        libcalamares.utils.chroot_call(
+                ['pacman', '-Ud', '--force', '--noconfirm'] + [ os.path.join(install_path, "opt/chakra/pkgs", pkg) for pkg in glob.glob('/opt/chakra/pkgs/*catalyst*') ])
+        shutil.rmtree('%s/opt/chakra/pkgs' % (install_path))
 
     print('done setting up hardware')
 
