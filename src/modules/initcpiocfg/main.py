@@ -86,7 +86,7 @@ def modify_mkinitcpio_conf(partitions, root_mount_point):
     cpu = cpuinfo()
     swap_uuid = ""
     btrfs = ""
-    hooks = ["base", "udev", "autodetect", "modconf", "block", "keyboard", "keymap"]
+    hooks = ["base", "udev", "autodetect", "modconf", "block", "keyboard", "keymap", "microcode"]
     modules = []
 
     # It is important that the plymouth hook comes before any encrypt hook
