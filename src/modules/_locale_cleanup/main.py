@@ -66,9 +66,7 @@ def remove_locales(basepkgname, keep_locale):
     # Search installed kde locale packages
     list_of_pkgs = []
 
-    cmd = ["pacman -Q | grep -i", str(basepkgname), "| awk '{print $1}'"]
-
-    p = subprocess.Popen(cmd, shell=True, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
+    p = subprocess.Popen("pacman -Q | grep -i " + basepkgname + " | awk '{print $1}'", shell=True, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
 
     # Iterates over every found pkg and put each one in a list
     for line in p.stdout.readlines():
