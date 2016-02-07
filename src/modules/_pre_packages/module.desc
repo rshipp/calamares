@@ -1,0 +1,6 @@
+---
+type:       "job"
+name:       "_pre_packages"
+interface:  "python"
+requires:   []
+script:     "main.py"
