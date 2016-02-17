@@ -87,6 +87,12 @@ def run():
                 ['pacman', '-Ud', '--force', '--noconfirm'] + [ os.path.join(install_path, "opt/chakra/pkgs", pkg) for pkg in glob.glob('/opt/chakra/pkgs/*catalyst*') ])
         shutil.rmtree('%s/opt/chakra/pkgs' % (install_path))
 
+    elif os.path.exists('/tmp/virtualbox'):
+        print('virtualbox VM detected')
+        print('installing virtualbox addons')
+        libcalamares.utils.chroot_call(
+                ['pacman', '-Ud', '--force', '--noconfirm'] + [ os.path.join(install_path, "opt/chakra/pkgs", pkg) for pkg in glob.glob('/opt/chakra/pkgs/*virtualbox-guest-additions*') ])
+
     print('done setting up hardware')
 
     return None
